@@ -4,9 +4,9 @@
 
 ## Team
 
-  - __Product Owner__: Vishal Reddy [vreddy18](http://www.github.com/vreddy18)
-  - __Scrum Master__: Ajay Tungare [atungare](http://www.github.com/atungare)
-  - __Tech Lead__: Mike Barton [gitMbar](http://www.github.com/gitMbar)
+  - __Product Owner__: [Vishal Reddy](http://www.github.com/vreddy18)
+  - __Scrum Master__: [Ajay Tungare](http://www.github.com/atungare)
+  - __Tech Lead__: [Mike Barton](http://www.github.com/gitMbar)
 
 ## Table of Contents
 

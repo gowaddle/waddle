@@ -1,3 +1,11 @@
+# Style Guide
+
+## Angular.js
+
+Please adhere to [Todd Motto's Angular Style Guide](https://github.com/toddmotto/angularjs-styleguide)
+
+## JavaScript
+
 ### Indentation
 
 When writing any block of code that is logically subordinate to the line immediately before and after it, that block should be indented two spaces more than the surrounding lines
@@ -181,7 +189,7 @@ When writing any block of code that is logically subordinate to the line immedia
   }
   ```
 
-# Supplemental reading
+## Supplemental reading
 
 ### Code density
 
@@ -240,23 +248,6 @@ When writing any block of code that is logically subordinate to the line immedia
 ### Working with files
 
 * Do not end a file with any character other than a newline.
-* Don't use the -a or -m flags for `git commit` for the first half of the class, since they conceal what is actually happening (and do slightly different things than most people expect).
-
-    ```shell
-    # good:
-    > git add .
-    > git commit
-    [save edits to the commit message file using the text editor that opens]
-
-    # bad:
-    > git commit -a
-    [save edits to the commit message file using the text editor that opens]
-
-    # bad:
-    > git add .
-    > git commit -m "updated algorithm"
-    ```
-
 
 ### Opening or closing too many blocks at once
 
