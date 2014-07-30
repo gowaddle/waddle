@@ -7,8 +7,6 @@
   "license": "Proprietary",
   "scripts": {},
   "dependencies": {
-    "angular": "~1.2.20",
-    "angular-ui-router": "^0.2.10",
     "karma-jasmine": "^0.1.5",
     "mocha": "^1.20.1",
     "grunt": "^0.4.4",
@@ -21,10 +19,12 @@
     "grunt-nodemon": "^0.2.1",
     "grunt-mocha-test": "^0.10.0",
     "express": "~4.7.2",
-    "browserify": "~5.9.1"
+    "browserify": "~5.9.1",
+    "angular": "~1.2.19",
+    "angular-ui-router": "~0.2.10"
   },
   "devDependencies": {
-    "karma": "^0.12.16",
+    "karma": "~0.12.19",
     "karma-chrome-launcher": "^0.1.4",
     "karma-mocha": "^0.1.4",
     "karma-nested-reporter": "^0.1.1"
