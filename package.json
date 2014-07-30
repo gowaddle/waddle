@@ -1,0 +1,34 @@
+{
+  "name": "Waddle",
+  "version": "0.0.1",
+  "description": "gogogo",
+  "main": "server.js",
+  "repository": "",
+  "license": "Proprietary",
+  "scripts": {
+  },
+  "dependencies": {
+  	"angular": "~1.2.20",
+  	"angular-ui-router": "^0.2.10",
+    "passport": "^0.2.0",
+    "passport-local": "^1.0.0",
+    //testing and grunt
+    "karma-jasmine": "^0.1.5",
+    "mocha": "^1.20.1",
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-concat": "^0.3.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-shell": "^0.6.4",
+    "grunt-contrib-cssmin": "^0.9.0",
+    "grunt-nodemon": "^0.2.1",
+    "grunt-mocha-test": "^0.10.0"
+  },
+  "devDependencies": {
+    "karma": "^0.12.16",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.4",
+    "karma-nested-reporter": "^0.1.1",
+  }
+}
