@@ -33,6 +33,6 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
-
+	
 	grunt.registerTask('dev', ['browserify', 'jshint']);
 };
