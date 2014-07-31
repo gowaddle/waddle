@@ -12,7 +12,7 @@ angular.module('app', [])
 		scope: {
 			things: '='
 		},
-		link: function (scope, ele, attr) {
+		link: function (scope) {
 			scope.change = function () {
 				scope.things.name = 'something';
 			};
