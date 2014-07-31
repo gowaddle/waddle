@@ -8,7 +8,7 @@ module.exports = function (app, express) {
 	app.use(bodyParser.json());
 	app.use(express.static(__dirname + '../client'));
 	app.get('/', function (req, res) {
-		res.send(path.join(__dirname, '../client/index.html'));
+		res.sendfile(path.join(__dirname, '../client/index.html'));
 	});
 	console.log('middleware');
 };
