@@ -16,5 +16,4 @@ angular.module('waddle', [
 
   $urlRouterProvider.otherwise('/');
 
-  // $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file):/);
 });
