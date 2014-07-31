@@ -10,7 +10,7 @@ angular.module('waddle', [
   $stateProvider
     .state('frontpage', {
       url: '/',
-      templateUrl: 'modules/pages/frontpage/frontpage.html',
+      templateUrl: '../app/modules/pages/frontpage/frontpage.html',
       controller: 'FrontpageController'
     });
 
