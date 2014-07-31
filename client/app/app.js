@@ -1,9 +1,8 @@
 'use strict';
-var angular = require('angular');
 
 angular.module('waddle', [
-	require('./controllers.js'),
-	require('./directives.js'),
+  'waddle.controllers',
+	'waddle.directives',
 	'ui.router'
 ])
 
@@ -14,7 +13,7 @@ angular.module('waddle', [
   .state('frontpage', {
   		url: '/',
   		templateUrl: 'pages/frontpage/frontpage.html',
-  		controller: 'FrontpageController'
+  		controller: 'Ctrl'
   	});
 
   $urlRouterProvider.otherwise('/');

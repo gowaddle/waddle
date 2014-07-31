@@ -1,7 +1,4 @@
-'use strict';
-var angular = require('angular');
-
-module.exports = angular.modules('waddle.directives', [])
+angular.module('waddle.directives', [])
 .directive('myThing', function () {
 	return {
 		restrict: 'E',
