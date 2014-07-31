@@ -1,23 +1,18 @@
 var angular = require('angular');
-angular.module('app', [])
+angular.module('waddle', [
+	'waddle.controllers',
+	'waddle.directives'
+])
 
-.controller('Ctrl', function ($scope) {
-	$scope.data = {name: 'yooooo'};
+.run()
+
+.config(function ($stateProvider, $urlRouterProvider) {
+  $stateProvider
+  	.state('frontpage', {
+  		url: '/',
+  		templateUrl: 'pages/frontpage/frontpage.html'
+  		controller: 'FrontpageController'
+  	});
+
+  $urlProvider.otherwise('/')
 })
-
-.directive('myThing', function () {
-	return {
-		restrict: 'E',
-		template: '<div><input><button ng-click="change()">change</button></div>',
-		scope: {
-			things: '='
-		},
-		link: function (scope) {
-			scope.change = function () {
-				scope.things.name = 'something';
-			};
-		}
-	};
-});
-
-

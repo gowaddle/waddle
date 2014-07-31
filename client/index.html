@@ -1,31 +1,12 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html ng-app='waddle'>
   <head>
     <meta charset="utf-8" />
     <title>Waddle</title>
-    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
   </head>
   <body>
-    the ng-view directive is where our templates will be loaded into when navigated to
-    <div ng-view></div>
-
-    <script>
-      document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')
-    </script>
+    <div ui-view></div>
     <script src="dist/bundle.js"></script>
   </body>
-</html>
- -->
-
- <html>
-<head>
-  <title></title>
-</head>
-<body ng-app='app'>
-  <div ng-controller='Ctrl'>
-    <h1>{{ data.name }}</h1>
-    <my-thing things='data'></my-thing>
-  </div>
-<script src="dist/bundle.js"></script>
-</body>
 </html>
