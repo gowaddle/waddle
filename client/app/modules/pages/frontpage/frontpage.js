@@ -1,4 +1,1 @@
-angular.module('waddle.frontpage', [])
-  .controller('FrontpageController', function () {
-
-  });
+angular.module('waddle.frontpage', []);
