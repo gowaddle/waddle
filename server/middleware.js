@@ -10,5 +10,8 @@ module.exports = function (app, express) {
 	app.get('/', function (req, res) {
 		res.sendfile(path.join(__dirname, '../client/index.html'));
 	});
+	app.get('/dist/main.js', function (req, res) {
+		res.sendfile(path.join(__dirname, '../client/dist/main.js'));
+	});
 	console.log('middleware');
 }

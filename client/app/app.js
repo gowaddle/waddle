@@ -1,18 +1,23 @@
+'use strict';
 var angular = require('angular');
+
 angular.module('waddle', [
-	'waddle.controllers',
-	'waddle.directives'
+	require('./controllers.js'),
+	require('./directives.js'),
+	'ui.router'
 ])
 
 .run()
 
-.config(function ($stateProvider, $urlRouterProvider) {
-  $stateProvider
-  	.state('frontpage', {
+.config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
+	$stateProvider
+  .state('frontpage', {
   		url: '/',
-  		templateUrl: 'pages/frontpage/frontpage.html'
+  		templateUrl: 'pages/frontpage/frontpage.html',
   		controller: 'FrontpageController'
   	});
 
-  $urlProvider.otherwise('/')
-})
+  $urlRouterProvider.otherwise('/');
+
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file):/);
+});
