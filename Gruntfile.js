@@ -11,14 +11,26 @@ module.exports = function (grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 
 		browserify: {
+			lib: {
+				src: [],
+				dest: 'client/dist/lib.js',
+				options: {
+					require: ['angular'],
+				}
+			},
 			js: {
 				src: ['client/**/*.js'],
 				dest: 'client/dist/bundle.js',
 				options: {
-					require: ['angular'],
+					external: ['angular'],
 					ignore: ['client/dist/*.js']
 				}
 			}
+
+		},
+
+		concat: {
+			'client/dist/main.js': ['client/dist/lib.js', 'client/dist/bundle.js']
 		},
 		
 		jshint: {
@@ -37,7 +49,7 @@ module.exports = function (grunt) {
 		watch: {
 			browserification: {
 			  files: ['client/**/*.js'],
-			  tasks: ['browserify']
+			  tasks: ['browserify', 'concat']
 			},
 			linting: {
 				files: allFiles,
@@ -50,6 +62,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-nodemon');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	grunt.registerTask('dev', function () {
 		var nodemon = grunt.util.spawn({
@@ -61,7 +74,7 @@ module.exports = function (grunt) {
 		nodemon.stdout.pipe(process.stdout);
 		nodemon.stderr.pipe(process.stderr);
 
-		grunt.task.run(['watch']);
+		grunt.task.run(['browserify', 'concat', 'jshint', 'watch']);
 	});
 
 };

@@ -1,23 +1,23 @@
+'use strict';
 var angular = require('angular');
-angular.module('app', [])
 
-.controller('Ctrl', function ($scope) {
-	$scope.data = {name: 'yooooo'};
-})
+angular.module('waddle', [
+	require('./controllers.js'),
+	require('./directives.js'),
+	'ui.router'
+])
 
-.directive('myThing', function () {
-	return {
-		restrict: 'E',
-		template: '<div><input><button ng-click="change()">change</button></div>',
-		scope: {
-			things: '='
-		},
-		link: function (scope) {
-			scope.change = function () {
-				scope.things.name = 'something';
-			};
-		}
-	};
+.run()
+
+.config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
+	$stateProvider
+  .state('frontpage', {
+  		url: '/',
+  		templateUrl: 'pages/frontpage/frontpage.html',
+  		controller: 'FrontpageController'
+  	});
+
+  $urlRouterProvider.otherwise('/');
+
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file):/);
 });
-
-
