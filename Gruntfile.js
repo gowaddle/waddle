@@ -10,27 +10,11 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		browserify: {
-			lib: {
-				src: [],
-				dest: 'client/dist/lib.js',
-				options: {
-					require: ['angular'],
-				}
-			},
-			js: {
-				src: ['client/**/*.js'],
-				dest: 'client/dist/bundle.js',
-				options: {
-					external: ['angular'],
-					ignore: ['client/dist/*.js']
-				}
-			}
-
-		},
-
 		concat: {
-			'client/dist/main.js': ['client/dist/lib.js', 'client/dist/bundle.js']
+			client: {
+				dest: 'client/dist/app.js',
+				src: ['client/app/app.js', 'client/app/modules/**/*.js']
+			},
 		},
 		
 		jshint: {
@@ -47,9 +31,9 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
-			browserification: {
+			build: {
 			  files: ['client/**/*.js'],
-			  tasks: ['browserify', 'concat']
+			  tasks: ['concat:client']
 			},
 			linting: {
 				files: allFiles,
@@ -74,7 +58,7 @@ module.exports = function (grunt) {
 		nodemon.stdout.pipe(process.stdout);
 		nodemon.stderr.pipe(process.stderr);
 
-		grunt.task.run(['browserify', 'concat', 'jshint', 'watch']);
+		grunt.task.run(['concat:client', 'jshint', 'watch']);
 	});
 
 };
