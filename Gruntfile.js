@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 		watch: {
 			build: {
 			  files: ['client/**/*.js', 'client/styles/*.styl'],
-			  tasks: ['concat:client']
+			  tasks: ['concat:client', 'stylus']
 			},
 
 			linting: {
