@@ -24,7 +24,9 @@
     "karma-jasmine": "^0.1.5",
     "mocha": "^1.20.1",
     "morgan": "~1.2.2",
-    "neo4j": "^1.1.0"
+    "neo4j": "^1.1.0",
+    "stylus": "~0.47.3",
+    "grunt-contrib-clean": "~0.6.0"
   },
   "devDependencies": {
     "karma": "~0.12.19",
@@ -33,6 +35,7 @@
     "karma-nested-reporter": "^0.1.1",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-browserify": "~2.1.4",
-    "grunt-nodemon": "~0.2.1"
+    "grunt-nodemon": "~0.2.1",
+    "grunt-contrib-stylus": "~0.18.0"
   }
 }
