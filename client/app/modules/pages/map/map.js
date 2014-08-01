@@ -1,5 +1,7 @@
 angular.module('waddle.map', [])
   .controller('MapController', function ($scope, $state, Auth, FacebookMapData) {
+  	
+  	L.mapbox.accessToken = globals.MAPBOX_ACCESS_TOKEN;
 
     $scope.logout = Auth.logout;
 
@@ -10,7 +12,7 @@ angular.module('waddle.map', [])
 	    }).setView([37.6, -122.45], 3);
 
 	  	$scope.facebookPlaces = L.layerGroup().addTo($scope.map);
-	  	
+
 	   	$scope.getMapData = function() {
 			  FacebookMapData.getFacebookMapData().then(function(data){
 			  	console.log("we got data:", data)
