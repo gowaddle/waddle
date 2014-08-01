@@ -6,3 +6,18 @@
   width: 100%;
   z-index: -1;
 }
+
+#fbsignin {
+  background-color: #E80500;
+  border-radius: 5px;
+  opacity: 0;
+  position: fixed;
+  top: 386px;
+  left: 572px;
+  width: 148px;
+  height: 40px;
+}
+
+#fbsignin:hover {
+  opacity: 0.2;
+}
