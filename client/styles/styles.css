@@ -1,0 +1,8 @@
+#signin {
+  position: absolute;
+  background-image: url('https://s3-us-west-2.amazonaws.com/waddle/waddleloginnotwitter.png');
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: -1;
+}

@@ -7,7 +7,6 @@
  * @author Christophe Coenraets @ccoenraets
  * @version 0.4
  */
-var globals = require('globals.js');
 var openFB = (function () {
 
     var FB_LOGIN_URL = 'https://www.facebook.com/dialog/oauth',
