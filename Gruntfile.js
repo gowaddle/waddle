@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 			all: allFiles,
 			options: {
 				jshintrc: '.jshintrc',
-				ignores: ['client/dist/*.js'],
+				ignores: ['client/dist/*.js', 'client/utils/openfb.js'],
 				force: true
 			}
 		},
