@@ -4,13 +4,15 @@ angular.module('waddle.frontpage', [])
 
   openFB.getLoginStatus(function(response){
   	if (response.status === 'connected'){
-  	  console.log('connected')
+  	  console.log('connected');
+      $state.go('map');
   	} else {
   	  console.log('not connected')
   	  $scope.login = function(){
   	  	openFB.login(function(response){
           if(response.status === 'connected') {
             openFB.api({path: '/me', success: function(data){
+              console.log(data)
               window.localStorage.setItem('FBuserID', data.id);
               window.localStorage.setItem('FBuserName', data.name);
               window.localStorage.setItem('FBuserLocale', data.locale);
@@ -18,7 +20,7 @@ angular.module('waddle.frontpage', [])
           } else {
             alert('Facebook login failed: ' + response.error);
           }
-  	  	}, {scope: 'user_friends'});
+  	  	}, {scope: 'user_friends, user_tagged_places'});
   	  }
   	}
   })
