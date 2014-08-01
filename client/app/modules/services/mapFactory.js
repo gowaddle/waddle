@@ -11,7 +11,7 @@ angular.module('waddle.services.mapFactory', [])
         console.log(data);
         deferred.resolve(data);
       },
-      error: function(err) {console.log(err);}
+      error: deferred.reject
     });
     return deferred.promise;
 	}
