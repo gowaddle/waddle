@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		concat: {
 			client: {
 				dest: 'client/dist/app.js',
-				src: ['client/app/app.js', 'client/app/modules/**/*.js']
+				src: ['client/utils/*.js', 'client/app/app.js', 'client/app/modules/**/*.js']
 			},
 		},
 		
