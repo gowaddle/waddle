@@ -1,6 +1,6 @@
 angular.module('waddle.map', [])
   .controller('MapController', function ($scope, $state, Auth, FacebookMapData) {
-  	
+
   	L.mapbox.accessToken = globals.MAPBOX_ACCESS_TOKEN;
 
     $scope.logout = Auth.logout;
@@ -8,7 +8,7 @@ angular.module('waddle.map', [])
   	Auth.checkLogin().then(function(){
 	  	$scope.map = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
 	      attributionControl: false,
-	      zoomControl: false
+	      worldCopyJump: true
 	    }).setView([37.6, -122.45], 3);
 
 	  	$scope.facebookPlaces = L.layerGroup().addTo($scope.map);
