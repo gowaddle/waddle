@@ -1,5 +1,5 @@
-var userController;
+var userController = require('./userController.js');
 
 module.exports = function(app){
-	//app.post('/create', userController.makeUser)
+	app.post('/userdata', userController.updateUser);
 };
