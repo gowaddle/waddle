@@ -1,5 +1,6 @@
 angular.module('waddle.map', [])
   .controller('MapController', function ($scope, $state, Auth) {
+    $scope.logout = Auth.logout;
   	Auth.checkLogin().then(function(){
 	  	$scope.map = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
 	      attributionControl: false,
