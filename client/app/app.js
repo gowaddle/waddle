@@ -3,6 +3,7 @@
 angular.module('waddle', [
   'waddle.controllers',
 	'waddle.directives',
+  'waddle.services',
 	'ui.router'
 ])
 
