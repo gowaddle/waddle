@@ -13,7 +13,12 @@ angular.module('waddle', [
       url: '/',
       templateUrl: '../app/modules/pages/frontpage/frontpage.html',
       controller: 'FrontpageController'
-    });
+    })
+    .state('map', {
+      url: '/map',
+      templateUrl: '../app/modules/pages/map/map.html',
+      controller: 'MapController'
+    })
 
   $urlRouterProvider.otherwise('/');
 
