@@ -1,1 +1,1 @@
-angular.module('waddle.services', ['waddle.services.auth'])
+angular.module('waddle.services', ['waddle.services.auth']);
