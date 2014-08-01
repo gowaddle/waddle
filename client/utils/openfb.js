@@ -15,7 +15,7 @@ var openFB = (function () {
         // By default we store fbtoken in sessionStorage. This can be overridden in init()
         tokenStore = window.sessionStorage,
 
-        fbAppId = globals.FACEBOOK_APP_ID;
+        fbAppId = globals.FACEBOOK_APP_ID,
 
         context = window.location.pathname.substring(0, window.location.pathname.indexOf("/",2)),
 
