@@ -20,9 +20,11 @@ angular.module('waddle.services.auth', [])
 
   var logout = function () {
     console.log('logout');
-    openFB.logout(function() {
-      $state.go('frontpage');
-    });
+
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+
+    $state.go('frontpage');
   };
 
   return {
