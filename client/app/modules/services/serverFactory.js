@@ -17,7 +17,7 @@ angular.module('waddle.services.serverFactory', [])
   };
 
   return {
-  	addUser: addUser,
-  	getUserData: getUserData
+    addUser: addUser,
+    getUserData: getUserData
   };
 });
