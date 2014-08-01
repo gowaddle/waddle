@@ -7,7 +7,7 @@ var allFiles = [
 ];
 
 module.exports = function (grunt) {
-	grunt.initConfig({
+	grunt.initConfig({ 
 		pkg: grunt.file.readJSON('package.json'),
 
 		concat: {
@@ -25,28 +25,44 @@ module.exports = function (grunt) {
 				force: true
 			}
 		},
+
 		nodemon: {
 			dev: {
 				script: 'server/server.js'
 			}
 		},
+
 		watch: {
 			build: {
-			  files: ['client/**/*.js'],
+			  files: ['client/**/*.js', 'client/styles/*.styl'],
 			  tasks: ['concat:client']
 			},
+
 			linting: {
 				files: allFiles,
 				tasks: ['jshint']
 			}
-		}
+		},
+
+		clean: {
+				build: ['client/dist/*.js', '!client/dist/app.js']
+		},
+
+		stylus: {
+      compile: {
+		    files: {
+		      'client/dist/style.css': 'client/styles/styles.styl' // 1:1 compile
+		    }
+	    }
+	  }
 	});
 
-	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-nodemon');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-stylus');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 
 	grunt.registerTask('dev', function () {
 		var nodemon = grunt.util.spawn({
@@ -58,7 +74,7 @@ module.exports = function (grunt) {
 		nodemon.stdout.pipe(process.stdout);
 		nodemon.stderr.pipe(process.stderr);
 
-		grunt.task.run(['concat:client', 'jshint', 'watch']);
+		grunt.task.run(['clean', 'concat:client', 'stylus', 'jshint', 'watch']);
 	});
 
 };
