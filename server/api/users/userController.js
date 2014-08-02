@@ -9,9 +9,11 @@ var userController = {
     .then(function(node) {
       console.log('successful user creation!!!!');
       console.log(node.node._data.data);
+      res.status(204).end();
     })
     .catch(function(err) {
       console.log(err);
+      res.status(500).end();
     });
   }
 }
