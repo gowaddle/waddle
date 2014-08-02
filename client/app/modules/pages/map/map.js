@@ -6,41 +6,48 @@ angular.module('waddle.map', [])
     $scope.logout = Auth.logout;
 
   	Auth.checkLogin().then(function(){
-	  	$scope.map = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
+
+
+	  	var map = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
 	      attributionControl: false,
 	      zoomControl: false,
 	      worldCopyJump: true
 	    }).setView([37.6, -122.45], 3);
 
-	  	$scope.facebookPlaces = L.layerGroup().addTo($scope.map);
+	  	var facebookPlaces = L.layerGroup().addTo(map);
+  
 
-	   	$scope.getMapData = function() {
-			  FacebookMapData.getFacebookMapData().then(function(data){
+	  	 var makeMarker = function(placeName, latLng) {
+	      L.marker(latLng, {
+		      icon: L.mapbox.marker.icon({
+	          'marker-color': '1087bf',
+	          'marker-size': 'large',
+	          'marker-symbol': 'circle-stroked'
+	        })
+		    })
+		    .bindPopup('<h2>' + placeName + '</h2>')
+		    .addTo(facebookPlaces);
+	    };
+
+	   	var getMapData = function() {
+			  FacebookMapData.getFacebookMapData()
+			  .then(function(data){
 			  	console.log("we got data:", data)
 			  	var fbData = data.data;
 			  	for(var i = 0; i < fbData.length; i++) {
 			  		var checkin = fbData[i].place;
 			  		var checkinLatLng = L.latLng(checkin.location.latitude, checkin.location.longitude);
-			  		$scope.makeMarker(checkin.name, checkinLatLng)
+			  		makeMarker(checkin.name, checkinLatLng)
 			  	}
+			  	$scope.fbData = fbData;
 			  })
 	  	};
 
-	    $scope.getMapData();
+	    getMapData();
+	    
 	  });
 
 
-  	$scope.makeMarker = function(placeName, latLng) {
-      L.marker(latLng, {
-	      icon: L.mapbox.marker.icon({
-          'marker-color': '1087bf',
-          'marker-size': 'large',
-          'marker-symbol': 'circle-stroked'
-        })
-	    })
-	    .bindPopup('<h2>' + placeName + '</h2>')
-	    .addTo($scope.facebookPlaces);
-    };
   });
 
 
