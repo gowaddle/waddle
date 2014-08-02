@@ -1,4 +1,2 @@
-angular.module('waddle.controllers', ['waddle.frontpage', 'waddle.map'])
-	.controller('Ctrl', function ($scope) {
-		$scope.data = {name: 'yooooo'};
-	});
+//all of our controllers are injected into waddle.controllers
+angular.module('waddle.controllers', ['waddle.frontpage', 'waddle.map', 'waddle.feed']);

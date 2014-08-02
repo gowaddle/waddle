@@ -16,9 +16,18 @@ angular.module('waddle', [
     })
     .state('map', {
       url: '/map',
-      templateUrl: '../app/modules/pages/map/map.html',
-      controller: 'MapController'
-    })
+      views: {
+        '': {
+          templateUrl: '../app/modules/pages/map/map.html',
+          controller: 'MapController'
+        },
+        'feed@map': {
+          templateUrl: '../app/modules/pages/map/feed.html', 
+          controller: 'FeedController'
+        }
+
+      }
+    });
 
   $urlRouterProvider.otherwise('/');
 
