@@ -5,7 +5,9 @@
   "main": "server.js",
   "repository": "",
   "license": "Proprietary",
-  "scripts": {},
+  "scripts": {
+    "prestart": "grunt build"
+    },
   "dependencies": {
     "angular": "~1.2.19",
     "angular-ui-router": "~0.2.10",
