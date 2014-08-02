@@ -11,7 +11,7 @@ angular.module('waddle.services.auth', [])
       } else {
         console.log('not connected');
         $state.go('frontpage');
-        deferred.reject('not connected');
+        deferred.reject(new Error('not connected'));
       }
     });
 
