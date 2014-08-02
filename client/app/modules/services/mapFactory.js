@@ -4,14 +4,16 @@ angular.module('waddle.services.mapFactory', [])
   
 	var getFacebookMapData = function(){
 		var deferred = $q.defer();
+
 		openFB.api({
       path: '/me/tagged_places',
-      params: {redirect:false},
-      success: function(data) {
-        deferred.resolve(data);
+      params: {
+        redirect:false
       },
+      success: deferred.resolve,
       error: deferred.reject
     });
+
     return deferred.promise;
 	}
 
