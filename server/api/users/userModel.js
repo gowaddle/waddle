@@ -1,7 +1,7 @@
 var neo4j = require('neo4j');
 var Q = require('q');
 
-var db = new neo4j.GraphDatabase('http://localhost:7474');
+var db = new neo4j.GraphDatabase(process.env['GRAPHENEDB_URL'] || 'http://localhost:7474');
 
 var User = function (node){
 	this.node = node;
