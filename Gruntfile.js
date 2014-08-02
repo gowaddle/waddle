@@ -35,13 +35,13 @@ module.exports = function (grunt) {
 		watch: {
 			build: {
 			  files: ['client/**/*.js', 'client/styles/*.styl'],
-			  tasks: ['concat:client']
+			  tasks: ['concat:client', 'stylus']
 			},
 
-			linting: {
+			/*linting: {
 				files: allFiles,
 				tasks: ['jshint']
-			}
+			}*/
 		},
 
 		clean: {
@@ -74,7 +74,8 @@ module.exports = function (grunt) {
 		nodemon.stdout.pipe(process.stdout);
 		nodemon.stderr.pipe(process.stderr);
 
-		grunt.task.run(['clean', 'concat:client', 'stylus', 'jshint', 'watch']);
+		//linting removed
+		grunt.task.run(['clean', 'concat:client', 'stylus', 'watch']);
 	});
 
 };
