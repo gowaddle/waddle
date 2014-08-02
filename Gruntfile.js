@@ -78,4 +78,8 @@ module.exports = function (grunt) {
 		grunt.task.run(['clean', 'concat:client', 'stylus', 'watch']);
 	});
 
+	grunt.registerTask('build', function () {
+		grunt.task.run(['clean', 'concat:client', 'stylus']);
+	})
+
 };
