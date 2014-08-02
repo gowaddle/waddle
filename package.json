@@ -6,7 +6,7 @@
   "repository": "",
   "license": "Proprietary",
   "scripts": {
-    "prestart": "grunt build"
+    "postinstall": "grunt build"
     },
   "dependencies": {
     "angular": "~1.2.19",
