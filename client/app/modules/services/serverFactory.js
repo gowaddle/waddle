@@ -1,11 +1,11 @@
 angular.module('waddle.services.serverFactory', [])  
 
 .factory('UserRequests', function($http){
-  var addUser = function(data){
+  var sendUserData = function(data){
     return $http({
       method: 'POST',
       data: data,
-      url: '/api/users/' + user + '/adduser'
+      url: '/api/users/userdata'
     });
   };
 
@@ -17,7 +17,7 @@ angular.module('waddle.services.serverFactory', [])
   };
 
   return {
-    addUser: addUser,
+    sendUserData: sendUserData,
     getUserData: getUserData
   };
 });
