@@ -1,5 +1,7 @@
 angular.module('waddle.map', [])
   .controller('MapController', function ($scope, $state, Auth, FacebookMapData) {
+
+    console.log('mapcontroller');
   	
   	L.mapbox.accessToken = globals.MAPBOX_ACCESS_TOKEN;
 

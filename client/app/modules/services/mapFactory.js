@@ -8,7 +8,6 @@ angular.module('waddle.services.mapFactory', [])
       path: '/me/tagged_places',
       params: {redirect:false},
       success: function(data) {
-        console.log(data);
         deferred.resolve(data);
       },
       error: deferred.reject

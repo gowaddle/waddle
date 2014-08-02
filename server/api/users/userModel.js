@@ -37,13 +37,11 @@ User.create = function (data) {
   var user = new User(node);
 
   var query = [
-    'CREATE (user:User {data})',
+    'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
     'RETURN user',
   ].join('\n');
 
-  var params = {
-    data: data
-  };
+  var params = data;
 
   var deferred = Q.defer();
 
