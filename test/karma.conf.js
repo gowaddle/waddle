@@ -20,14 +20,20 @@ module.exports = function(config){
 
     plugins : [
             'karma-phantomjs-launcher',
-            'karma-jasmine'
+            'karma-jasmine',
+            'karma-coverage'
             ],
 
-    junitReporter : {
-      outputFile: 'test_out/unit.xml',
-      suite: 'unit'
+    preprocessors: {
+      'client/dist/*.js': ['coverage']
+    },
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/'
     },
 
+    reporters: ['progress', 'coverage'],
+    
     colors: true
 
   });
