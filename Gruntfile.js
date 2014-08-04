@@ -63,7 +63,8 @@ module.exports = function (grunt) {
 	  		},
 	  		src: ['test/unit/serverUnitTests.js']
 	  	}
-	  }
+	  },
+
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
