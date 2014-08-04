@@ -1,6 +1,6 @@
 angular.module('waddle.frontpage', [])
 
-.controller('FrontpageController', function ($scope, $state, $window, UserRequests) {
+.controller('FrontpageController', function ($scope, $state, UserRequests) {
   openFB.getLoginStatus(function (response){
   	if (response.status === 'connected'){
   	  console.log('connected');

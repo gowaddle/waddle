@@ -75,7 +75,7 @@ module.exports = function (grunt) {
 		nodemon.stderr.pipe(process.stderr);
 
 		//linting removed
-		grunt.task.run(['clean', 'concat:client', 'stylus']);
+		grunt.task.run(['clean', 'concat:client', 'stylus', 'watch']);
 	});
 
 	grunt.registerTask('build', function () {
