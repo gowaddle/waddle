@@ -13,7 +13,7 @@ User.prototype.id = function(){
 
 User.prototype.setName = function(name){
 	this.node.data['name'] = name;
-  this.save();
+  return this.save();
 };
 
 User.prototype.getName = function(){
@@ -22,7 +22,7 @@ User.prototype.getName = function(){
 
 User.prototype.setProperty = function(property, value) {
   this.node.data[property] = value;
-  this.save();
+  return this.save();
 };
 
 User.prototype.getProperty = function(property) {
@@ -35,7 +35,7 @@ User.prototype.save = function (){
 	this.node.save(function (err, node){
 		if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(node);
+      deferred.resolve(new User(node));
     }
 	});
 
@@ -44,7 +44,6 @@ User.prototype.save = function (){
 
 User.createOrFind = function (data) {
   var node = db.createNode(data);
-  var user = new User(node);
 
   var query = [
     'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
@@ -58,8 +57,7 @@ User.createOrFind = function (data) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      var user = new User(results[0]['user']);
-      deferred.resolve(user);
+      deferred.resolve(new User(results[0]['user']));
     }
   });
 

@@ -29,5 +29,8 @@ node_modules/
 bower_components/
 coverage/
 
-#globals
+# globals
 globals.js
+
+# Geo data
+natural_earth.gso.json
