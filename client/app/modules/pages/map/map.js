@@ -15,9 +15,11 @@ angular.module('waddle.map', [])
 
     	var facebookPlaces = L.layerGroup().addTo(configuredMap);
     	var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
+      var aggregatedMarkers = new L.MarkerClusterGroup();
+      configuredMap.addLayer(aggregatedMarkers);
     
     	var makeMarker = function (placeName, latLng) {
-        L.marker(latLng, {
+        var marker = L.marker(latLng, {
   	      icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
             'marker-size': 'large',
@@ -26,6 +28,8 @@ angular.module('waddle.map', [])
   	    })
   	    .bindPopup('<h2>' + placeName + '</h2>')
   	    .addTo(facebookPlaces);
+
+        aggregatedMarkers.addLayer(marker);
       };
     	console.log(configuredMap.getZoom());
 
