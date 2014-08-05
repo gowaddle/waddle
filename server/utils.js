@@ -34,4 +34,20 @@ utils.exchangeFBAccessToken = function (fbToken) {
   return deferred.promise;
 };
 
+// utils.exchangeFoursquareUserCode = function (fsqCode) {
+//   var deferred = Q.defer();
+//   var queryPath = 'https://foursquare.com/oauth2/access_token
+//     ?client_id=' + process.env.WADDLE_FOURSQUARE_CLIENT_ID +
+//     '&client_secret=' + process.env.WADDLE_FOURSQUARE_CLIENT_SECRET +
+//     '&grant_type=authorization_code
+//     &redirect_uri=' + YOUR_REGISTERED_REDIRECT_URI +
+//     '&code=' + CODE
+
+//   var query = {
+
+//   }
+
+//   https.get()
+// }
+
 module.exports = utils;
