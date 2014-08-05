@@ -11,16 +11,18 @@ User.prototype.id = function(){
 	return this.node.id;
 };
 
-User.prototype.getName = function(){
-	return this.node.data['name'];
-};
-
 User.prototype.setName = function(name){
 	this.node.data['name'] = name;
+  this.save();
+};
+
+User.prototype.getName = function(){
+  return this.node.data['name'];
 };
 
 User.prototype.setProperty = function(property, value) {
   this.node.data[property] = value;
+  this.save();
 };
 
 User.prototype.getProperty = function(property) {
