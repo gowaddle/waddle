@@ -1,7 +1,7 @@
 var neo4j = require('neo4j');
 var Q = require('q');
 
-var db = new neo4j.GraphDatabase(process.env['GRAPHENEDB_URL'] || 'http://localhost:7474');
+var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
 
 var User = function (node){
 	this.node = node;
@@ -11,12 +11,20 @@ User.prototype.id = function(){
 	return this.node.id;
 };
 
-User.prototype.getName= function(){
+User.prototype.getName = function(){
 	return this.node.data['name'];
 };
 
-User.prototype.setName= function(name){
+User.prototype.setName = function(name){
 	this.node.data['name'] = name;
+};
+
+User.prototype.setProperty = function(property, value) {
+  this.node.data[property] = value;
+};
+
+User.prototype.getProperty = function(property) {
+  return this.node.data[property];
 };
 
 User.prototype.save = function (){
@@ -29,10 +37,10 @@ User.prototype.save = function (){
     }
 	});
 
-  return deferred.promise();
+  return deferred.promise;
 };
 
-User.create = function (data) {
+User.createOrFind = function (data) {
   var node = db.createNode(data);
   var user = new User(node);
 
