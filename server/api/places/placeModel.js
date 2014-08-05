@@ -25,7 +25,7 @@ Place.prototype.save = function (){
     }
   });
 
-  return deferred.promise();
+  return deferred.promise;
 };
 
 Place.create = function(data){
@@ -49,5 +49,5 @@ Place.create = function(data){
     }
   });
 
-  return deferred.promise()
+  return deferred.promise
 }
