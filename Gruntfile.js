@@ -54,7 +54,17 @@ module.exports = function (grunt) {
 		      'client/dist/style.css': 'client/styles/styles.styl' // 1:1 compile
 		    }
 	    }
-	  }
+	  },
+
+	  mochaTest: {
+	  	test: {
+	  		options: {
+	  			reporter: 'spec'
+	  		},
+	  		src: ['test/unit/serverUnitTests.js']
+	  	}
+	  },
+
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -63,6 +73,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-stylus');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-mocha-test');
 
 	grunt.registerTask('dev', function () {
 		var nodemon = grunt.util.spawn({
@@ -75,11 +86,11 @@ module.exports = function (grunt) {
 		nodemon.stderr.pipe(process.stderr);
 
 		//linting removed
-		grunt.task.run(['clean', 'concat:client', 'stylus']);
+		grunt.task.run(['clean', 'concat:client', 'stylus', 'watch']);
 	});
 
-	grunt.registerTask('build', function () {
-		grunt.task.run(['clean', 'concat:client', 'stylus']);
-	})
+	grunt.registerTask('build', ['clean', 'concat:client', 'stylus']);
+
+	grunt.registerTask('test', ['mochaTest']);
 
 };
