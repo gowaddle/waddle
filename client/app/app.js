@@ -14,6 +14,11 @@ angular.module('waddle', [
       templateUrl: '../app/modules/pages/frontpage/frontpage.html',
       controller: 'FrontpageController'
     })
+    .state('providers', {
+      url: '/providers',
+      templateUrl: '../app/modules/pages/providers/providers.html',
+      controller: 'ProvidersController'
+    })
     .state('map', {
       url: '/map',
       views: {
