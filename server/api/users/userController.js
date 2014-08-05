@@ -8,14 +8,20 @@ var userController = {
     var user;
 
     User.createOrFind(userData)
-    .then(function(u) { 
+    .then(function (u) { 
       user = u;
     })
-    .then(function() {
+    .then(function () {
       return utils.exchangeFBAccessToken(userData.fbToken);
     })
-    .then(function(d) {
-      user.setProperty('fbToken', d.access_token);
+    .then(function (d) {
+      return user.setProperty('fbToken', d.access_token);
+    })
+    .then(function (user) {
+      return utils.getFBTaggedPlaces(user);
+    })
+    .then(function (d) {
+      console.log(d);
       res.status(204).end();
     })
     .catch(function(err) {
