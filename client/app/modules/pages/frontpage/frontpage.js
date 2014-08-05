@@ -23,7 +23,7 @@ angular.module('waddle.frontpage', [])
 
     UserRequests.sendUserData(userData)
     .then(function(){
-        //enterSite() should occur here when we end up getting data from the database (and show a waddling penguin meanwhile)
+        //$state.go('map') should occur here when we end up getting data from the database (and show a waddling penguin meanwhile)
     });
 
     $state.go('map');
@@ -38,12 +38,12 @@ angular.module('waddle.frontpage', [])
 
   	  $scope.login = function(){
   	  	openFB.login(function (response) {
-        if(response.status === 'connected') {
-          console.log('connected');
-          enterSiteWhenConnected(response.authResponse.token);
-        } else {
-          alert('Facebook login failed: ' + response.error);
-        }
+          if(response.status === 'connected') {
+            console.log('connected');
+            enterSiteWhenConnected(response.authResponse.token);
+          } else {
+            alert('Facebook login failed: ' + response.error);
+          }
         }, {
           scope: 'user_friends, user_tagged_places'
         });
