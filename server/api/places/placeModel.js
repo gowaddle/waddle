@@ -7,12 +7,13 @@ var Place = function(node){
   this.node = node;
 }
 
-Place.prototype.getName= function(){
-  return this.node.data['name'];
+Place.prototype.setProperty = function(property, value) {
+  this.node.data[property] = value;
+  return this.save();
 };
 
-Place.prototype.setName= function(name){
-  this.node.data['name'] = name;
+Place.prototype.getProperty = function(property) {
+  return this.node.data[property];
 };
 
 Place.prototype.save = function (){
@@ -45,7 +46,7 @@ Place.create = function(data){
     if (err) { deferred.reject(err); }
     else {
       var place = new Place(results[0]['place']);
-      deferred.resolve(user);
+      deferred.resolve(place);
     }
   });
 

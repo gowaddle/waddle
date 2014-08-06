@@ -7,13 +7,13 @@ var Country = function(node){
   this.node = node;
 }
 
-Country.create = function(data){
+Country.importCSV = function(data){
   node = db.createNode(data);
   var country = new Country(node);
 
   var query = [
-    'MERGE (country:Country {name: {name}})',
-    'RETURN country',
+    'LOAD CSV WITH HEADERS FROM "http://docs.neo4j.org/chunked/2.1.3/csv/import/persons.csv" AS csvLine',
+    'CREATE (p:Person { id: toInt(csvLine.id), name: csvLine.name })',
   ].join('\n');
 
   var params = data;
