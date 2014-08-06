@@ -8,12 +8,16 @@ var utils = {};
 
 utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   var deferred = Q.defer();
-  var queryPath = 'https://foursquare.com/oauth2/access_token' +
-    '?client_id=' + process.env.WADDLE_FOURSQUARE_CLIENT_ID +
-    '&client_secret=' + process.env.WADDLE_FOURSQUARE_CLIENT_SECRET +
-    '&grant_type=authorization_code' +
-    '&redirect_uri=http://localhost:8080/fsqredirect' +
-    '&code=' + fsqCode;
+
+  var query = {
+    client_id: process.env.WADDLE_FOURSQUARE_CLIENT_ID,
+    client_secret: process.env.WADDLE_FOURSQUARE_CLIENT_SECRET,
+    grant_type: 'authorization_code',
+    redirect_uri: 'http://localhost:8080/fsqredirect',
+    code: fsqCode
+  };
+
+  var queryPath = 'https://foursquare.com/oauth2/access_token?' + qs.stringify(query);
 
   https.get(queryPath, function (res) {
     var data = '';
