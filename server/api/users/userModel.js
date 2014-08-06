@@ -35,7 +35,6 @@ User.prototype.save = function (){
 
 User.createUniqueUser = function (data) {
   var node = db.createNode(data);
-  console.log(data);
 
   var query = [
     'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
@@ -56,7 +55,29 @@ User.createUniqueUser = function (data) {
   return deferred.promise;
 };
 
-User.get = function (id) {
+User.find = function (data) {
+  var node = db.createNode(data);
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'RETURN user',
+  ].join('\n');
+
+  var params = data;
+
+  var deferred = Q.defer();
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+};
+
+/*User.get = function (id) {
   var deferred = Q.defer();
 
   db.getNodeById(id, function (err, node) {
@@ -67,7 +88,7 @@ User.get = function (id) {
   });
 
   return deferred.promise;
-};
+};*/
 
 User.getAll = function () {
 

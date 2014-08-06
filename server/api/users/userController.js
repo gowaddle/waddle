@@ -1,5 +1,5 @@
-var foursquareUtils = require('../../utils/foursquareutils.js');
-var facebookUtils = require('../../utils/facebookutils.js');
+var foursquareUtils = require('../../utils/foursquareUtils.js');
+var facebookUtils = require('../../utils/facebookUtils.js');
 var User = require('./userModel.js');
 
 var userController = {
@@ -10,7 +10,7 @@ var userController = {
     var userFBCheckinData;
     var userFBPhotoData;
 
-    User.createOrFind(userData)
+    User.createUniqueUser(userData)
     .then(function (userNode) { 
       user = userNode;
     })
@@ -51,7 +51,7 @@ var userController = {
     var userData = req.body;
     var user;
 
-    User.createOrFind(userData)
+    User.find(userData)
     .then(function (userNode) { 
       console.log("userNode: " + userNode);
       user = userNode;
