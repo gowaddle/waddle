@@ -14,7 +14,7 @@ angular.module('waddle.map', [])
       }).setView([37.6, -122.45], 3);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-      var aggregatedMarkers = new L.MarkerClusterGroup();
+      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false});
     	// var facebookPlaces = L.layerGroup().addTo(configuredMap);
       configuredMap.addLayer(aggregatedMarkers);
     

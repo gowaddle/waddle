@@ -39,7 +39,23 @@ var userController = {
       console.log(err);
       res.status(500).end();
     });
+  },
+
+  addFoursquareData: function (req, res) {
+
+    var userData = req.body;
+    var user;
+    console.log(userData);
+    User.createOrFind(userData)
+      .then(function (userNode) { 
+        user = userNode;
+        console.log(userNode);
+      });
   }
+
+
 }
+
+
 
 module.exports = userController;
