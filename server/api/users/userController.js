@@ -1,4 +1,5 @@
-var utils = require('../../utils.js');
+var foursquareUtils = require('../../utils/foursquareutils.js');
+var facebookUtils = require('../../utils/facebookutils.js');
 var User = require('./userModel.js');
 
 var userController = {
@@ -14,26 +15,26 @@ var userController = {
       user = userNode;
     })
     .then(function () {
-      return utils.exchangeFBAccessToken(userData.fbToken);
+      return facebookUtils.exchangeFBAccessToken(userData.fbToken);
     })
     .then(function (fbReqData) {
       return user.setProperty('fbToken', fbReqData.access_token);
     })
     .then(function (userNode) {
       user = userNode;
-      return utils.getFBTaggedPlaces(user);
+      return facebookUtils.getFBTaggedPlaces(user);
     })
     //start getting checkin specific data
     .then(function (fbCheckinData) {
       userFBCheckinData = fbCheckinData.data;
       var latitudeLongitude = fbCheckinData.data[0].place.location
-      return utils.getFBPictureInfo(user);
+      return facebookUtils.getFBPictureInfo(user);
     })
     .then(function (fbPhotoData) {
       console.log("currnt")
       console.log(fbPhotoData.data[0])
       userFBPhotoData = fbPhotoData.data;
-      return utils.integrateFBPhotosAndCheckins(userFBPhotoData, userFBCheckinData);
+      return facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
       //console.log(d);
@@ -49,17 +50,28 @@ var userController = {
 
     var userData = req.body;
     var user;
-    console.log(userData);
+
     User.createOrFind(userData)
-      .then(function (userNode) { 
-        user = userNode;
-        console.log(userNode);
-      });
+    .then(function (userNode) { 
+      console.log("userNode: " + userNode);
+      user = userNode;
+    })
+    .then(function () {
+      return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
+    })
+    .then(function (foursquareAccessToken) {
+      console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
+      return user.setProperty('fsqToken', foursquareAccessToken.access_token);
+    })
+    .then(function (d) {
+      console.log("data" + d);
+      res.status(204).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    })
   }
-
-
 }
-
-
 
 module.exports = userController;

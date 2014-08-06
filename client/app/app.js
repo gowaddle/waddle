@@ -7,7 +7,7 @@ angular.module('waddle', [
 	'ui.router'
 ])
 
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
   $stateProvider
     .state('frontpage', {
       url: '/',
@@ -39,5 +39,6 @@ angular.module('waddle', [
     });
 
   $urlRouterProvider.otherwise('/');
+  // $locationProvider.html5Mode(true);
 
 });
