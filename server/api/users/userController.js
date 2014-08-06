@@ -29,7 +29,7 @@ var userController = {
     })
     .then(function (fbPhotoData) {
       userFBPhotoData = fbPhotoData.data;
-      return utils.integrateFBPhotosAndCheckins(userFBPhotoData, userFBCheckinData);
+      return utils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
       console.log(d);

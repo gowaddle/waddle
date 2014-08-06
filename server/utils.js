@@ -118,8 +118,47 @@ utils.getFBPictureInfo = function (user) {
   return deferred.promise;
 };
 
-utils.integrateFBPhotosAndCheckins = function (photoData, checkinData) {
-  return photoData.concat(checkinData);
+utils.getFBPhotoMetadata = function (user, fbPhotoId) {
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
+
+  var deferred = Q.defer();
+
+  var query = {
+    access_token: fbToken
+  };
+
+  var queryPath = 'https://graph.facebook.com/v2.0/' + fbPhotoId + '?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      var photoMetadata = JSON.parse(data);
+      if (photoMetadata.place) {
+        deferred.resolve(photoMetadata);
+      } else {
+        deferred.resolve(null);
+      }
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+}
+
+utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
+  var photos = [];
+  for(var i = 0, photo; photo = photoData[i]; i++) {
+    var photoId = photo.id;
+    photos.push(utils.getFBPhotoMetadata(user, photoId));
+  }
+  return Q.all(photos);
 };
 
 module.exports = utils;
