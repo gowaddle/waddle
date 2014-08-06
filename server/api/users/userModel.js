@@ -46,7 +46,7 @@ User.createOrFind = function (data) {
   var node = db.createNode(data);
 
   var query = [
-    'MERGE (user:User {facebookID: {facebookID}})',
+    'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
     'RETURN user',
   ].join('\n');
 

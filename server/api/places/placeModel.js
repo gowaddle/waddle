@@ -34,7 +34,7 @@ Place.create = function(data){
   var place = new Place(node);
 
   var query = [
-    'MERGE (place:Place {name: {name}, xcoord: {xcoord}, ycoord: {ycoord}})',
+    'MERGE (place:Place {name: {name}, lat: {lat}, long: {long}, country: {country}})',
     'RETURN place',
   ].join('\n');
 

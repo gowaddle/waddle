@@ -33,7 +33,7 @@ Checkin.createOrFind = function (data) {
   var node = db.createNode(data);
 
   var query = [
-    'MERGE (checkin:Checkin {facebookID: {facebookID}, name: {name}})',
+    'MERGE (checkin:Checkin {pictures: {pictures}, likes: {likes}})',
     'RETURN checkin',
   ].join('\n');
 
