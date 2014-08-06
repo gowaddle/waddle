@@ -34,8 +34,24 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   return deferred.promise; 
 };
 
-utils.getFoursquareCheckinHistory = function (fsqAccessToken) {
+utils.getFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
+
+  var fsqAccessToken = user.getProperty('fsqToken');
+  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806&oauth_token=' + fsqAccessToken;
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function(){
+      deferred.resolve(JSON.parse(data));
+    })
+  }).on('error', function(err) {
+    console.log(err);
+  });
+  return deferred.promise;
 };
 
 module.exports = utils;
