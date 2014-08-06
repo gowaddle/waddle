@@ -1,4 +1,7 @@
-/*var neo4j = require('neo4j');
+//run python -m SimpleHTTPServer in this folder
+//node countryModel.js
+
+var neo4j = require('neo4j');
 var Q = require('q');
 
 var db = new neo4j.GraphDatabase(process.env['GRAPHENEDB_URL'] || 'http://localhost:7474');
@@ -7,28 +10,20 @@ var Country = function(node){
   this.node = node;
 }
 
-Country.create = function(data){
-  node = db.createNode(data);
-  var country = new Country(node);
+Country.importCSV = function(){
 
   var query = [
-    'MERGE (country:Country {name: {name}})',
-    'RETURN country',
+    'LOAD CSV WITH HEADERS FROM "http://localhost:8000/country_data.csv" AS csvLine',
+    'CREATE (c:Country { name: csvLine.NAME_LONG })',
   ].join('\n');
 
-  var params = data;
-
-  var deferred = Q.defer();
-
-  db.query(query, params, function (err, results) {
-    if (err) { deferred.reject(err); }
+  db.query(query, function (err, results) {
+    if (err) { console.log(err); }
     else {
-      var country = new Country(results[0]['country']);
-      deferred.resolve(user);
+      console.log(results)
     }
   });
 
-  return deferred.promise()
-}*/
+};
 
-//probably just import csv or json
+Country.importCSV();
