@@ -63,12 +63,12 @@ var userController = {
       console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
       return user.setProperty('fsqToken', foursquareAccessToken.access_token);
     })
-    // .then(function (userNode) {
-    //   console.log('is this a user access token?' + userNode);
-    //   // return foursquareUtils.getUserFoursquareCheckinHistory;
-    // })
+    .then(function (userNode) {
+      user = userNode;
+      return foursquareUtils.getFoursquareCheckinHistory(user);
+    })
     .then(function (d) {
-      console.log("data" + d);
+      console.log("data" + JSON.stringify(d));
       res.status(204).end();
     })
     .catch(function(err) {
