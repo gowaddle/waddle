@@ -23,16 +23,20 @@ var userController = {
       user = userNode;
       return utils.getFBTaggedPlaces(user);
     })
+    //start getting checkin specific data
     .then(function (fbCheckinData) {
       userFBCheckinData = fbCheckinData.data;
+      var latitudeLongitude = fbCheckinData.data[0].place.location
       return utils.getFBPictureInfo(user);
     })
     .then(function (fbPhotoData) {
+      console.log("currnt")
+      console.log(fbPhotoData.data[0])
       userFBPhotoData = fbPhotoData.data;
       return utils.integrateFBPhotosAndCheckins(userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
-      console.log(d);
+      //console.log(d);
       res.status(204).end();
     })
     .catch(function(err) {

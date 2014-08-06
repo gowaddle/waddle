@@ -11,15 +11,6 @@ User.prototype.id = function(){
 	return this.node.id;
 };
 
-User.prototype.setName = function(name){
-	this.node.data['name'] = name;
-  return this.save();
-};
-
-User.prototype.getName = function(){
-  return this.node.data['name'];
-};
-
 User.prototype.setProperty = function(property, value) {
   this.node.data[property] = value;
   return this.save();
@@ -42,7 +33,7 @@ User.prototype.save = function (){
   return deferred.promise;
 };
 
-User.createOrFind = function (data) {
+User.createUniqueUser = function (data) {
   var node = db.createNode(data);
 
   var query = [
