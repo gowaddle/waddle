@@ -45,17 +45,28 @@ var userController = {
 
     var userData = req.body;
     var user;
-    console.log(userData);
+
     User.createOrFind(userData)
-      .then(function (userNode) { 
-        user = userNode;
-        console.log(userNode);
-      });
+    .then(function (userNode) { 
+      console.log("userNode: " + userNode);
+      user = userNode;
+    })
+    .then(function () {
+      return utils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
+    })
+    .then(function (foursquareAccessToken) {
+      console.log("the access token is " + JSON.parse(foursquareAccessToken.access_token));
+      // return user.setProperty('fsqToken', foursquareAccessToken);
+    })
+    .then(function (d) {
+      console.log("data" + d);
+      res.status(204).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    })
   }
-
-
 }
-
-
 
 module.exports = userController;

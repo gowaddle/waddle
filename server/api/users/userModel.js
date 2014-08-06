@@ -44,6 +44,7 @@ User.prototype.save = function (){
 
 User.createOrFind = function (data) {
   var node = db.createNode(data);
+  console.log(data);
 
   var query = [
     'MERGE (user:User {facebookID: {facebookID}})',

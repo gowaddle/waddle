@@ -34,13 +34,13 @@ utils.exchangeFBAccessToken = function (fbToken) {
   return deferred.promise;
 };
 
-utils.exchangeFoursquareUserCode = function (fsqCode) {
+utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   var deferred = Q.defer();
   var queryPath = 'https://foursquare.com/oauth2/access_token' +
     '?client_id=' + process.env.WADDLE_FOURSQUARE_CLIENT_ID +
     '&client_secret=' + process.env.WADDLE_FOURSQUARE_CLIENT_SECRET +
     '&grant_type=authorization_code' +
-    '&redirect_uri=http://localhost:8080/#/providers' +
+    '&redirect_uri=http://localhost:8080/fsqredirect' +
     '&code=' + fsqCode;
 
   https.get(queryPath, function (res) {
@@ -48,16 +48,15 @@ utils.exchangeFoursquareUserCode = function (fsqCode) {
     res.on('data', function(chunk) {
       data += chunk;
     });
-
     res.on('end', function() {
-      deferred.resolve(qs.parse(data));
+      console.log(data);
+      deferred.resolve(data);
     })
-  })
-  .on('error', function (err) {
+  }).on('error', function(err) {
     deferred.reject(err);
   });
-  return deferred.promise;
-}
+  return deferred.promise; 
+};
 
 utils.getFBTaggedPlaces = function (user) {
   var fbID = user.getProperty('facebookID');
