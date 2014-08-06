@@ -59,6 +59,9 @@ var userController = {
       console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
       return user.setProperty('fsqToken', foursquareAccessToken.access_token);
     })
+    .then(function (foursquareAccessToken) {
+      return foursquareUtils.getUserFoursquareCheckinHistory
+    })
     .then(function (d) {
       console.log("data" + d);
       res.status(204).end();
