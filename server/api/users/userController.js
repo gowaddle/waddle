@@ -28,16 +28,15 @@ var userController = {
     .then(function (fbCheckinData) {
       userFBCheckinData = fbCheckinData.data;
       var latitudeLongitude = fbCheckinData.data[0].place.location
-      return facebookUtils.getFBPictureInfo(user);
+      return facebookUtils.getFBPictures(user);
     })
     .then(function (fbPhotoData) {
-      console.log("currnt")
-      console.log(fbPhotoData.data[0])
       userFBPhotoData = fbPhotoData.data;
+      var fbPhotoData.paging.next;
       return facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
-      // console.log(d);
+      console.log(d);
       res.status(204).end();
     })
     .catch(function(err) {
@@ -53,14 +52,14 @@ var userController = {
 
     User.find(userData)
     .then(function (userNode) { 
-      console.log("userNode: " + userNode);
+      // console.log("userNode: " + userNode);
       user = userNode;
     })
     .then(function () {
       return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
     })
     .then(function (foursquareAccessToken) {
-      console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
+      // console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
       return user.setProperty('fsqToken', foursquareAccessToken.access_token);
     })
     .then(function (userNode) {
@@ -68,7 +67,7 @@ var userController = {
       return foursquareUtils.getFoursquareCheckinHistory(user);
     })
     .then(function (d) {
-      console.log("data" + JSON.stringify(d));
+      // console.log("data" + JSON.stringify(d));
       res.status(204).end();
     })
     .catch(function(err) {

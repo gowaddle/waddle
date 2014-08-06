@@ -65,11 +65,11 @@ utils.getFBTaggedPlaces = function (user) {
   return deferred.promise;
 };
 
-utils.getFBPictureInfo = function (user) {
+utils.getFBPictures = function (user) {
+  var deferred = Q.defer();
+
   var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
-
-  var deferred = Q.defer();
 
   var query = {
     access_token: fbToken
@@ -77,6 +77,15 @@ utils.getFBPictureInfo = function (user) {
 
   var queryPath = 'https://graph.facebook.com/'+fbID+'/photos?' + qs.stringify(query);
 
+  var photos = [];
+
+  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photos));
+
+  return deferred.promise;
+};
+
+utils.makeFBPhotosRequest = function (queryPath, photos) {
+  var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -85,7 +94,16 @@ utils.getFBPictureInfo = function (user) {
     });
 
     res.on('end', function () {
-      deferred.resolve(JSON.parse(data));
+      var dataObj = JSON.parse(data);
+
+      photos.concat(dataObj.data);
+      var nextPath = dataObj.paging.next;
+
+      if (! nextPath) {
+        deferred.resolve(photos);
+      } else {
+        deferred.resolve(utils.makeFBPhotosRequest(nextPath, photos));
+      }
     })
 
   }).on('error', function (e) {
@@ -93,7 +111,7 @@ utils.getFBPictureInfo = function (user) {
   });
 
   return deferred.promise;
-};
+}
 
 utils.getFBPhotoMetadata = function (user, fbPhotoId) {
   var fbID = user.getProperty('facebookID');
