@@ -1,4 +1,5 @@
-var utils = require('../../utils.js');
+var foursquareUtils = require('../../utils/foursquareutils.js');
+var facebookUtils = require('../../utils/facebookutils.js');
 var User = require('./userModel.js');
 
 var userController = {
@@ -14,22 +15,22 @@ var userController = {
       user = userNode;
     })
     .then(function () {
-      return utils.exchangeFBAccessToken(userData.fbToken);
+      return facebookUtils.exchangeFBAccessToken(userData.fbToken);
     })
     .then(function (fbReqData) {
       return user.setProperty('fbToken', fbReqData.access_token);
     })
     .then(function (userNode) {
       user = userNode;
-      return utils.getFBTaggedPlaces(user);
+      return facebookUtils.getFBTaggedPlaces(user);
     })
     .then(function (fbCheckinData) {
       userFBCheckinData = fbCheckinData.data;
-      return utils.getFBPictureInfo(user);
+      return facebookUtils.getFBPictureInfo(user);
     })
     .then(function (fbPhotoData) {
       userFBPhotoData = fbPhotoData.data;
-      return utils.integrateFBPhotosAndCheckins(userFBPhotoData, userFBCheckinData);
+      return facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
       console.log(d);
@@ -52,7 +53,7 @@ var userController = {
       user = userNode;
     })
     .then(function () {
-      return utils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
+      return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
     })
     .then(function (foursquareAccessToken) {
       console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
