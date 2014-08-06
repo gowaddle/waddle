@@ -55,8 +55,8 @@ var userController = {
       return utils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
     })
     .then(function (foursquareAccessToken) {
-      console.log("the access token is " + JSON.parse(foursquareAccessToken.access_token));
-      // return user.setProperty('fsqToken', foursquareAccessToken);
+      console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
+      return user.setProperty('fsqToken', foursquareAccessToken.access_token);
     })
     .then(function (d) {
       console.log("data" + d);
