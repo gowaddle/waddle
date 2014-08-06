@@ -34,7 +34,10 @@ utils.getFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
   var fsqAccessToken = user.getProperty('fsqToken');
-  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806&oauth_token=' + fsqAccessToken;
+  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806' +
+  '&limit=250' +
+  '&sort=oldestfirst' +
+  '&oauth_token=' + fsqAccessToken;
 
   https.get(queryPath, function (res) {
     var data = '';
