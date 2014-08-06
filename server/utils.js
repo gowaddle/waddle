@@ -3,7 +3,9 @@ var qs = require('querystring');
 var Q = require('q');
 
 var utils = {};
+module.exports = utils;
 
+//FACEBOOK HELPER METHODS
 
 utils.exchangeFBAccessToken = function (fbToken) {
   var deferred = Q.defer();
@@ -34,30 +36,6 @@ utils.exchangeFBAccessToken = function (fbToken) {
   return deferred.promise;
 };
 
-utils.exchangeFoursquareUserCode = function (fsqCode) {
-  var deferred = Q.defer();
-  var queryPath = 'https://foursquare.com/oauth2/access_token' +
-    '?client_id=' + process.env.WADDLE_FOURSQUARE_CLIENT_ID +
-    '&client_secret=' + process.env.WADDLE_FOURSQUARE_CLIENT_SECRET +
-    '&grant_type=authorization_code' +
-    '&redirect_uri=http://localhost:8080/#/providers' +
-    '&code=' + fsqCode;
-
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function() {
-      deferred.resolve(qs.parse(data));
-    })
-  })
-  .on('error', function (err) {
-    deferred.reject(err);
-  });
-  return deferred.promise;
-}
 
 utils.getFBTaggedPlaces = function (user) {
   var fbID = user.getProperty('facebookID');
@@ -122,4 +100,32 @@ utils.integrateFBPhotosAndCheckins = function (photoData, checkinData) {
   return photoData.concat(checkinData);
 };
 
-module.exports = utils;
+//FOURSQUARE HELPER METHODS
+
+utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
+  var deferred = Q.defer();
+  var queryPath = 'https://foursquare.com/oauth2/access_token' +
+    '?client_id=' + process.env.WADDLE_FOURSQUARE_CLIENT_ID +
+    '&client_secret=' + process.env.WADDLE_FOURSQUARE_CLIENT_SECRET +
+    '&grant_type=authorization_code' +
+    '&redirect_uri=http://localhost:8080/fsqredirect' +
+    '&code=' + fsqCode;
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function() {
+      console.log(data);
+      deferred.resolve(JSON.parse(data));
+    })
+  }).on('error', function(err) {
+    deferred.reject(err);
+  });
+  return deferred.promise; 
+};
+
+utils.getFoursquareCheckinHistory = function (fsqAccessToken) {
+  var deferred = Q.defer();
+}
