@@ -13,6 +13,7 @@ angular.module('waddle.frontpage', [])
   };
   
   var sendUserDataToServer = function(fbToken, data){
+    window.sessionStorage.userFbID = data.id;
     var userData = {
       facebookID: data.id,
       name: data.name,
