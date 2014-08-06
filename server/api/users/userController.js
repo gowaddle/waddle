@@ -6,19 +6,30 @@ var userController = {
 
     var userData = req.body;
     var user;
+    var userFBCheckinData;
+    var userFBPhotoData;
 
     User.createOrFind(userData)
-    .then(function (u) { 
-      user = u;
+    .then(function (userNode) { 
+      user = userNode;
     })
     .then(function () {
       return utils.exchangeFBAccessToken(userData.fbToken);
     })
-    .then(function (d) {
-      return user.setProperty('fbToken', d.access_token);
+    .then(function (fbReqData) {
+      return user.setProperty('fbToken', fbReqData.access_token);
     })
-    .then(function (user) {
+    .then(function (userNode) {
+      user = userNode;
       return utils.getFBTaggedPlaces(user);
+    })
+    .then(function (fbCheckinData) {
+      userFBCheckinData = fbCheckinData.data;
+      return utils.getFBPictureInfo(user);
+    })
+    .then(function (fbPhotoData) {
+      userFBPhotoData = fbPhotoData.data;
+      return utils.integrateFBPhotosAndCheckins(userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
       console.log(d);
