@@ -6,11 +6,7 @@ var Q = require('q');
 
 var db = new neo4j.GraphDatabase(process.env['GRAPHENEDB_URL'] || 'http://localhost:7474');
 
-var Country = function(node){
-  this.node = node;
-}
-
-Country.importCSV = function(){
+importCSV = function(){
 
   var query = [
     'LOAD CSV WITH HEADERS FROM "http://localhost:8000/country_data.csv" AS csvLine',
@@ -26,4 +22,4 @@ Country.importCSV = function(){
 
 };
 
-Country.importCSV();
+importCSV();
