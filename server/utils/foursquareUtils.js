@@ -88,8 +88,8 @@ utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   return deferred.promise;
 };
 
-utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBuckets) {
-  var allCheckins =  _.map(foursquareCheckinHistoryBuckets, function(checkinBucket) {
+utils.convertFoursquareCheckinHistoryToSingleArrayOfCheckins = function (foursquareCheckinHistoryBucketContainer) {
+  var allCheckins =  _.map(foursquareCheckinHistoryBucketContainer, function(checkinBucket) {
     return checkinBucket.response.checkins.items;
   });
   return _.flatten(allCheckins, true);
