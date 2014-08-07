@@ -1,6 +1,7 @@
 var https = require('https');
 var qs = require('querystring');
 var Q = require('q');
+var _ = require('lodash');
 
 var utils = {};
 
@@ -65,11 +66,11 @@ utils.getFBTaggedPlaces = function (user) {
   return deferred.promise;
 };
 
-utils.getFBPictureInfo = function (user) {
+utils.getFBPictures = function (user) {
+  var deferred = Q.defer();
+
   var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
-
-  var deferred = Q.defer();
 
   var query = {
     access_token: fbToken
@@ -77,6 +78,15 @@ utils.getFBPictureInfo = function (user) {
 
   var queryPath = 'https://graph.facebook.com/'+fbID+'/photos?' + qs.stringify(query);
 
+  var photoContainer = [];
+
+  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
+
+  return deferred.promise;
+};
+
+utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
+  var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -85,7 +95,16 @@ utils.getFBPictureInfo = function (user) {
     });
 
     res.on('end', function () {
-      deferred.resolve(JSON.parse(data));
+      var dataObj = JSON.parse(data);
+
+      photoContainer.push(dataObj.data)
+      var paging = dataObj.paging;
+
+      if (! paging) {
+        deferred.resolve(_.flatten(photoContainer, true));
+      } else {
+        deferred.resolve(utils.makeFBPhotosRequest(paging.next, photoContainer));
+      }
     })
 
   }).on('error', function (e) {
@@ -95,47 +114,18 @@ utils.getFBPictureInfo = function (user) {
   return deferred.promise;
 };
 
-utils.getFBPhotoMetadata = function (user, fbPhotoId) {
-  var fbID = user.getProperty('facebookID');
-  var fbToken = user.getProperty('fbToken');
-
-  var deferred = Q.defer();
-
-  var query = {
-    access_token: fbToken
-  };
-
-  var queryPath = 'https://graph.facebook.com/v2.0/' + fbPhotoId + '?' + qs.stringify(query);
-
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
-      var photoMetadata = JSON.parse(data);
-      if (photoMetadata.place) {
-        deferred.resolve(photoMetadata);
-      } else {
-        deferred.resolve(null);
-      }
-    })
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
-
-  return deferred.promise;
-}
+utils.generateCheckinListFromPhotoList = function (user, photoList) {
+  return _.map(photoList, function (photo) {
+    if (photo.place) {
+      return photo;
+    } else {
+      return null;
+    }
+  })
+};
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
-  var photos = [];
-  for(var i = 0, photo; photo = photoData[i]; i++) {
-    var photoId = photo.id;
-    photos.push(this.getFBPhotoMetadata(user, photoId));
-  }
-  return Q.all(photos);
+  
 };
 
 module.exports = utils;
