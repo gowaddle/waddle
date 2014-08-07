@@ -66,7 +66,7 @@ utils.getFBTaggedPlaces = function (user) {
   return deferred.promise;
 };
 
-utils.getFBPictures = function (user) {
+utils.getFBPhotos = function (user) {
   var deferred = Q.defer();
 
   var fbID = user.getProperty('facebookID');
@@ -122,7 +122,7 @@ utils.parsePhotoList = function (userFBPhotoData, photoList) {
         'name': photo.place.name,
         'likes': photo.likes.data.length,
         'lat': photo.place.location.latitude,
-        'long': photo.place.location.longitude
+        'lng': photo.place.location.longitude
       }
       // do stuff here to pluck out relevant fields
       userFBPhotoData.push(place);
@@ -132,23 +132,19 @@ utils.parsePhotoList = function (userFBPhotoData, photoList) {
   return userFBPhotoData;
 };
 
-utils.generateCheckinListFromPhotoList = function (userFBPhotoData, photoList) {
-
-
-  _.each(photoList, function (photo) {
-    if (photo.place) {
+utils.parseCheckinData = function (userFBCheckinData, checkinList) {
+  _.each(checkinList, function (checkin) {
+     // console.log(checkin)
       var place = {
-        'name': photo.place.name,
-        'likes': photo.likes.data.length,
-        'lat': photo.place.location.latitude,
-        'long': photo.place.location.longitude
+        'name': checkin.place.name,
+        'lat': checkin.place.location.latitude,
+        'lng': checkin.place.location.longitude
       }
       // do stuff here to pluck out relevant fields
-      userFBPhotoData.push(place);
-    }
+      userFBCheckinData.push(place);
   });
 
-  return userFBPhotoData;
+  return userFBCheckinData;
 };
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
