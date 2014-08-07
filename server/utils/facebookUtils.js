@@ -118,6 +118,7 @@ utils.generateCheckinListFromPhotoList = function (user, photoList) {
 
   _.each(photoList, function (photo) {
     if (photo.place) {
+      // do stuff here to pluck out relevant fields
       photos.push(photo);
     }
   });

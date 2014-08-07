@@ -34,7 +34,7 @@ var userController = {
       return facebookUtils.generateCheckinListFromPhotoList(user, fbRawPhotoList); 
     })
     .then(function (fbPhotosWithPlaceList) {
-
+      return fbPhotosWithPlaceList;
     })
     .then(function (d) {
       console.log(d);
