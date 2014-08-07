@@ -27,13 +27,12 @@ var userController = {
     //start getting checkin specific data
     .then(function (fbCheckinData) {
       userFBCheckinData = fbCheckinData.data;
-      var latitudeLongitude = fbCheckinData.data[0].place.location
       return facebookUtils.getFBPictures(user);
     })
     .then(function (fbPhotoData) {
-      userFBPhotoData = fbPhotoData.data;
-      var fbPhotoData.paging.next;
-      return facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
+      return fbPhotoData;
+      // userFBPhotoData = fbPhotoData.data;
+      // facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
       console.log(d);

@@ -85,6 +85,7 @@ utils.getFBPictures = function (user) {
 };
 
 utils.makeFBPhotosRequest = function (queryPath, photos) {
+  console.log(photos);
   var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
@@ -96,13 +97,15 @@ utils.makeFBPhotosRequest = function (queryPath, photos) {
     res.on('end', function () {
       var dataObj = JSON.parse(data);
 
-      photos.concat(dataObj.data);
-      var nextPath = dataObj.paging.next;
+      photos.concat(dataObj.data)
 
-      if (! nextPath) {
+      var paging = dataObj.paging;
+      console.log (paging);
+
+      if (! paging) {
         deferred.resolve(photos);
       } else {
-        deferred.resolve(utils.makeFBPhotosRequest(nextPath, photos));
+        deferred.resolve(utils.makeFBPhotosRequest(paging.next, photos));
       }
     })
 
@@ -149,10 +152,10 @@ utils.getFBPhotoMetadata = function (user, fbPhotoId) {
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
   var photos = [];
-  for(var i = 0, photo; photo = photoData[i]; i++) {
-    var photoId = photo.id;
-    photos.push(this.getFBPhotoMetadata(user, photoId));
-  }
+  // for(var i = 0, photo; photo = photoData[i]; i++) {
+  //   var photoId = photo.id;
+  //   photos.push(this.getFBPhotoMetadata(user, photoId));
+  // }
   return Q.all(photos);
 };
 
