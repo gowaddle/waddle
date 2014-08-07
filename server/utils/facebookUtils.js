@@ -38,11 +38,11 @@ utils.exchangeFBAccessToken = function (fbToken) {
 
 
 utils.getFBTaggedPlaces = function (user) {
+  var deferred = Q.defer();
+
   var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
   
-  var deferred = Q.defer();
-
   var query = {
     access_token: fbToken
   };
@@ -98,12 +98,11 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
       var dataObj = JSON.parse(data);
 
       photoContainer.push(dataObj.data)
-      var paging = dataObj.paging;
 
-      if (! paging) {
+      if (! dataObj.paging) {
         deferred.resolve(_.flatten(photoContainer, true));
       } else {
-        deferred.resolve(utils.makeFBPhotosRequest(paging.next, photoContainer));
+        deferred.resolve(utils.makeFBPhotosRequest(dataObj.paging.next, photoContainer));
       }
     })
 
@@ -115,13 +114,15 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
 };
 
 utils.generateCheckinListFromPhotoList = function (user, photoList) {
-  return _.map(photoList, function (photo) {
+  var photos = [];
+
+  _.each(photoList, function (photo) {
     if (photo.place) {
-      return photo;
-    } else {
-      return null;
+      photos.push(photo);
     }
-  })
+  });
+
+  return photos;
 };
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
