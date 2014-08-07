@@ -72,7 +72,7 @@ var userController = {
       return foursquareUtils.processFoursquareCheckinHistory(foursquareHistoryBucket);
     })
     .then(function (data) {
-      console.log("data" + JSON.stringify(data));
+      console.log("data: " + JSON.stringify(data));
       res.status(204).end();
     })
     .catch(function(err) {

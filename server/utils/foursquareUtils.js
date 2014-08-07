@@ -1,6 +1,7 @@
 var https = require('https');
 var qs = require('querystring');
 var Q = require('q');
+var _ = require('lodash');
 
 var utils = {};
 
@@ -36,41 +37,42 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
 
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
+
   var offset = 0;
-  var historyBucket = [];
+  var historyBucketContainer = [];
+
   var fsqAccessToken = user.getProperty('fsqToken');
+
   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
   .then(function(checkinHistory) {
-    historyBucket.push(checkinHistory);
+    console.log('checkinHistory: ' + checkinHistory);
+
     var checkinCount = checkinHistory.response.checkins.count;
-    console.log('checkins count: '+ checkinCount);
+    console.log('checkinCount: ' + checkinCount);
+
     var numberOfTimesToTabThroughHistory = Math.ceil(checkinCount/250);
-    for(var i = 1; i < numberOfTimesToTabThroughHistory; i++) {
-      offset += 250;
-      console.log('the offset is: ' + offset);
-      utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
-      .then(function(tabbedCheckinHistory) {
-        historyBucket.push(tabbedCheckinHistory);
-        console.log(historyBucket);
-        console.log("the length of this tab is: " + JSON.stringify(historyBucket[1].response.checkins.items.length));
-        if(historyBucket.length === numberOfTimesToTabThroughHistory) {
-          console.log('my history bucket: ' + historyBucket.length);
-          deferred.resolve(historyBucket);
-          return deferred.promise;
-        }
-       })
-     }
-   });
+
+    for(var i = 0; i < numberOfTimesToTabThroughHistory; i++) {
+      historyBucketContainer.push(utils.getFoursquareCheckinHistory(fsqAccessToken, offset));
+      offset += 250;  
+    }
+    console.log('historyBucketContainer: ' + historyBucketContainer);
+    deferred.resolve(Q.all(historyBucketContainer));
+  });
+  return deferred.promise;
 }
 
 utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   var deferred = Q.defer();
-  var offsetString = offset.toString();
-  // var fsqAccessToken = user.getProperty('fsqToken');
-  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806' +
-  '&limit=250' +
-  '&offset=' + offsetString +
-  '&oauth_token=' + userAccessToken;
+
+  var query = {
+    v: '20140806',
+    limit: '250',
+    offset: offset.toString(),
+    oauth_token: userAccessToken
+  };
+
+  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?' + qs.stringify(query);
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -81,18 +83,16 @@ utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
       deferred.resolve(JSON.parse(data));
     })
   }).on('error', function(err) {
-    console.log(err);
-    deferred.reject();
+    deferred.reject(err);
   });
   return deferred.promise;
 };
 
-utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBucket) {
-  var allCheckins = [];
-  for(var i = 0; i < foursquareCheckinHistoryBucket.length; i++) {
-    allCheckins.push(foursquareCheckinHistoryBucket[i].response.checkins.items);
-  }
-  console.log(JSON.stringify(allCheckins));
+utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBuckets) {
+  var allCheckins =  _.map(foursquareCheckinHistoryBuckets, function(checkinBucket) {
+    return checkinBucket.response.checkins.items;
+  });
+  return _.flatten(allCheckins, true);
 }
 
 module.exports = utils;
