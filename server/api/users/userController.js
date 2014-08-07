@@ -31,12 +31,10 @@ var userController = {
       return facebookUtils.getFBPictures(user);
     })
     .then(function (fbPhotoList) {
-      return facebookUtils.generateCheckinListFromPhotoList(user, fbPhotoList);
-      // userFBPhotoData = fbPhotoData.data;
-      // facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
+      return facebookUtils.generateCheckinListFromPhotoList(user, fbPhotoList); 
     })
     .then(function (d) {
-      // console.log(d);
+      console.log(d);
       res.status(204).end();
     })
     .catch(function(err) {

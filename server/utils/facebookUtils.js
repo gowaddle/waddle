@@ -115,54 +115,14 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
 };
 
 utils.generateCheckinListFromPhotoList = function (user, photoList) {
-  var photos = _.map(photoList, function (photo) {
+  return _.map(photoList, function (photo) {
     if (photo.place) {
       return photo;
     } else {
       return null;
     }
   })
-
-  return Q.all(photos);
 };
-
-utils.getFBPhotoMetadata = function (user, fbPhoto) {
-  console.log(fbPhoto);
-
-  var photoId = fbPhoto.id;
-
-  var fbID = user.getProperty('facebookID');
-  var fbToken = user.getProperty('fbToken');
-
-  var deferred = Q.defer();
-
-  var query = {
-    access_token: fbToken
-  };
-
-  var queryPath = 'https://graph.facebook.com/v2.0/' + photoId + '?' + qs.stringify(query);
-
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
-      var photoMetadata = JSON.parse(data);
-      if (photoMetadata.place) {
-        deferred.resolve([fbPhoto, photoMetadata]);
-      } else {
-        deferred.resolve(null);
-      }
-    })
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
-
-  return deferred.promise;
-}
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
   
