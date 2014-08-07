@@ -2,6 +2,7 @@ var foursquareUtils = require('../../utils/foursquareUtils.js');
 var facebookUtils = require('../../utils/facebookUtils.js');
 var User = require('./userModel.js');
 
+
 var userController = {
   updateUser: function (req, res) {
 
@@ -29,8 +30,8 @@ var userController = {
       userFBCheckinData = fbCheckinData.data;
       return facebookUtils.getFBPictures(user);
     })
-    .then(function (fbPhotoData) {
-      return fbPhotoData;
+    .then(function (fbPhotoList) {
+      return facebookUtils.generateCheckinListFromPhotoList(user, fbPhotoList);
       // userFBPhotoData = fbPhotoData.data;
       // facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })

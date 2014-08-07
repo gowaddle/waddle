@@ -1,6 +1,7 @@
 var https = require('https');
 var qs = require('querystring');
 var Q = require('q');
+var _ = require('lodash');
 
 var utils = {};
 
@@ -85,7 +86,6 @@ utils.getFBPictures = function (user) {
 };
 
 utils.makeFBPhotosRequest = function (queryPath, photos) {
-  console.log(photos);
   var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
@@ -97,13 +97,11 @@ utils.makeFBPhotosRequest = function (queryPath, photos) {
     res.on('end', function () {
       var dataObj = JSON.parse(data);
 
-      photos.concat(dataObj.data)
-
+      photos.push(dataObj.data)
       var paging = dataObj.paging;
-      console.log (paging);
 
       if (! paging) {
-        deferred.resolve(photos);
+        deferred.resolve(_.flatten(photos, true));
       } else {
         deferred.resolve(utils.makeFBPhotosRequest(paging.next, photos));
       }
@@ -114,7 +112,16 @@ utils.makeFBPhotosRequest = function (queryPath, photos) {
   });
 
   return deferred.promise;
-}
+};
+
+utils.generateCheckinListFromPhotoList = function (user, photoList) {
+  var photos = [];
+  for(var i = 0, photo; photo = photoList[i]; i++) {
+    var photoId = photo.id;
+    photos.push(utils.getFBPhotoMetadata(user, photoId));
+  }
+  return Q.all(photos);
+};
 
 utils.getFBPhotoMetadata = function (user, fbPhotoId) {
   var fbID = user.getProperty('facebookID');
@@ -151,12 +158,7 @@ utils.getFBPhotoMetadata = function (user, fbPhotoId) {
 }
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
-  var photos = [];
-  // for(var i = 0, photo; photo = photoData[i]; i++) {
-  //   var photoId = photo.id;
-  //   photos.push(this.getFBPhotoMetadata(user, photoId));
-  // }
-  return Q.all(photos);
+  
 };
 
 module.exports = utils;
