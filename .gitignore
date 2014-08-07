@@ -34,3 +34,4 @@ globals.js
 
 # Geo data
 natural_earth.gso.json
+*.csv

@@ -12,7 +12,6 @@ module.exports = function (app, express) {
   app.use(express.static(path.join(__dirname, '../client')));
 
   app.use('/api/users', userRouter);
-
   app.use(errorhandlers.errorLogger);
   app.use(errorhandlers.errorHandler);
 

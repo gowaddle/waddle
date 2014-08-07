@@ -7,16 +7,20 @@ angular.module('waddle', [
 	'ui.router'
 ])
 
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
   $stateProvider
     .state('frontpage', {
       url: '/',
       templateUrl: '../app/modules/pages/frontpage/frontpage.html',
       controller: 'FrontpageController'
     })
+    .state('add_providers', {
+      url: '/add_providers',
+      templateUrl: '../app/modules/pages/providers/add_providers.html'
+    })
     .state('providers', {
       url: '/providers',
-      templateUrl: '../app/modules/pages/providers/providers.html',
+      templateUrl: '../app/modules/pages/providers/loading.html',
       controller: 'ProvidersController'
     })
     .state('map', {
@@ -35,5 +39,6 @@ angular.module('waddle', [
     });
 
   $urlRouterProvider.otherwise('/');
+  // $locationProvider.html5Mode(true);
 
 });

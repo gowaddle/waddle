@@ -9,4 +9,8 @@ app.listen(port, function () {
 	console.log('Listening on port ' + this.address().port);
 });
 
+app.get('/fsqredirect', function(req, res) {
+	res.sendfile(__dirname + '/static/foursquareredirect.html');
+});
+
 module.exports.app = app;

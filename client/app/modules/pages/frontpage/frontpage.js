@@ -13,6 +13,7 @@ angular.module('waddle.frontpage', [])
   };
   
   var sendUserDataToServer = function(fbToken, data){
+    window.sessionStorage.userFbID = data.id;
     var userData = {
       facebookID: data.id,
       name: data.name,
@@ -45,7 +46,7 @@ angular.module('waddle.frontpage', [])
             alert('Facebook login failed: ' + response.error);
           }
         }, {
-          scope: 'user_friends, user_tagged_places'
+          scope: 'user_friends, user_tagged_places, user_photos'
         });
   	  };
   	}

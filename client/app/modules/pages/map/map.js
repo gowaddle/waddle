@@ -5,6 +5,10 @@ angular.module('waddle.map', [])
 
       $scope.logout = Auth.logout;
 
+      $scope.goToProvidersPage = function () {
+        $state.go('add_providers');
+      };
+
     	L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
     	var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
@@ -14,7 +18,7 @@ angular.module('waddle.map', [])
       }).setView([37.6, -122.45], 3);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-      var aggregatedMarkers = new L.MarkerClusterGroup();
+      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false});
     	// var facebookPlaces = L.layerGroup().addTo(configuredMap);
       configuredMap.addLayer(aggregatedMarkers);
     
