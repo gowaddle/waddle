@@ -120,10 +120,14 @@ utils.parsePhotoList = function (userFBPhotoData, photoList) {
     if (photo.place) {
       var place = {
         'name': photo.place.name,
-        'likes': photo.likes.data.length,
         'lat': photo.place.location.latitude,
         'lng': photo.place.location.longitude
       }
+      
+      if (photo.likes) {
+        place.likes = photo.likes.data.length;
+      }
+      
       // do stuff here to pluck out relevant fields
       userFBPhotoData.push(place);
     }
