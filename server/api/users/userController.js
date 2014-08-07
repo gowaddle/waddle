@@ -8,8 +8,9 @@ var userController = {
 
     var userData = req.body;
     var user;
-    var userFBCheckinData;
-    var userFBPhotoData;
+    var userFBCheckinData = [];
+    var userFBPhotoData = [];
+    var combinedFBCheckins;
 
     User.createUniqueUser(userData)
     .then(function (userNode) { 
@@ -21,23 +22,24 @@ var userController = {
     .then(function (fbReqData) {
       return user.setProperty('fbToken', fbReqData.access_token);
     })
+    //start getting data for checkins and photos
     .then(function (userNode) {
       user = userNode;
       return facebookUtils.getFBTaggedPlaces(user);
     })
-    //start getting checkin specific data
-    .then(function (fbCheckinData) {
-      userFBCheckinData = fbCheckinData.data;
-      return facebookUtils.getFBPictures(user);
+    .then(function (fbRawCheckinData) {
+      //parse Checkin data
+      facebookUtils.parseCheckinData(userFBCheckinData, fbRawCheckinData.data);
+      //get Picture data
+      return facebookUtils.getFBPhotos(user);
     })
     .then(function (fbRawPhotoList) {
-      return facebookUtils.generateCheckinListFromPhotoList(user, fbRawPhotoList); 
-    })
-    .then(function (fbPhotosWithPlaceList) {
-      return fbPhotosWithPlaceList;
-    })
-    .then(function (d) {
-      console.log(d);
+      //parse Photo data
+      facebookUtils.parsePhotoList(userFBPhotoData, fbRawPhotoList); 
+
+      //req.body.facebookID = 'xxxxxxx'
+      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
+      console.log(combinedFBCheckins)
       res.status(204).end();
     })
     .catch(function(err) {
