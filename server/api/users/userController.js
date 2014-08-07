@@ -9,7 +9,7 @@ var userController = {
     var userData = req.body;
     var user;
     var userFBCheckinData;
-    var userFBPhotoData;
+    var userFBPhotoData = [];
 
     User.createUniqueUser(userData)
     .then(function (userNode) { 
@@ -31,13 +31,11 @@ var userController = {
       return facebookUtils.getFBPictures(user);
     })
     .then(function (fbRawPhotoList) {
-      return facebookUtils.generateCheckinListFromPhotoList(user, fbRawPhotoList); 
+      return facebookUtils.parsePhotoList(userFBPhotoData, fbRawPhotoList); 
     })
-    .then(function (fbPhotosWithPlaceList) {
-      return fbPhotosWithPlaceList;
-    })
-    .then(function (d) {
-      console.log(d);
+    .then(function () {
+      //req.body.facebookID = 'xxxxxxx'
+      console.log(userFBPhotoData);
       res.status(204).end();
     })
     .catch(function(err) {

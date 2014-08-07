@@ -113,17 +113,42 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
   return deferred.promise;
 };
 
-utils.generateCheckinListFromPhotoList = function (user, photoList) {
-  var photos = [];
+utils.parsePhotoList = function (userFBPhotoData, photoList) {
+
 
   _.each(photoList, function (photo) {
     if (photo.place) {
+      var place = {
+        'name': photo.place.name,
+        'likes': photo.likes.data.length,
+        'lat': photo.place.location.latitude,
+        'long': photo.place.location.longitude
+      }
       // do stuff here to pluck out relevant fields
-      photos.push(photo);
+      userFBPhotoData.push(place);
     }
   });
 
-  return photos;
+  return userFBPhotoData;
+};
+
+utils.generateCheckinListFromPhotoList = function (userFBPhotoData, photoList) {
+
+
+  _.each(photoList, function (photo) {
+    if (photo.place) {
+      var place = {
+        'name': photo.place.name,
+        'likes': photo.likes.data.length,
+        'lat': photo.place.location.latitude,
+        'long': photo.place.location.longitude
+      }
+      // do stuff here to pluck out relevant fields
+      userFBPhotoData.push(place);
+    }
+  });
+
+  return userFBPhotoData;
 };
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
