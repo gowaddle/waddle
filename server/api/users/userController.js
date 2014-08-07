@@ -65,10 +65,14 @@ var userController = {
     })
     .then(function (userNode) {
       user = userNode;
-      return foursquareUtils.getFoursquareCheckinHistory(user);
+      return foursquareUtils.tabThroughFoursquareCheckinHistory(user);
     })
-    .then(function (d) {
-      // console.log("data" + JSON.stringify(d));
+    .then(function (foursquareHistoryBucket) {
+      console.log('this is ma bucket, ma:' + foursquareHistoryBucket);
+      return foursquareUtils.processFoursquareCheckinHistory(foursquareHistoryBucket);
+    })
+    .then(function (data) {
+      console.log("data: " + JSON.stringify(data));
       res.status(204).end();
     })
     .catch(function(err) {
