@@ -51,4 +51,6 @@ Place.create = function(data){
   });
 
   return deferred.promise
-}
+};
+
+module.exports = Place;
