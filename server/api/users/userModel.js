@@ -2,6 +2,7 @@ var neo4j = require('neo4j');
 var Q = require('q');
 
 var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
+var Checkin = require('../checkins/checkinModel.js');
 
 var User = function (node){
 	this.node = node;
@@ -29,6 +30,22 @@ User.prototype.save = function (){
       deferred.resolve(new User(node));
     }
 	});
+
+  return deferred.promise;
+};
+
+User.prototype.findAllCheckins = function () {
+  var deferred = Q.defer();
+
+  user.getRelationshipNodes('hasCheckin', function (checkinNodeArray) {
+    if (err) { deferred.reject(err); }
+    else {
+      var checkinArray = _.map(checkinNodeArray, function (node) {
+        return new Checkin(node);
+      });
+      deferred.resolve(checkinArray);
+    }
+  });
 
   return deferred.promise;
 };

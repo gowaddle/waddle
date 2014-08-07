@@ -115,15 +115,19 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
 
 utils.parsePhotoList = function (userFBPhotoData, photoList) {
 
-
   _.each(photoList, function (photo) {
     if (photo.place) {
       var place = {
         'name': photo.place.name,
-        'likes': photo.likes.data.length,
         'lat': photo.place.location.latitude,
-        'lng': photo.place.location.longitude
+        'lng': photo.place.location.longitude,
+        'checkinTime': new Date(photo.created_time)
       }
+
+      if (photo.likes) {
+        place.likes = photo.likes.data.length;
+      }
+      
       // do stuff here to pluck out relevant fields
       userFBPhotoData.push(place);
     }
@@ -133,12 +137,13 @@ utils.parsePhotoList = function (userFBPhotoData, photoList) {
 };
 
 utils.parseCheckinData = function (userFBCheckinData, checkinList) {
+
   _.each(checkinList, function (checkin) {
-     // console.log(checkin)
       var place = {
         'name': checkin.place.name,
         'lat': checkin.place.location.latitude,
-        'lng': checkin.place.location.longitude
+        'lng': checkin.place.location.longitude,
+        'checkinTime': new Date(checkin.created_time)
       }
       // do stuff here to pluck out relevant fields
       userFBCheckinData.push(place);

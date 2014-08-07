@@ -1,9 +1,8 @@
-var Place = require('./placeModel.js');
+var Checkin = require('./checkinModel.js');
 
-var placeController = {};
+var checkinController = {};
 
-placeController.updatePlace = function (req, res){
-
+checkinController.userCheckinData = function (req, res){
   var placeData = req.body;
 
   Place.create(placeData)
@@ -14,6 +13,6 @@ placeController.updatePlace = function (req, res){
     console.log(err);
     res.status(500).end();
   });
-};
+}
 
-module.exports = placeController;
+module.exports = checkinController;
