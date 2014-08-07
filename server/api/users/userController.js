@@ -30,8 +30,11 @@ var userController = {
       userFBCheckinData = fbCheckinData.data;
       return facebookUtils.getFBPictures(user);
     })
-    .then(function (fbPhotoList) {
-      return facebookUtils.generateCheckinListFromPhotoList(user, fbPhotoList); 
+    .then(function (fbRawPhotoList) {
+      return facebookUtils.generateCheckinListFromPhotoList(user, fbRawPhotoList); 
+    })
+    .then(function (fbPhotosWithPlaceList) {
+
     })
     .then(function (d) {
       console.log(d);
