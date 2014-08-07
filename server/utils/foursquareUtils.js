@@ -34,14 +34,41 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   return deferred.promise; 
 };
 
-utils.getFoursquareCheckinHistory = function (user) {
-  var deferred = Q.defer();
+utils.tabThroughFoursquareCheckinHistory = function (user) {
+   var deferred = Q.defer();
+   var offset = 0;
+   var historyBucket = [];
+   var fsqAccessToken = user.getProperty('fsqToken');
+   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
+   .then(function(checkinHistory) {
+     historyBucket.push(checkinHistory);
+     var checkinCount = checkinHistory.response.checkins.count;
+     console.log('checkins count: '+ checkinCount);
+     var numberOfTimesToTabThroughHistory = Math.floor(checkinCount/250);
+     for(var i = 0; i < numberOfTimesToTabThroughHistory; i++) {
+       offset += 250;
+       console.log(offset);
+       utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
+       .then(function(tabbedCheckinHistory) {
+        historyBucket.push(tabbedCheckinHistory);
+        if(historyBucket.length === numberOfTimesToTabThroughHistory + 1) {
+         console.log("the length of this tab is: " + JSON.stringify(historyBucket[i].response.checkins.items.length));
+         return historyBucket;
+        }
+       })
+     }
+   });
+}
 
-  var fsqAccessToken = user.getProperty('fsqToken');
+utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
+  var deferred = Q.defer();
+  console.log('am i here?')
+  var offsetString = offset.toString();
+  // var fsqAccessToken = user.getProperty('fsqToken');
   var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806' +
   '&limit=250' +
-  '&sort=oldestfirst' +
-  '&oauth_token=' + fsqAccessToken;
+  '&offset=' + offsetString +
+  '&oauth_token=' + userAccessToken;
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -53,8 +80,17 @@ utils.getFoursquareCheckinHistory = function (user) {
     })
   }).on('error', function(err) {
     console.log(err);
+    deferred.reject();
   });
   return deferred.promise;
 };
+
+// utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBucket) {
+//   var allCheckins = []
+//   for(var i = 0; i < foursquareCheckinHistoryBucket.length; i++) {
+//     allCheckins.push(foursquareCheckinHistoryBucket[i].response.checkins.items);
+//   }
+//   allCheckins
+// }
 
 module.exports = utils;

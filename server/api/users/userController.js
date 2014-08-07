@@ -65,10 +65,10 @@ var userController = {
     })
     .then(function (userNode) {
       user = userNode;
-      return foursquareUtils.getFoursquareCheckinHistory(user);
+      return foursquareUtils.tabThroughFoursquareCheckinHistory(user);
     })
-    .then(function (d) {
-      console.log("data" + JSON.stringify(d));
+    .then(function (data) {
+      console.log("data" + JSON.stringify(data));
       res.status(204).end();
     })
     .catch(function(err) {
