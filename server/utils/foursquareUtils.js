@@ -1,6 +1,7 @@
 var https = require('https');
 var qs = require('querystring');
 var Q = require('q');
+var _ = require('lodash');
 
 var utils = {};
 
@@ -34,11 +35,44 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   return deferred.promise; 
 };
 
-utils.getFoursquareCheckinHistory = function (user) {
+utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
+  var offset = 0;
+  var historyBucketContainer = [];
+
   var fsqAccessToken = user.getProperty('fsqToken');
-  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806&oauth_token=' + fsqAccessToken;
+
+  utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
+  .then(function(checkinHistory) {
+    console.log('checkinHistory: ' + checkinHistory);
+
+    var checkinCount = checkinHistory.response.checkins.count;
+    console.log('checkinCount: ' + checkinCount);
+
+    var numberOfTimesToTabThroughHistory = Math.ceil(checkinCount/250);
+
+    for(var i = 0; i < numberOfTimesToTabThroughHistory; i++) {
+      historyBucketContainer.push(utils.getFoursquareCheckinHistory(fsqAccessToken, offset));
+      offset += 250;  
+    }
+    console.log('historyBucketContainer: ' + historyBucketContainer);
+    deferred.resolve(Q.all(historyBucketContainer));
+  });
+  return deferred.promise;
+}
+
+utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
+  var deferred = Q.defer();
+
+  var query = {
+    v: '20140806',
+    limit: '250',
+    offset: offset.toString(),
+    oauth_token: userAccessToken
+  };
+
+  var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?' + qs.stringify(query);
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -49,9 +83,16 @@ utils.getFoursquareCheckinHistory = function (user) {
       deferred.resolve(JSON.parse(data));
     })
   }).on('error', function(err) {
-    console.log(err);
+    deferred.reject(err);
   });
   return deferred.promise;
 };
+
+utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBuckets) {
+  var allCheckins =  _.map(foursquareCheckinHistoryBuckets, function(checkinBucket) {
+    return checkinBucket.response.checkins.items;
+  });
+  return _.flatten(allCheckins, true);
+}
 
 module.exports = utils;
