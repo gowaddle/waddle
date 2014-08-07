@@ -73,9 +73,10 @@ var userController = {
     })
     .then(function (foursquareHistoryBucket) {
       console.log('this be ma bucket:' + foursquareHistoryBucket);
-      return foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
+      var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
+      return foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
     })
-    // .then(function (arrayOfFoursquareCheckins) {
+    // .then(function (parsedFoursquareCheckins) {
 
     // })
     .then(function (data) {

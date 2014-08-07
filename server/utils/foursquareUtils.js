@@ -95,4 +95,19 @@ utils.convertFoursquareCheckinHistoryToSingleArrayOfCheckins = function (foursqu
   return _.flatten(allCheckins, true);
 }
 
+utils.parseFoursquareCheckinPlaces = function(foursquareCheckinArray) {
+  _.each(foursquareCheckinArray, function(item) {
+    var place = {
+      checkinTime: new Date(item.createdAt*1000),
+      venueCategory: item.venue.categories[0].name,
+      foursquareID: item.venue.id,
+      name: item.venue.name,
+      lat: item.venue.location.lat,
+      lng: item.venue.location.lng
+    }
+  })
+
+
+}
+
 module.exports = utils;
