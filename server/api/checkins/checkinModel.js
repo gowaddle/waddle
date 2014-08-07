@@ -29,3 +29,5 @@ Checkin.prototype.save = function (){
 
   return deferred.promise;
 };
+
+module.exports = Checkin;

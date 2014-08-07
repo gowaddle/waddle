@@ -42,7 +42,7 @@ User.prototype.findAllCheckins = function () {
     else {
       var checkinArray = _.map(checkinNodeArray, function (node) {
         return new Checkin(node);
-      };
+      });
       deferred.resolve(checkinArray);
     }
   });

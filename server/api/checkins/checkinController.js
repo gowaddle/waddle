@@ -1,5 +1,7 @@
 var Checkin = require('./checkinModel.js');
 
+var checkinController = {};
+
 checkinController.userCheckinData = function (req, res){
   var placeData = req.body;
 
