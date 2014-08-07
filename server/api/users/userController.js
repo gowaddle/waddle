@@ -67,6 +67,10 @@ var userController = {
       user = userNode;
       return foursquareUtils.tabThroughFoursquareCheckinHistory(user);
     })
+    .then(function (foursquareHistoryBucket) {
+      console.log('this is ma bucket, ma:' + foursquareHistoryBucket);
+      return foursquareUtils.processFoursquareCheckinHistory(foursquareHistoryBucket);
+    })
     .then(function (data) {
       console.log("data" + JSON.stringify(data));
       res.status(204).end();

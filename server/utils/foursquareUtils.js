@@ -35,25 +35,28 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
 };
 
 utils.tabThroughFoursquareCheckinHistory = function (user) {
-   var deferred = Q.defer();
-   var offset = 0;
-   var historyBucket = [];
-   var fsqAccessToken = user.getProperty('fsqToken');
-   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
-   .then(function(checkinHistory) {
-     historyBucket.push(checkinHistory);
-     var checkinCount = checkinHistory.response.checkins.count;
-     console.log('checkins count: '+ checkinCount);
-     var numberOfTimesToTabThroughHistory = Math.floor(checkinCount/250);
-     for(var i = 0; i < numberOfTimesToTabThroughHistory; i++) {
-       offset += 250;
-       console.log(offset);
-       utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
-       .then(function(tabbedCheckinHistory) {
+  var deferred = Q.defer();
+  var offset = 0;
+  var historyBucket = [];
+  var fsqAccessToken = user.getProperty('fsqToken');
+  utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
+  .then(function(checkinHistory) {
+    historyBucket.push(checkinHistory);
+    var checkinCount = checkinHistory.response.checkins.count;
+    console.log('checkins count: '+ checkinCount);
+    var numberOfTimesToTabThroughHistory = Math.ceil(checkinCount/250);
+    for(var i = 1; i < numberOfTimesToTabThroughHistory; i++) {
+      offset += 250;
+      console.log('the offset is: ' + offset);
+      utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
+      .then(function(tabbedCheckinHistory) {
         historyBucket.push(tabbedCheckinHistory);
-        if(historyBucket.length === numberOfTimesToTabThroughHistory + 1) {
-         console.log("the length of this tab is: " + JSON.stringify(historyBucket[i].response.checkins.items.length));
-         return historyBucket;
+        console.log(historyBucket);
+        console.log("the length of this tab is: " + JSON.stringify(historyBucket[1].response.checkins.items.length));
+        if(historyBucket.length === numberOfTimesToTabThroughHistory) {
+          console.log('my history bucket: ' + historyBucket.length);
+          deferred.resolve(historyBucket);
+          return deferred.promise;
         }
        })
      }
@@ -62,7 +65,6 @@ utils.tabThroughFoursquareCheckinHistory = function (user) {
 
 utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   var deferred = Q.defer();
-  console.log('am i here?')
   var offsetString = offset.toString();
   // var fsqAccessToken = user.getProperty('fsqToken');
   var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?v=20140806' +
@@ -85,12 +87,12 @@ utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   return deferred.promise;
 };
 
-// utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBucket) {
-//   var allCheckins = []
-//   for(var i = 0; i < foursquareCheckinHistoryBucket.length; i++) {
-//     allCheckins.push(foursquareCheckinHistoryBucket[i].response.checkins.items);
-//   }
-//   allCheckins
-// }
+utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBucket) {
+  var allCheckins = [];
+  for(var i = 0; i < foursquareCheckinHistoryBucket.length; i++) {
+    allCheckins.push(foursquareCheckinHistoryBucket[i].response.checkins.items);
+  }
+  console.log(JSON.stringify(allCheckins));
+}
 
 module.exports = utils;
