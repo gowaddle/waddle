@@ -78,14 +78,14 @@ utils.getFBPictures = function (user) {
 
   var queryPath = 'https://graph.facebook.com/'+fbID+'/photos?' + qs.stringify(query);
 
-  var photos = [];
+  var photoContainer = [];
 
-  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photos));
+  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
 
   return deferred.promise;
 };
 
-utils.makeFBPhotosRequest = function (queryPath, photos) {
+utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
   var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
@@ -97,13 +97,13 @@ utils.makeFBPhotosRequest = function (queryPath, photos) {
     res.on('end', function () {
       var dataObj = JSON.parse(data);
 
-      photos.push(dataObj.data)
+      photoContainer.push(dataObj.data)
       var paging = dataObj.paging;
 
       if (! paging) {
-        deferred.resolve(_.flatten(photos, true));
+        deferred.resolve(_.flatten(photoContainer, true));
       } else {
-        deferred.resolve(utils.makeFBPhotosRequest(paging.next, photos));
+        deferred.resolve(utils.makeFBPhotosRequest(paging.next, photoContainer));
       }
     })
 
@@ -115,15 +115,22 @@ utils.makeFBPhotosRequest = function (queryPath, photos) {
 };
 
 utils.generateCheckinListFromPhotoList = function (user, photoList) {
-  var photos = [];
-  for(var i = 0, photo; photo = photoList[i]; i++) {
-    var photoId = photo.id;
-    photos.push(utils.getFBPhotoMetadata(user, photoId));
-  }
+  var photos = _.map(photoList, function (photo) {
+    if (photo.place) {
+      return photo;
+    } else {
+      return null;
+    }
+  })
+
   return Q.all(photos);
 };
 
-utils.getFBPhotoMetadata = function (user, fbPhotoId) {
+utils.getFBPhotoMetadata = function (user, fbPhoto) {
+  console.log(fbPhoto);
+
+  var photoId = fbPhoto.id;
+
   var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
 
@@ -133,7 +140,7 @@ utils.getFBPhotoMetadata = function (user, fbPhotoId) {
     access_token: fbToken
   };
 
-  var queryPath = 'https://graph.facebook.com/v2.0/' + fbPhotoId + '?' + qs.stringify(query);
+  var queryPath = 'https://graph.facebook.com/v2.0/' + photoId + '?' + qs.stringify(query);
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -144,7 +151,7 @@ utils.getFBPhotoMetadata = function (user, fbPhotoId) {
     res.on('end', function () {
       var photoMetadata = JSON.parse(data);
       if (photoMetadata.place) {
-        deferred.resolve(photoMetadata);
+        deferred.resolve([fbPhoto, photoMetadata]);
       } else {
         deferred.resolve(null);
       }

@@ -36,7 +36,7 @@ var userController = {
       // facebookUtils.integrateFBPhotosAndCheckins(user, userFBPhotoData, userFBCheckinData);
     })
     .then(function (d) {
-      console.log(d);
+      // console.log(d);
       res.status(204).end();
     })
     .catch(function(err) {
