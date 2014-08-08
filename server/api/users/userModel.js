@@ -1,7 +1,11 @@
 var neo4j = require('neo4j');
 var Q = require('q');
+var qs = require('querystring')
+var request = require('request')
 
-var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
+var neo4jurl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474'
+var db = new neo4j.GraphDatabase(neo4jurl);
+
 var Checkin = require('../checkins/checkinModel.js');
 
 var User = function (node){
@@ -35,27 +39,57 @@ User.prototype.save = function (){
 };
 
 User.prototype.addCheckins = function(facebookID, combinedCheckins){
-  var node = db.createNode(data);
+    var deferred = Q.defer()
+    var batchRequest = [];
 
-  var query = [
-    'MATCH (user:User {facebookID: {facebookID}})',
+/*    var query = [
+    'MERGE (user:User {facebookID: {facebookID}})',
     'MERGE (user)-[:hasCheckin]->' +
     '(checkin:Checkin {checkinTime: {checkinTime},' +
     'likes: {likes}, photos: {photos}, caption: {caption},' +
-    'foursquareID: {foursquareID}})-[:hasPlace]->' +
+    'foursquareID: {foursquareID}})',
+    'MERGE (checkin)-[:hasPlace]->' +
     '(place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}})',
+    'RETURN user, checkin, place',
+  ].join('\n');*/
+
+   var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'MERGE (checkin:Checkin {checkinTime: {checkinTime},' +
+    'likes: {likes}, photos: {photos}, caption: {caption}})',
+    'MERGE (place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}, foursquareID: {foursquareID}})',
+    'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)',
     'RETURN user, checkin, place',
   ].join('\n');
 
-  var params = combinedCheckins;
+  for (var checkin = 0; checkin < combinedCheckins.length; checkin++){
+    var singleRequest = {
+      'method': "POST",
+      'to': "/cypher",
+      'body': {
+        'query': query,
+        'params': combinedCheckins[checkin]
+      },
+      'id': checkin
+    };
+    singleRequest.body.params.facebookID = facebookID;
+    batchRequest.push(singleRequest);
+  }
 
-  var deferred = Q.defer();
+  console.log('sample batch request: ', batchRequest[0])
 
-  db.query(query, params, function (err, results) {
-    if (err) { deferred.reject(err); }
-    else {
-      deferred.resolve(new User(results[0]['user']));
-    }
+  var options = {
+    'url': neo4jurl + '/db/data/batch',
+    'method': 'POST',
+    'json': true,
+    'body': JSON.stringify(batchRequest)
+  }
+
+  console.log('batch url: ', options.url)
+
+  request.post(options, function(err, response, body) {
+    if (err) {deferred.reject(err)}
+    deferred.resolve(body);
   });
 
   return deferred.promise;

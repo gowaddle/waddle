@@ -15,6 +15,7 @@ userController.updateUser = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
+
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     user = userNode;
@@ -41,7 +42,7 @@ userController.updateUser = function (req, res) {
     facebookUtils.parseFBData(userFBPhotoData, fbRawPhotoList); 
     // merge checkins and photos
     combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
-    return combinedFBCheckins;
+    return user.addCheckins(userData.facebookID, combinedFBCheckins);
   })
   .then(function (data) {
     console.log('fb: ',data);

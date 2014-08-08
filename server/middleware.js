@@ -12,6 +12,11 @@ module.exports = function (app, express) {
   app.use(express.static(path.join(__dirname, '../client')));
 
   app.use('/api/users', userRouter);
+
+  app.get('/fsqredirect', function(req, res) {
+    res.sendfile(__dirname + '/static/foursquareredirect.html');
+  });
+  
   app.use(errorhandlers.errorLogger);
   app.use(errorhandlers.errorHandler);
 
