@@ -49,25 +49,27 @@ Place.create = function(data){
       deferred.resolve(place);
     }
   });
+}
 
 Place.find = function (data){
-  node = db.createNode(data);
+
   var query = [
     'MATCH (place:Place {foursquareID: {foursquareID}})',
     'RETURN place'
-  ];
+  ].join('\n');
   var params = data;
 
   var deferred = Q.defer();
+
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
       var place = new Place(results[0]['place']);
       deferred.resolve(place);
     }
-}
+  });
 
-  return deferred.promise
+  return deferred.promise;
 };
 
 module.exports = Place;

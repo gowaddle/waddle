@@ -80,7 +80,7 @@ var userController = {
 
     // })
     .then(function (data) {
-      console.log("data: " + JSON.stringify(data));
+      console.log("hi data: " + JSON.stringify(data));
       res.status(204).end();
     })
     .catch(function(err) {
