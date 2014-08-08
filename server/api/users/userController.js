@@ -13,6 +13,7 @@ var userController = {
     var userFBCheckinData = [];
     var userFBPhotoData = [];
     var combinedFBCheckins;
+    var alreadyExists = false;
 
     User.createUniqueUser(userData)
     .then(function (userNode) { 
@@ -31,13 +32,13 @@ var userController = {
     })
     .then(function (fbRawCheckinData) {
       //parse Checkin data
-      facebookUtils.parseCheckinData(userFBCheckinData, fbRawCheckinData.data);
+      facebookUtils.parseFBData(userFBCheckinData, fbRawCheckinData.data);
       //get Picture data
       return facebookUtils.getFBPhotos(user);
     })
     .then(function (fbRawPhotoList) {
       //parse Photo data
-      facebookUtils.parsePhotoList(userFBPhotoData, fbRawPhotoList); 
+      facebookUtils.parseFBData(userFBPhotoData, fbRawPhotoList); 
 
       //req.body.facebookID = 'xxxxxxx'
       combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
