@@ -35,6 +35,31 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   return deferred.promise; 
 };
 
+utils.getUserFoursquareIDFromToken = function (user) {
+  
+  var deferred = Q.defer();
+
+  var fsqAccessToken = user.getProperty('fsqToken');
+  var query = {
+    v: '20140806',
+    oauth_token: fsqAccessToken
+  }
+  var queryPath = 'https://api.foursquare.com/v2/users/self?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function(){
+      deferred.resolve(JSON.parse(data));
+    })
+  }).on('error', function(err) {
+    deferred.reject(err);
+  });
+  return deferred.promise;
+}
+
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
@@ -110,7 +135,8 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
         'caption': 'null',
         'foursquareID': item.venue.id,
         'country': item.venue.location.country,
-        'category': 'null'
+        'category': 'null',
+        'source': 'foursquare'
       };
 
 
