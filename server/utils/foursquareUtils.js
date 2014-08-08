@@ -88,11 +88,55 @@ utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   return deferred.promise;
 };
 
-utils.processFoursquareCheckinHistory = function (foursquareCheckinHistoryBuckets) {
-  var allCheckins =  _.map(foursquareCheckinHistoryBuckets, function(checkinBucket) {
+utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareCheckinHistoryBucketContainer) {
+  var allCheckins =  _.map(foursquareCheckinHistoryBucketContainer, function(checkinBucket) {
     return checkinBucket.response.checkins.items;
   });
   return _.flatten(allCheckins, true);
+}
+
+utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
+ var parsedCheckins = _.map(foursquareCheckinArray, function(item) {
+    
+    var placeCheckin = {
+      'checkin': {
+        'checkinTime': new Date(item.createdAt*1000),
+        'photos': null,
+        'caption': null
+      },
+
+      'place': {
+        'foursquareID': item.venue.id,
+        'name': item.venue.name,
+        'lat': item.venue.location.lat,
+        'lng': item.venue.location.lng,
+        'country': item.venue.location.country,
+        'category': null
+      }
+    };
+
+    if(item.venue.categories[0]) {
+      placeCheckin.place.category = item.venue.categories[0].name;
+    }
+
+    if(item.photos.count > 0) {
+      placeCheckin.photos = _.map(item.photos.items, function(photo) {
+        var photoMetaData = {
+          prefix: photo.prefix,
+          suffix: photo.suffix,
+          height: photo.height,
+          width: photo.width,
+          visibility: photo.visibility
+        }
+        return photoMetaData;
+      });
+    }
+    if(item.shout) {
+      placeCheckin.caption = item.shout;
+    }
+    return placeCheckin;
+  });
+ return parsedCheckins;
 }
 
 module.exports = utils;

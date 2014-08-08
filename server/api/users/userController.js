@@ -1,6 +1,8 @@
 var foursquareUtils = require('../../utils/foursquareUtils.js');
 var facebookUtils = require('../../utils/facebookUtils.js');
 var User = require('./userModel.js');
+var Place = require('../places/placeModel.js');
+var Checkin = require('../checkins/checkinModel.js');
 
 
 var userController = {
@@ -71,11 +73,15 @@ var userController = {
       return foursquareUtils.tabThroughFoursquareCheckinHistory(user);
     })
     .then(function (foursquareHistoryBucket) {
-      console.log('this is ma bucket, ma:' + foursquareHistoryBucket);
-      return foursquareUtils.processFoursquareCheckinHistory(foursquareHistoryBucket);
+      console.log('this be ma bucket:' + foursquareHistoryBucket);
+      var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
+      return foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
     })
+    // .then(function (parsedFoursquareCheckins) {
+
+    // })
     .then(function (data) {
-      console.log("data: " + JSON.stringify(data));
+      console.log("hi data: " + JSON.stringify(data));
       res.status(204).end();
     })
     .catch(function(err) {
