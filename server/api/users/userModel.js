@@ -65,6 +65,7 @@ User.createUniqueUser = function (data) {
   ].join('\n');
 
   var params = data;
+  //data has a user's facebook ID and name
 
 
   db.query(query, params, function (err, results) {
