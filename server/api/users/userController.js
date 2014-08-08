@@ -15,6 +15,7 @@ userController.updateUser = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
+
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     user = userNode;
