@@ -72,7 +72,7 @@ User.prototype.findAllCheckins = function () {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      deferred.resolve(results);
     }
   });
 
@@ -89,7 +89,6 @@ User.createUniqueUser = function (data) {
 
   var params = data;
   //data has a user's facebook ID and name
-
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
