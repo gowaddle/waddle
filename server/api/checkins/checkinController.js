@@ -3,13 +3,14 @@ var Checkin = require('./checkinModel.js');
 var checkinController = {};
 
 checkinController.userCheckinData = function (req, res){
-  var placeData = req.body;
+  var data = req.body;
 
-  Place.create(placeData)
-  .then(function(node) {
+  Checkin.doStuff()
+  .then(function (data) {
+    console.log(data);
     res.status(204).end();
   })
-  .catch(function(err) {
+  .catch(function (err) {
     console.log(err);
     res.status(500).end();
   });

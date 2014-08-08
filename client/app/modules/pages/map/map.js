@@ -6,7 +6,7 @@ angular.module('waddle.map', [])
       $scope.logout = Auth.logout;
 
       $scope.goToProvidersPage = function () {
-        $state.go('add_providers');
+        $state.go('providers');
       };
 
     	L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
