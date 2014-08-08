@@ -142,8 +142,4 @@ utils.parseFBData = function (userFBPhotoData, data) {
   return userFBPhotoData;
 };
 
-utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {
-  
-};
-
 module.exports = utils;
