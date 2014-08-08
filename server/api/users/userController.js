@@ -35,7 +35,7 @@ userController.updateUser = function (req, res) {
   })
   .then(function (fbRawCheckinData) {
     // parse Checkin data
-    return facebookUtils.parseFBData(fbRawCheckinData.data);
+    return facebookUtils.parseFBData(user, fbRawCheckinData.data);
   })
   .then(function (fbParsedCheckinData) {
     userFBCheckinData = fbParsedCheckinData;
@@ -45,7 +45,7 @@ userController.updateUser = function (req, res) {
   .then(function (fbRawPhotoList) {
     // parse Photo data
     console.log(fbRawPhotoList.length)
-    return facebookUtils.parseFBData(fbRawPhotoList); 
+    return facebookUtils.parseFBData(user, fbRawPhotoList); 
   })
   .then(function (fbParsedPhotoData) {
     // merge checkins and photos

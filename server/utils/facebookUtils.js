@@ -114,7 +114,7 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
   return deferred.promise;
 };
 
-utils.parseFBData = function (data) {
+utils.parseFBData = function (user, data) {
   var deferred = Q.defer();
 
   var parsedData = [];
@@ -138,12 +138,11 @@ utils.parseFBData = function (data) {
       if (datum.likes) {
         place.likes = datum.likes.data.length;
       }
-      
-      parsedData.push(place);
 
       var latlng = place.lat.toString() + ',' + place.lng.toString();
-
-      foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(place.name, latlng));
+      
+      parsedData.push(place);
+      foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
     }
   });
 
