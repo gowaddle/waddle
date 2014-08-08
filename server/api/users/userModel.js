@@ -1,10 +1,11 @@
 var neo4j = require('neo4j');
 var Q = require('q');
-var https = require('https')
 var qs = require('querystring')
 var request = require('request')
 
-var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
+var neo4jurl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474'
+var db = new neo4j.GraphDatabase(neo4jurl);
+
 var Checkin = require('../checkins/checkinModel.js');
 
 var User = function (node){
@@ -75,16 +76,16 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
     batchRequest.push(singleRequest);
   }
 
-  console.log(batchRequest)
+  console.log('sample batch request: ', batchRequest[0])
 
   var options = {
-    'url': process.env['WADDLE_GRAPHENEDB_URL'] + '/db/data/batch',
+    'url': neo4jurl + '/db/data/batch',
     'method': 'POST',
     'json': true,
     'body': JSON.stringify(batchRequest)
   }
 
-  console.log(options.url)
+  console.log('batch url: ', options.url)
 
   request.post(options, function(err, response, body) {
     if (err) {deferred.reject(err)}
