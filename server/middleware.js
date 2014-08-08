@@ -16,4 +16,5 @@ module.exports = function (app, express) {
   app.use(errorhandlers.errorHandler);
 
 	require('./api/users/userRoutes.js')(userRouter);
+	require('./api/users/checkinRoutes.js')(checkinRouter);
 };

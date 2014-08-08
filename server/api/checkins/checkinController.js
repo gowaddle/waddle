@@ -16,4 +16,9 @@ checkinController.userCheckinData = function (req, res){
   });
 }
 
+checkinController.realtimeCheckinData = function (req, res){
+  var data = req.body;
+  console.log(data);
+}
+
 module.exports = checkinController;
