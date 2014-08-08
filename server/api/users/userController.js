@@ -4,7 +4,6 @@ var User = require('./userModel.js');
 var Place = require('../places/placeModel.js');
 var Checkin = require('../checkins/checkinModel.js');
 
-
 var userController = {
   updateUser: function (req, res) {
 

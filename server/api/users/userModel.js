@@ -60,13 +60,19 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
 User.prototype.findAllCheckins = function () {
   var deferred = Q.defer();
 
-  user.getRelationshipNodes('hasCheckin', function (checkinNodeArray) {
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID})-[:hasCheckin]->(c:Checkin)-[:hasPlace]->(p:Place)',
+    'RETURN user, c, p',
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+  db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      var checkinArray = _.map(checkinNodeArray, function (node) {
-        return new Checkin(node);
-      });
-      deferred.resolve(checkinArray);
+      deferred.resolve(new User(results[0]['user']));
     }
   });
 
@@ -74,7 +80,7 @@ User.prototype.findAllCheckins = function () {
 };
 
 User.createUniqueUser = function (data) {
-  var node = db.createNode(data);
+  var deferred = Q.defer();
 
   var query = [
     'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
@@ -84,7 +90,6 @@ User.createUniqueUser = function (data) {
   var params = data;
   //data has a user's facebook ID and name
 
-  var deferred = Q.defer();
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
@@ -117,19 +122,6 @@ User.find = function (data) {
 
   return deferred.promise;
 };
-
-/*User.get = function (id) {
-  var deferred = Q.defer();
-
-  db.getNodeById(id, function (err, node) {
-    if (err) { deferred.reject(err); }
-    else {
-      deferred.resolve(new User(node));
-    }
-  });
-
-  return deferred.promise;
-};*/
 
 User.getAll = function () {
 
