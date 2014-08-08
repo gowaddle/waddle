@@ -14,7 +14,7 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
     client_id: process.env.WADDLE_FOURSQUARE_CLIENT_ID,
     client_secret: process.env.WADDLE_FOURSQUARE_CLIENT_SECRET,
     grant_type: 'authorization_code',
-    redirect_uri: 'http://waddle.herokuapp.com/fsqredirect',
+    redirect_uri: 'http://localhost:8080/fsqredirect',
     code: fsqCode
   };
 
@@ -96,40 +96,44 @@ utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareChec
 }
 
 utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
- var parsedCheckins = _.map(foursquareCheckinArray, function(item) {
-    
+
+ var parsedCheckins = [];
+ _.each(foursquareCheckinArray, function(item) {
+
     var placeCheckin = {
-        'checkinTime': new Date(item.createdAt*1000),
-        'photos': null,
-        'caption': null,
-        'foursquareID': item.venue.id,
         'name': item.venue.name,
         'lat': item.venue.location.lat,
         'lng': item.venue.location.lng,
+        'checkinTime': new Date(item.createdAt*1000),
+        'likes': 'null',
+        'photos': 'null',
+        'caption': 'null',
+        'foursquareID': item.venue.id,
         'country': item.venue.location.country,
-        'category': null
+        'category': 'null'
       };
+
 
     if(item.venue.categories[0]) {
       placeCheckin.category = item.venue.categories[0].name;
     }
 
-    if(item.photos.count > 0) {
-      placeCheckin.photos = _.map(item.photos.items, function(photo) {
-        var photoMetaData = {
-          prefix: photo.prefix,
-          suffix: photo.suffix,
-          height: photo.height,
-          width: photo.width,
-          visibility: photo.visibility
-        }
-        return photoMetaData;
-      });
-    }
+    // if(item.photos.count > 0) {
+    //   placeCheckin.photos = _.map(item.photos.items, function(photo) {
+    //     var photoMetaData = {
+    //       prefix: photo.prefix,
+    //       suffix: photo.suffix,
+    //       height: photo.height,
+    //       width: photo.width,
+    //       visibility: photo.visibility
+    //     }
+    //     return photoMetaData;
+    //   });
+    // }
     if(item.shout) {
       placeCheckin.caption = item.shout;
     }
-    return placeCheckin;
+    parsedCheckins.push(placeCheckin);
   });
  return parsedCheckins;
 }

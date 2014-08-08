@@ -77,7 +77,8 @@ userController.addFoursquareData = function (req, res) {
   })
   .then(function (foursquareHistoryBucket) {
     var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
-    return foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    return user.addCheckins(userData.facebookID, allParsedFoursquareCheckins);
   })
   .then(function (data) {
     console.log('4s: ',data);
