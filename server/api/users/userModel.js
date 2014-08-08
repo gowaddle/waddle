@@ -39,11 +39,15 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
-    'MERGE (user)-[:hasCheckin]->(checkin:Checkin {name: {name}})',
-    'RETURN user, place',
+    'MERGE (user)-[:hasCheckin]->' +
+    '(checkin:Checkin {checkinTime: {checkinTime},' +
+    'likes: {likes}, photos: {photos}, caption: {caption},' +
+    'foursquareID: {foursquareID}})-[:hasPlace]->' +
+    '(place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}})',
+    'RETURN user, checkin, place',
   ].join('\n');
 
-  var params = data;
+  var params = combinedCheckins;
 
   var deferred = Q.defer();
 
