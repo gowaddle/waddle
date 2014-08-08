@@ -113,19 +113,25 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
   return deferred.promise;
 };
 
-utils.parsePhotoList = function (userFBPhotoData, photoList) {
+utils.parseFBData = function (userFBPhotoData, data) {
 
-  _.each(photoList, function (photo) {
-    if (photo.place) {
+  _.each(data, function (datum) {
+    if (datum.place) {
       var place = {
-        'name': photo.place.name,
-        'lat': photo.place.location.latitude,
-        'lng': photo.place.location.longitude,
-        'checkinTime': new Date(photo.created_time)
+        'name': datum.place.name,
+        'lat': datum.place.location.latitude,
+        'lng': datum.place.location.longitude,
+        'checkinTime': new Date(datum.created_time),
+        'likes': null,
+        'photos': null,
+        'caption': null,
+        'foursquareID': null,
+        'country': null,
+        'category': null
       }
 
-      if (photo.likes) {
-        place.likes = photo.likes.data.length;
+      if (datum.likes) {
+        place.likes = datum.likes.data.length;
       }
       
       // do stuff here to pluck out relevant fields
@@ -134,22 +140,6 @@ utils.parsePhotoList = function (userFBPhotoData, photoList) {
   });
 
   return userFBPhotoData;
-};
-
-utils.parseCheckinData = function (userFBCheckinData, checkinList) {
-
-  _.each(checkinList, function (checkin) {
-      var place = {
-        'name': checkin.place.name,
-        'lat': checkin.place.location.latitude,
-        'lng': checkin.place.location.longitude,
-        'checkinTime': new Date(checkin.created_time)
-      }
-      // do stuff here to pluck out relevant fields
-      userFBCheckinData.push(place);
-  });
-
-  return userFBCheckinData;
 };
 
 utils.integrateFBPhotosAndCheckins = function (user, photoData, checkinData) {

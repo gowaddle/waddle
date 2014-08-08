@@ -34,6 +34,29 @@ User.prototype.save = function (){
   return deferred.promise;
 };
 
+User.prototype.addCheckins = function(facebookID, combinedCheckins){
+  var node = db.createNode(data);
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'MERGE (user)-[:hasCheckin]->(checkin:Checkin {name: {name}})',
+    'RETURN user, place',
+  ].join('\n');
+
+  var params = data;
+
+  var deferred = Q.defer();
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+}
+
 User.prototype.findAllCheckins = function () {
   var deferred = Q.defer();
 
