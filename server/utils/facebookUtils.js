@@ -132,7 +132,8 @@ utils.parseFBData = function (user, data) {
         'caption': 'null',
         'foursquareID': 'null',
         'country': 'null',
-        'category': 'null'
+        'category': 'null',
+        'source': 'facebook'
       }
 
       if (datum.likes) {

@@ -35,6 +35,31 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   return deferred.promise; 
 };
 
+utils.getUserFoursquareIDFromToken = function (user) {
+  
+  var deferred = Q.defer();
+
+  var fsqAccessToken = user.getProperty('fsqToken');
+  var query = {
+    v: '20140806',
+    oauth_token: fsqAccessToken
+  }
+  var queryPath = 'https://api.foursquare.com/v2/users/self?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function(){
+      deferred.resolve(JSON.parse(data));
+    })
+  }).on('error', function(err) {
+    deferred.reject(err);
+  });
+  return deferred.promise;
+}
+
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
@@ -97,40 +122,45 @@ utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareChec
 };
 
 utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
- var parsedCheckins = _.map(foursquareCheckinArray, function(item) {
-    
+
+ var parsedCheckins = [];
+ _.each(foursquareCheckinArray, function(item) {
+
     var placeCheckin = {
-        'checkinTime': new Date(item.createdAt*1000),
-        'photos': null,
-        'caption': null,
-        'foursquareID': item.venue.id,
         'name': item.venue.name,
         'lat': item.venue.location.lat,
         'lng': item.venue.location.lng,
+        'checkinTime': new Date(item.createdAt*1000),
+        'likes': 'null',
+        'photos': 'null',
+        'caption': 'null',
+        'foursquareID': item.venue.id,
         'country': item.venue.location.country,
-        'category': null
+        'category': 'null',
+        'source': 'foursquare'
       };
+
 
     if(item.venue.categories[0]) {
       placeCheckin.category = item.venue.categories[0].name;
     }
 
-    if(item.photos.count > 0) {
-      placeCheckin.photos = _.map(item.photos.items, function(photo) {
-        var photoMetaData = {
-          prefix: photo.prefix,
-          suffix: photo.suffix,
-          height: photo.height,
-          width: photo.width,
-          visibility: photo.visibility
-        }
-        return photoMetaData;
-      });
-    }
+    // if(item.photos.count > 0) {
+    //   placeCheckin.photos = _.map(item.photos.items, function(photo) {
+    //     var photoMetaData = {
+    //       prefix: photo.prefix,
+    //       suffix: photo.suffix,
+    //       height: photo.height,
+    //       width: photo.width,
+    //       visibility: photo.visibility
+    //     }
+    //     return photoMetaData;
+    //   });
+    // }
     if(item.shout) {
       placeCheckin.caption = item.shout;
     }
-    return placeCheckin;
+    parsedCheckins.push(placeCheckin);
   });
  return parsedCheckins;
 };

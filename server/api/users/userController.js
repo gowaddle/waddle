@@ -82,11 +82,20 @@ userController.addFoursquareData = function (req, res) {
   })
   .then(function (userNode) {
     user = userNode;
+    return foursquareUtils.getUserFoursquareIDFromToken(user);
+  })
+  .then(function (userFoursquareData) {
+    console.log(userFoursquareData.response.user.id);
+    return user.setProperty('foursquareID', userFoursquareData.response.user.id);
+  })
+  .then(function (userNode) {
+    user = userNode;
     return foursquareUtils.tabThroughFoursquareCheckinHistory(user);
   })
   .then(function (foursquareHistoryBucket) {
     var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
-    return foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    return user.addCheckins(userData.facebookID, allParsedFoursquareCheckins);
   })
   .then(function (data) {
     console.log('4s: ',data);
