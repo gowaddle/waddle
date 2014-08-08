@@ -99,7 +99,6 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
  var parsedCheckins = _.map(foursquareCheckinArray, function(item) {
     
     var placeCheckin = {
-      'checkin': {
         'checkinTime': new Date(item.createdAt*1000),
         'photos': null,
         'caption': null,
@@ -109,8 +108,7 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
         'lng': item.venue.location.lng,
         'country': item.venue.location.country,
         'category': null
-      }
-    };
+      };
 
     if(item.venue.categories[0]) {
       placeCheckin.category = item.venue.categories[0].name;
