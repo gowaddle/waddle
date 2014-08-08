@@ -2,6 +2,7 @@ var https = require('https');
 var qs = require('querystring');
 var Q = require('q');
 var _ = require('lodash');
+var foursquareUtils = require('./foursquareUtils');
 
 var utils = {};
 
@@ -113,7 +114,11 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
   return deferred.promise;
 };
 
-utils.parseFBData = function (userFBPhotoData, data) {
+utils.parseFBData = function (data) {
+  var deferred = Q.defer();
+
+  var parsedData = [];
+  var foursquareVenueQueries = [];
 
   _.each(data, function (datum) {
     if (datum.place) {
@@ -134,11 +139,29 @@ utils.parseFBData = function (userFBPhotoData, data) {
         place.likes = datum.likes.data.length;
       }
       
-      userFBPhotoData.push(place);
+      parsedData.push(place);
+
+      var latlng = place.lat.toString() + ',' + place.lng.toString();
+
+      foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(place.name, latlng));
     }
   });
 
-  return userFBPhotoData;
+  console.log('4s query sample', JSON.stringify(foursquareVenueQueries[0]));
+
+  Q.all(foursquareVenueQueries)
+  .then(function (foursquareVenueIDs) {
+    _.each(parsedData, function (datum, index) {
+      datum.foursquareID = foursquareVenueIDs[index];
+    });
+    console.log('parsedData sample' + JSON.stringify(parsedData[0]));
+    deferred.resolve(parsedData);
+  })
+  .catch(function (err) {
+    deferred.reject(err);
+  });
+
+  return deferred.promise;
 };
 
 module.exports = utils;

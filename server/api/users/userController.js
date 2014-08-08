@@ -22,7 +22,7 @@ userController.updateUser = function (req, res) {
     return user.findAllCheckins();
   })
   .then(function (checkinsAlreadyStored) {
-    console.log(checkinsAlreadyStored); // we should send this data to the client immediately?
+    // console.log(checkinsAlreadyStored); // we should send this data to the client immediately?
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
   .then(function (fbReqData) {
@@ -35,14 +35,21 @@ userController.updateUser = function (req, res) {
   })
   .then(function (fbRawCheckinData) {
     // parse Checkin data
-    facebookUtils.parseFBData(userFBCheckinData, fbRawCheckinData.data);
+    return facebookUtils.parseFBData(fbRawCheckinData.data);
+  })
+  .then(function (fbParsedCheckinData) {
+    userFBCheckinData = fbParsedCheckinData;
     // get Picture data
     return facebookUtils.getFBPhotos(user);
   })
   .then(function (fbRawPhotoList) {
     // parse Photo data
-    facebookUtils.parseFBData(userFBPhotoData, fbRawPhotoList); 
+    console.log(fbRawPhotoList.length)
+    return facebookUtils.parseFBData(fbRawPhotoList); 
+  })
+  .then(function (fbParsedPhotoData) {
     // merge checkins and photos
+    userFBPhotoData = fbParsedPhotoData;
     combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
     return user.addCheckins(userData.facebookID, combinedFBCheckins);
   })

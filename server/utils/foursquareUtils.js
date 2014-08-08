@@ -93,7 +93,7 @@ utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareChec
     return checkinBucket.response.checkins.items;
   });
   return _.flatten(allCheckins, true);
-}
+};
 
 utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
  var parsedCheckins = _.map(foursquareCheckinArray, function(item) {
@@ -132,6 +132,10 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
     return placeCheckin;
   });
  return parsedCheckins;
-}
+};
+
+utils.generateFoursquarePlaceID = function (name, latlng) {
+  return name + latlng;
+};
 
 module.exports = utils;
