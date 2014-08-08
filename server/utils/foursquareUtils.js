@@ -102,10 +102,7 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
       'checkin': {
         'checkinTime': new Date(item.createdAt*1000),
         'photos': null,
-        'caption': null
-      },
-
-      'place': {
+        'caption': null,
         'foursquareID': item.venue.id,
         'name': item.venue.name,
         'lat': item.venue.location.lat,
@@ -116,7 +113,7 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
     };
 
     if(item.venue.categories[0]) {
-      placeCheckin.place.category = item.venue.categories[0].name;
+      placeCheckin.category = item.venue.categories[0].name;
     }
 
     if(item.photos.count > 0) {
