@@ -122,12 +122,12 @@ utils.parseFBData = function (userFBPhotoData, data) {
         'lat': datum.place.location.latitude,
         'lng': datum.place.location.longitude,
         'checkinTime': new Date(datum.created_time),
-        'likes': null,
-        'photos': null,
-        'caption': null,
-        'foursquareID': null,
-        'country': null,
-        'category': null
+        'likes': 1,
+        'photos': 1,
+        'caption': 1,
+        'foursquareID': 1,
+        'country': 1,
+        'category': 1
       }
 
       if (datum.likes) {

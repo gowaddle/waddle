@@ -42,6 +42,10 @@ var userController = {
       //req.body.facebookID = 'xxxxxxx'
       combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
       console.log(combinedFBCheckins)
+      return user.addCheckins(userData.facebookID, combinedFBCheckins)
+    })
+    .then(function (data){
+      console.log(data)
       res.status(204).end();
     })
     .catch(function(err) {

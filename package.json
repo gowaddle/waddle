@@ -38,7 +38,8 @@
     "protractor": "^1.0.0",
     "q": "^1.0.1",
     "stylus": "~0.47.3",
-    "supertest": "^0.13.0"
+    "supertest": "^0.13.0",
+    "request": "~2.40.0"
   },
   "devDependencies": {
     "karma": "~0.12.19",
