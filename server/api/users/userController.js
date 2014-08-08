@@ -19,8 +19,10 @@ userController.updateUser = function (req, res) {
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     user = userNode;
+    return user.findAllCheckins();
   })
-  .then(function () {
+  .then(function (checkinsAlreadyStored) {
+    console.log(checkinsAlreadyStored); // we should send this data to the client immediately?
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
   .then(function (fbReqData) {
@@ -45,7 +47,7 @@ userController.updateUser = function (req, res) {
     return user.addCheckins(userData.facebookID, combinedFBCheckins);
   })
   .then(function (data) {
-    console.log('fb: ',data);
+    console.log('fb: ', data);
     res.status(204).end();
   })
   .catch(function(err) {

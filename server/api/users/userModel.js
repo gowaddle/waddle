@@ -1,12 +1,14 @@
 var neo4j = require('neo4j');
 var Q = require('q');
-var qs = require('querystring')
-var request = require('request')
+var qs = require('querystring');
+var request = require('request');
+var _ = require('lodash');
 
-var neo4jurl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474'
-var db = new neo4j.GraphDatabase(neo4jurl);
+var neo4jUrl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474';
+var db = new neo4j.GraphDatabase(neo4jUrl);
 
 var Checkin = require('../checkins/checkinModel.js');
+var Place = require('../places/placeModel.js');
 
 var User = function (node){
 	this.node = node;
@@ -79,7 +81,7 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
   console.log('sample batch request: ', batchRequest[0])
 
   var options = {
-    'url': neo4jurl + '/db/data/batch',
+    'url': neo4jUrl + '/db/data/batch',
     'method': 'POST',
     'json': true,
     'body': JSON.stringify(batchRequest)
@@ -99,8 +101,8 @@ User.prototype.findAllCheckins = function () {
   var deferred = Q.defer();
 
   var query = [
-    'MATCH (user:User {facebookID: {facebookID})-[:hasCheckin]->(c:Checkin)-[:hasPlace]->(p:Place)',
-    'RETURN user, c, p',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(c:Checkin)-[:hasPlace]->(p:Place)',
+    'RETURN c, p',
   ].join('\n');
 
   var params = {
@@ -110,7 +112,13 @@ User.prototype.findAllCheckins = function () {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(results);
+      var parsedResults = _.map(results, function (item) {
+        return {
+          checkin: item.c.data,
+          place: item.p.data
+        }
+      })
+      deferred.resolve(parsedResults);
     }
   });
 
