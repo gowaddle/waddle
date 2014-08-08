@@ -122,19 +122,18 @@ utils.parseFBData = function (userFBPhotoData, data) {
         'lat': datum.place.location.latitude,
         'lng': datum.place.location.longitude,
         'checkinTime': new Date(datum.created_time),
-        'likes': 1,
-        'photos': 1,
-        'caption': 1,
-        'foursquareID': 1,
-        'country': 1,
-        'category': 1
+        'likes': 'null',
+        'photos': 'null',
+        'caption': 'null',
+        'foursquareID': 'null',
+        'country': 'null',
+        'category': 'null'
       }
 
       if (datum.likes) {
         place.likes = datum.likes.data.length;
       }
       
-      // do stuff here to pluck out relevant fields
       userFBPhotoData.push(place);
     }
   });
