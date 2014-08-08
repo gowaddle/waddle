@@ -5,7 +5,7 @@ var db = new neo4j.GraphDatabase(process.env['GRAPHENEDB_URL'] || 'http://localh
 
 var Place = function(node){
   this.node = node;
-}
+};
 
 Place.prototype.setProperty = function(property, value) {
   this.node.data[property] = value;

@@ -2,7 +2,6 @@ var foursquareUtils = require('../../utils/foursquareUtils.js');
 var facebookUtils = require('../../utils/facebookUtils.js');
 var User = require('./userModel.js');
 
-
 var userController = {
   updateUser: function (req, res) {
 
