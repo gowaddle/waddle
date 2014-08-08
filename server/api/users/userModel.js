@@ -78,23 +78,19 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
   console.log(batchRequest)
 
   var options = {
-    'url': 'http://localhost:7474/db/data/batch',
+    'url': process.env['WADDLE_GRAPHENEDB_URL'] + '/db/data/batch',
     'method': 'POST',
     'json': true,
     'body': JSON.stringify(batchRequest)
   }
 
-  console.log(options.path)
+  console.log(options.url)
 
   request.post(options, function(err, response, body) {
-    if (err) {console.log(err)}
-      console.log(body)
+    if (err) {deferred.reject(err)}
+    deferred.resolve(body);
   });
 
-  // write the data
-
-
-  deferred.resolve(1);
   return deferred.promise;
 }
 
