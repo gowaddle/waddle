@@ -6,7 +6,7 @@ var Checkin = require('../checkins/checkinModel.js');
 
 var userController = {};
 
-userController.updateUser = function (req, res) {
+userController.userLogin = function (req, res) {
 
   var userData = req.body;
   var user;
@@ -15,52 +15,68 @@ userController.updateUser = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
-
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     user = userNode;
-    return user.findAllCheckins();
-  })
-  .then(function (checkinsAlreadyStored) {
-    // console.log(checkinsAlreadyStored); // we should send this data to the client immediately?
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
   .then(function (fbReqData) {
     return user.setProperty('fbToken', fbReqData.access_token);
   })
-  // start getting data for checkins and photos
-  .then(function (userNode) {
+  .then(function (userNode) { 
     user = userNode;
-    return facebookUtils.getFBTaggedPlaces(user);
+    return user.findAllCheckins()
   })
-  .then(function (fbRawCheckinData) {
-    // parse Checkin data
-    return facebookUtils.parseFBData(user, fbRawCheckinData.data);
-  })
-  .then(function (fbParsedCheckinData) {
-    userFBCheckinData = fbParsedCheckinData;
-    // get Picture data
-    return facebookUtils.getFBPhotos(user);
-  })
-  .then(function (fbRawPhotoList) {
-    // parse Photo data
-    console.log(fbRawPhotoList.length)
-    return facebookUtils.parseFBData(user, fbRawPhotoList); 
-  })
-  .then(function (fbParsedPhotoData) {
-    // merge checkins and photos
-    userFBPhotoData = fbParsedPhotoData;
-    combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
-    return user.addCheckins(userData.facebookID, combinedFBCheckins);
-  })
-  .then(function (data) {
-    // console.log('fb: ', data);
-    res.status(204).end();
+  .then(function (checkinsAlreadyStored) {
+    console.log('fb checkins: ', checkinsAlreadyStored.length)
+    if (checkinsAlreadyStored.length) {
+      res.json(checkinsAlreadyStored);
+      res.status(200).end();
+    } else {
+      getAndParseFBData();
+    }
   })
   .catch(function(err) {
     console.log(err);
     res.status(500).end();
   });
+
+  var getAndParseFBData = function () {
+    // start getting data for checkins and photos
+    facebookUtils.getFBTaggedPlaces(user)
+    .then(function (fbRawCheckinData) {
+      // parse Checkin data
+      return facebookUtils.parseFBData(user, fbRawCheckinData.data);
+    })
+    .then(function (fbParsedCheckinData) {
+      userFBCheckinData = fbParsedCheckinData;
+      // get Picture data
+      return facebookUtils.getFBPhotos(user);
+    })
+    .then(function (fbRawPhotoList) {
+      // parse Photo data
+      console.log(fbRawPhotoList.length)
+      return facebookUtils.parseFBData(user, fbRawPhotoList); 
+    })
+    .then(function (fbParsedPhotoData) {
+      // merge checkins and photos
+      userFBPhotoData = fbParsedPhotoData;
+      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
+      return user.addCheckins(userData.facebookID, combinedFBCheckins);
+    })
+    .then(function (data) {
+      return user.findAllCheckins()
+    })
+    .then(function (checkinsStored) {
+      console.log('fb checkins: ', checkinsStored.length);
+      res.json(checkinsStored);
+      res.status(200).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    });
+  }
 };
 
 userController.addFoursquareData = function (req, res) {

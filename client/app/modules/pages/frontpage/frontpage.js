@@ -25,7 +25,8 @@ angular.module('waddle.frontpage', [])
     console.log("userDataPassedToServer: ", userData)
 
     UserRequests.sendUserData(userData)
-    .then(function(){
+    .then(function(data){
+      console.log(data);
         //$state.go('map') should occur here when we end up getting data from the database (and show a waddling penguin meanwhile)
     });
 

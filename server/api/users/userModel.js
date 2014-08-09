@@ -41,8 +41,7 @@ User.prototype.save = function (){
 };
 
 User.prototype.addCheckins = function(facebookID, combinedCheckins){
-    var deferred = Q.defer()
-    var batchRequest = [];
+    var deferred = Q.defer();
 
 /*    var query = [
     'MERGE (user:User {facebookID: {facebookID}})',
@@ -66,30 +65,34 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
     'RETURN user, checkin, place',
   ].join('\n');
 
-  for (var checkin = 0; checkin < combinedCheckins.length; checkin++){
+  var batchRequest = _.map(combinedCheckins, function (checkin, index) {
     var singleRequest = {
       'method': "POST",
       'to': "/cypher",
       'body': {
         'query': query,
-        'params': combinedCheckins[checkin]
+        'params': checkin
       },
-      'id': checkin
+      'id': index
     };
+
     singleRequest.body.params.facebookID = facebookID;
-    batchRequest.push(singleRequest);
-  }
+
+    return singleRequest;
+  });
 
   var options = {
     'url': neo4jUrl + '/db/data/batch',
     'method': 'POST',
     'json': true,
     'body': JSON.stringify(batchRequest)
-  }
+  };
 
   request.post(options, function(err, response, body) {
-    if (err) {deferred.reject(err)}
-    deferred.resolve(body);
+    if (err) { deferred.reject(err) }
+    else {
+      deferred.resolve(body);
+    }
   });
 
   return deferred.promise;
@@ -116,6 +119,7 @@ User.prototype.findAllCheckins = function () {
           place: item.p.data
         }
       })
+
       deferred.resolve(parsedResults);
     }
   });
