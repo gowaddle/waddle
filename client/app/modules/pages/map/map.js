@@ -18,7 +18,7 @@ angular.module('waddle.map', [])
       }).setView([37.6, -122.45], 3);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false});
+      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
     	// var facebookPlaces = L.layerGroup().addTo(configuredMap);
       configuredMap.addLayer(aggregatedMarkers);
     
@@ -40,7 +40,7 @@ angular.module('waddle.map', [])
       var handleUserCheckinData = function (allUserCheckins) {
       	var deferred = $q.defer();
       	var placeLatLngs = [];
-		  	// $scope.allUserCheckins = allUserCheckins;
+		  	$scope.allUserCheckins = allUserCheckins;
 		  	console.log(allUserCheckins.data);
 		  	for(var i = 0; i < allUserCheckins.data.length; i++) {
           var place = allUserCheckins.data[i].place;
@@ -52,28 +52,17 @@ angular.module('waddle.map', [])
        return deferred.promise;
       };
 
-    	// $scope.countriesBeen = ["United States", "China"];
+    	// $scope.countriesBeen = [];
 
-     //  var findCountriesBeen = function (fbData) {
-     //  	var deferred = $q.defer();
-     //  	deferredPromises = [];
-     //  	$scope.countriesBeen = [];
-     //  	for(var j = 0; j < fbData.length; j++) {
-	    //   	var deferred = $q.defer();
-     //  		var checkin = fbData[j].place;
-	    //   	Geocoder.reverseGeocode(checkin.location.longitude, checkin.location.latitude)
-     //        .then(function(data) {
-     //        	var countryName = data.data.features[0].place_name;
-	    //       	if($scope.countriesBeen.indexOf(countryName) === -1) {
-	    //       		$scope.countriesBeen.push(countryName);
-	    //       	}
-	    //       	deferred.resolve($scope.countriesBeen);
-     //        })
-     //      .then(function(data) {
-	    //   	  deferred.resolve($scope.countriesBeen);
-	    //   	  return deferred.promise;
-     //      })
-     //  	}
+     //  var findCountriesBeen = function (allUserCheckins) {
+     //    for(var i = 0; i < allUserCheckins.data.length; i++) {
+     //      var place = allUserCheckins.data[i].place;
+     //      var country = 
+     //      if($scope.countriesBeen.indexOf(country) === -1) {
+     //        $scope.countriesBeen.push(country);
+     //      }
+     //      return $scope.countriesBeen;
+     //    }
      //  };
 
       // var addToShadedCountries = function () {
