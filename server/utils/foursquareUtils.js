@@ -110,6 +110,7 @@ utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   }).on('error', function(err) {
     deferred.reject(err);
   });
+
   return deferred.promise;
 };
 
@@ -118,7 +119,7 @@ utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareChec
     return checkinBucket.response.checkins.items;
   });
   return _.flatten(allCheckins, true);
-}
+};
 
 utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
 
@@ -162,6 +163,47 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
     parsedCheckins.push(placeCheckin);
   });
  return parsedCheckins;
-}
+};
+
+utils.generateFoursquarePlaceID = function (user, name, latlng) {
+  var deferred = Q.defer();
+
+  var query = {
+    v: '20140806',
+    limit: '1',
+    ll: latlng,
+    query: name
+  };
+
+  var oauthToken = user.getProperty('fsqToken');
+
+  if (oauthToken) {
+    query.oauth_token = oauthToken;
+  } else {
+    query.client_id = process.env.WADDLE_FOURSQUARE_CLIENT_ID;
+    query.client_secret = process.env.WADDLE_FOURSQUARE_CLIENT_SECRET;
+  }
+
+  var queryPath = 'https://api.foursquare.com/v2/venues/search?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function(){
+      var venue = JSON.parse(data).response.venues[0];
+      if (venue) {
+        deferred.resolve(venue.id);
+      } else {
+        deferred.resolve(name);
+      }
+    })
+  }).on('error', function(err) {
+    deferred.reject(err);
+  });
+
+  return deferred.promise;
+};
 
 module.exports = utils;

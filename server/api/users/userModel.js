@@ -80,16 +80,12 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
     batchRequest.push(singleRequest);
   }
 
-  console.log('sample batch request: ', batchRequest[0])
-
   var options = {
     'url': neo4jUrl + '/db/data/batch',
     'method': 'POST',
     'json': true,
     'body': JSON.stringify(batchRequest)
   }
-
-  console.log('batch url: ', options.url)
 
   request.post(options, function(err, response, body) {
     if (err) {deferred.reject(err)}
