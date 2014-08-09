@@ -1,5 +1,5 @@
 angular.module('waddle.map', [])
-  .controller('MapController', function ($scope, $state, $q, Auth, FacebookMapData, Geocoder) {
+  .controller('MapController', function ($scope, $state, $q, Auth, $rootScope) {
     Auth.checkLogin()
     .then(function(){
 
@@ -37,18 +37,18 @@ angular.module('waddle.map', [])
       };
     	console.log(configuredMap.getZoom());
 
-      var handleFacebookData = function (fbData) {
+      var handleUserCheckinData = function (allUserCheckins) {
       	var deferred = $q.defer();
-      	var checkinLatLngs = []
-		  	$scope.fbData = fbData;
-		  	console.log(fbData);
-		  	for(var i = 0; i < fbData.length; i++) {
-          var checkin = fbData[i].place;
-          var checkinLatLng = [checkin.location.latitude, checkin.location.longitude];
-          checkinLatLngs.push(checkinLatLng);
-          makeMarker(checkin.name, checkinLatLng);
+      	var placeLatLngs = [];
+		  	// $scope.allUserCheckins = allUserCheckins;
+		  	console.log(allUserCheckins.data);
+		  	for(var i = 0; i < allUserCheckins.data.length; i++) {
+          var place = allUserCheckins.data[i].place;
+          var placeLatLng = [place.lat, place.lng];
+          placeLatLngs.push(placeLatLng);
+          makeMarker(place.name, placeLatLng);
         }
-       deferred.resolve(checkinLatLngs);
+       deferred.resolve(placeLatLngs);
        return deferred.promise;
       };
 
@@ -95,12 +95,15 @@ angular.module('waddle.map', [])
       // addToShadedCountries();
 
    
+         if($rootScope.allUserCheckins) {
+           handleUserCheckinData($rootScope.allUserCheckins);
+         }
+    //   FacebookMapData.getFacebookMapData()
+    //   .then(function(data){
+    //     handleFacebookData(data.data)
+		  // });
 
 
-      FacebookMapData.getFacebookMapData()
-      .then(function(data){
-        handleFacebookData(data.data)
-		  });
   	    
 	  });
 
