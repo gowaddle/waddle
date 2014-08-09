@@ -41,9 +41,9 @@ angular.module('waddle.map', [])
       	var deferred = $q.defer();
       	var placeLatLngs = [];
 		  	// $scope.allUserCheckins = allUserCheckins;
-		  	console.log(allUserCheckins.data);
-		  	for(var i = 0; i < allUserCheckins.data.length; i++) {
-          var place = allUserCheckins.data[i].place;
+		  	console.log(allUserCheckins.data.allCheckins);
+		  	for(var i = 0; i < allUserCheckins.data.allCheckins.length; i++) {
+          var place = allUserCheckins.data.allCheckins[i].place;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
           makeMarker(place.name, placeLatLng);

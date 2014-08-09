@@ -46,7 +46,7 @@ User.prototype.addFriends = function(facebookID, friends){
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
-    'MERGE (friend:User {facebookID: {friendFacebookID}})',
+    'MERGE (friend:User {facebookID: {friendFacebookID}, name: {friendName}})',
     'MERGE (user)-[:hasFriend]->(friend)',
     //change to merge on foursquareID only
     'RETURN user, friend',
@@ -59,6 +59,7 @@ User.prototype.addFriends = function(facebookID, friends){
       'body': {
         'query': query,
         'params': {
+          friendName: friend.name,
           friendFacebookID: friend.id,
           facebookID: facebookID
         }
@@ -116,7 +117,7 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
   var batchRequest = _.map(combinedCheckins, function (checkin, index) {
     var singleRequest = {
       'method': "POST",
-      'to': "/cypher",
+      'to': "/cypher", ///?includeStats=true
       'body': {
         'query': query,
         'params': checkin
@@ -144,7 +145,33 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
   });
 
   return deferred.promise;
-}
+};
+
+User.prototype.findAllFriends = function () {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasFriend]->(friend:User)',
+    'RETURN friend',
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (friend) {
+        return friend.friend._data.data
+      })
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+};
 
 User.prototype.findAllCheckins = function () {
   var deferred = Q.defer();
