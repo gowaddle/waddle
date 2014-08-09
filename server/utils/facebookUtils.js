@@ -37,6 +37,34 @@ utils.exchangeFBAccessToken = function (fbToken) {
   return deferred.promise;
 };
 
+utils.getFBFriends = function (user) {
+  var deferred = Q.defer();
+
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
+  
+  var query = {
+    access_token: fbToken
+  };
+
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/friends?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      deferred.resolve(JSON.parse(data));
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+};
 
 utils.getFBTaggedPlaces = function (user) {
   var deferred = Q.defer();

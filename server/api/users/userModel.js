@@ -40,6 +40,54 @@ User.prototype.save = function (){
   return deferred.promise;
 };
 
+User.prototype.addFriends = function(facebookID, friends){
+  var deferred = Q.defer();
+
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'MERGE (friend:User {facebookID: {friendFacebookID}})',
+    'MERGE (user)-[:hasFriend]->(friend)',
+    //change to merge on foursquareID only
+    'RETURN user, friend',
+  ].join('\n');
+
+  var batchRequest = _.map(friends, function (friend, index) {
+    var singleRequest = {
+      'method': "POST",
+      'to': "/cypher",
+      'body': {
+        'query': query,
+        'params': {
+          friendFacebookID: friend.id,
+          facebookID: facebookID
+        }
+      },
+      'id': index
+    };
+
+    return singleRequest;
+  });
+
+  var options = {
+    'url': neo4jUrl + '/db/data/batch',
+    'method': 'POST',
+    'json': true,
+    'body': JSON.stringify(batchRequest)
+  };
+
+  request.post(options, function(err, response, body) {
+    if (err) { deferred.reject(err) }
+    else {
+      deferred.resolve(body);
+    }
+  });
+
+  return deferred.promise;
+
+
+}
+
 User.prototype.addCheckins = function(facebookID, combinedCheckins){
     var deferred = Q.defer();
 
@@ -54,7 +102,7 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
     'RETURN user, checkin, place',
   ].join('\n');*/
 
-   var query = [
+  var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
     'MERGE (checkin:Checkin {checkinTime: {checkinTime}})',
     'ON CREATE SET checkin = {likes: {likes}, photoSmall: {photoSmall}, photoLarge: {photoLarge}, caption: {caption}, checkinTime: {checkinTime}, source: {source}}',
@@ -131,7 +179,8 @@ User.createUniqueUser = function (data) {
   var deferred = Q.defer();
 
   var query = [
-    'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
+    'MERGE (user:User {facebookID: {facebookID}})',
+    'SET user.name = {name}',
     'RETURN user',
   ].join('\n');
 

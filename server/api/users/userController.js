@@ -29,6 +29,7 @@ userController.userLogin = function (req, res) {
   })
   .then(function (checkinsAlreadyStored) {
     console.log('fb checkins: ', checkinsAlreadyStored.length)
+    //??
     if (checkinsAlreadyStored.length) {
       res.json(checkinsAlreadyStored);
       res.status(200).end();
@@ -43,7 +44,18 @@ userController.userLogin = function (req, res) {
 
   var getAndParseFBData = function () {
     // start getting data for checkins and photos
-    facebookUtils.getFBTaggedPlaces(user)
+    facebookUtils.getFBFriends(user)
+    .then(function (fbRawUserData) {
+      // Friends data
+      console.log(fbRawUserData)
+      //return user.setProperty('friends', fbRawUserData.data.length);
+      return user.addFriends(userData.facebookID, fbRawUserData.data);
+    })
+    .then(function (ok) {
+      // Friends data
+      console.log(ok)
+      return facebookUtils.getFBTaggedPlaces(user)
+    })
     .then(function (fbRawCheckinData) {
       // parse Checkin data
       return facebookUtils.parseFBData(user, fbRawCheckinData.data);
@@ -62,6 +74,7 @@ userController.userLogin = function (req, res) {
       // merge checkins and photos
       userFBPhotoData = fbParsedPhotoData;
       combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
+      return user.addCheckins(userData.facebookID, combinedFBCheckins);
       return user.addCheckins(userData.facebookID, combinedFBCheckins);
     })
     .then(function (data) {
