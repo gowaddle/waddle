@@ -128,7 +128,8 @@ utils.parseFBData = function (user, data) {
         'lng': datum.place.location.longitude,
         'checkinTime': new Date(datum.created_time),
         'likes': 'null',
-        'photos': 'null',
+        'photoSmall': 'null',
+        'photoLarge': 'null',
         'caption': 'null',
         'foursquareID': 'null',
         'country': 'null',
@@ -140,7 +141,16 @@ utils.parseFBData = function (user, data) {
         place.likes = datum.likes.data.length;
       }
 
+      if (datum.picture) {
+        place.photoSmall = datum.picture;
+      }
+
+      if (datum.source) {
+        place.photoLarge = datum.source;
+      }
+
       var latlng = place.lat.toString() + ',' + place.lng.toString();
+
       
       parsedData.push(place);
       foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
