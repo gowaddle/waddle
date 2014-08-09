@@ -192,8 +192,12 @@ utils.generateFoursquarePlaceID = function (user, name, latlng) {
       data += chunk;
     });
     res.on('end', function(){
-      console.log(name, JSON.parse(data).response.venues);
-      deferred.resolve(name);
+      var venue = JSON.parse(data).response.venues[0];
+      if (venue) {
+        deferred.resolve(venue.id);
+      } else {
+        deferred.resolve(name);
+      }
     })
   }).on('error', function(err) {
     deferred.reject(err);

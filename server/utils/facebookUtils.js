@@ -147,14 +147,11 @@ utils.parseFBData = function (user, data) {
     }
   });
 
-  console.log('4s query sample', JSON.stringify(foursquareVenueQueries[0]));
-
   Q.all(foursquareVenueQueries)
   .then(function (foursquareVenueIDs) {
     _.each(parsedData, function (datum, index) {
       datum.foursquareID = foursquareVenueIDs[index];
     });
-    console.log('parsedData sample' + JSON.stringify(parsedData[0]));
     deferred.resolve(parsedData);
   })
   .catch(function (err) {
