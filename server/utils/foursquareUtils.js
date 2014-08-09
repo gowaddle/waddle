@@ -36,7 +36,7 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
 };
 
 utils.getUserFoursquareIDFromToken = function (user) {
-  
+
   var deferred = Q.defer();
 
   var fsqAccessToken = user.getProperty('fsqToken');
@@ -132,7 +132,8 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
         'lng': item.venue.location.lng,
         'checkinTime': new Date(item.createdAt*1000),
         'likes': 'null',
-        'photos': 'null',
+        'photoSmall': 'null',
+        'photoLarge': 'null',
         'caption': 'null',
         'foursquareID': item.venue.id,
         'country': item.venue.location.country,
@@ -145,18 +146,10 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
       placeCheckin.category = item.venue.categories[0].name;
     }
 
-    // if(item.photos.count > 0) {
-    //   placeCheckin.photos = _.map(item.photos.items, function(photo) {
-    //     var photoMetaData = {
-    //       prefix: photo.prefix,
-    //       suffix: photo.suffix,
-    //       height: photo.height,
-    //       width: photo.width,
-    //       visibility: photo.visibility
-    //     }
-    //     return photoMetaData;
-    //   });
-    // }
+    if(item.photos.count > 0) {
+      placeCheckin.photoSmall = item.photos.items[0].prefix + 'cap300' + item.photos.items[0].suffix;
+      placeCheckin.photoLarge = item.photos.items[0].prefix + 'original' + item.photos.items[0].suffix;
+    }
     if(item.shout) {
       placeCheckin.caption = item.shout;
     }

@@ -54,7 +54,7 @@ userController.updateUser = function (req, res) {
     return user.addCheckins(userData.facebookID, combinedFBCheckins);
   })
   .then(function (data) {
-    console.log('fb: ', data);
+    // console.log('fb: ', data);
     res.status(204).end();
   })
   .catch(function(err) {
