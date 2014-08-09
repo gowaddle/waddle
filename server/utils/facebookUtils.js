@@ -123,7 +123,8 @@ utils.parseFBData = function (userFBPhotoData, data) {
         'lng': datum.place.location.longitude,
         'checkinTime': new Date(datum.created_time),
         'likes': 'null',
-        'photos': 'null',
+        'photoSmall': 'null',
+        'photoLarge': 'null',
         'caption': 'null',
         'foursquareID': 'null',
         'country': 'null',
@@ -133,6 +134,14 @@ utils.parseFBData = function (userFBPhotoData, data) {
 
       if (datum.likes) {
         place.likes = datum.likes.data.length;
+      }
+
+      if (datum.picture) {
+        place.photoSmall = datum.picture;
+      }
+
+      if (datum.source) {
+        place.photoLarge = datum.source;
       }
       
       userFBPhotoData.push(place);

@@ -58,8 +58,8 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
    var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
     'MERGE (checkin:Checkin {checkinTime: {checkinTime}})',
-    'ON CREATE SET checkin = {likes: {likes}, photos: {photos}, caption: {caption}, checkinTime: {checkinTime}, source: {source}}',
-    'ON MATCH SET checkin.likes = {likes}, checkin.photos = {photos}, checkin.caption = {caption}, checkin.source = {source}',
+    'ON CREATE SET checkin = {likes: {likes}, photoSmall: {photoSmall}, photoLarge: {photoLarge}, caption: {caption}, checkinTime: {checkinTime}, source: {source}}',
+    'ON MATCH SET checkin.likes = {likes}, checkin.photoSmall = {photoSmall}, checkin.photoLarge = {photoLarge}, checkin.caption = {caption}, checkin.source = {source}',
     //change to merge on foursquareID only
     'MERGE (place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}, foursquareID: {foursquareID}})',
     'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)',
