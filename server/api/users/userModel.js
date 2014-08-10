@@ -49,13 +49,14 @@ User.prototype.addFriends = function(facebookID, friends){
     'MERGE (friend:User {facebookID: {friendFacebookID}, name: {friendName}})',
     'MERGE (user)-[:hasFriend]->(friend)',
     //change to merge on foursquareID only
-    'RETURN user, friend',
+    'RETURN friend',
   ].join('\n');
 
+  //?includeStats=true
   var batchRequest = _.map(friends, function (friend, index) {
     var singleRequest = {
       'method': "POST",
-      'to': "/cypher",
+      'to': "/cypher?includeStats=true",
       'body': {
         'query': query,
         'params': {
@@ -117,7 +118,7 @@ User.prototype.addCheckins = function(facebookID, combinedCheckins){
   var batchRequest = _.map(combinedCheckins, function (checkin, index) {
     var singleRequest = {
       'method': "POST",
-      'to': "/cypher", ///?includeStats=true
+      'to': "/cypher",
       'body': {
         'query': query,
         'params': checkin
