@@ -3,6 +3,7 @@ var facebookUtils = require('../../utils/facebookUtils.js');
 var User = require('./userModel.js');
 var Place = require('../places/placeModel.js');
 var Checkin = require('../checkins/checkinModel.js');
+var _ = require('lodash');
 
 var userController = {};
 
@@ -58,13 +59,14 @@ userController.userLogin = function (req, res) {
       // Friends data
       return user.addFriends(userData.facebookID, fbRawUserData.data);
     })
-    .then(function (data) {
-      // Friends data
-      return user.findAllFriends();
-    })
-    .then(function (neoUserData) {
-      // Friends data
-      userFBFriendsData = neoUserData;
+    .then(function (friends) {
+      // Parse Friends data
+      var allFriends = _.map(friends, function(friend){
+        return friend.body.data[0][0].data;
+      })
+      userFBFriendsData = allFriends
+
+      //get tagged places
       return facebookUtils.getFBTaggedPlaces(user);
     })
     .then(function (fbRawCheckinData) {
