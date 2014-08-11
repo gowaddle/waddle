@@ -4,7 +4,9 @@ angular.module('waddle', [
   'waddle.controllers',
 	'waddle.directives',
   'waddle.services',
-	'ui.router'
+	'ui.router',
+  'ui.scroll',
+  'ui.scroll.jqlite'
 ])
 
 .config(function ($stateProvider, $urlRouterProvider) {

@@ -1,7 +1,10 @@
 angular.module('waddle.map', [])
-  .controller('MapController', function ($scope, $state, $q, Auth, $rootScope) {
+  .controller('MapController', function ($scope, $state, $q, Auth, UserRequests, $rootScope) {
+    UserRequests.getUserData(window.sessionStorage.userFbID);
+
     Auth.checkLogin()
     .then(function(){
+
 
       $scope.logout = Auth.logout;
 
@@ -9,33 +12,34 @@ angular.module('waddle.map', [])
         $state.go('providers');
       };
 
-    	L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
+      L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
-    	var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
+      var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
         attributionControl: false,
         zoomControl: false,
         worldCopyJump: true
       }).setView([37.6, -122.45], 3);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false});
+
+      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
     	// var facebookPlaces = L.layerGroup().addTo(configuredMap);
       configuredMap.addLayer(aggregatedMarkers);
     
-    	var makeMarker = function (placeName, latLng) {
+      var makeMarker = function (placeName, latLng) {
         var marker = L.marker(latLng, {
-  	      icon: L.mapbox.marker.icon({
+          icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
             'marker-size': 'large',
             'marker-symbol': 'circle-stroked'
           })
-  	    })
-  	    .bindPopup('<h2>' + placeName + '</h2>')
-  	    // .addTo(facebookPlaces);
+        })
+        .bindPopup('<h2>' + placeName + '</h2>')
+        // .addTo(facebookPlaces);
 
         aggregatedMarkers.addLayer(marker);
       };
-    	console.log(configuredMap.getZoom());
+      console.log(configuredMap.getZoom());
 
       var handleUserCheckinData = function (allUserCheckins) {
       	var deferred = $q.defer();
@@ -52,28 +56,17 @@ angular.module('waddle.map', [])
        return deferred.promise;
       };
 
-    	// $scope.countriesBeen = ["United States", "China"];
+    	// $scope.countriesBeen = [];
 
-     //  var findCountriesBeen = function (fbData) {
-     //  	var deferred = $q.defer();
-     //  	deferredPromises = [];
-     //  	$scope.countriesBeen = [];
-     //  	for(var j = 0; j < fbData.length; j++) {
-	    //   	var deferred = $q.defer();
-     //  		var checkin = fbData[j].place;
-	    //   	Geocoder.reverseGeocode(checkin.location.longitude, checkin.location.latitude)
-     //        .then(function(data) {
-     //        	var countryName = data.data.features[0].place_name;
-	    //       	if($scope.countriesBeen.indexOf(countryName) === -1) {
-	    //       		$scope.countriesBeen.push(countryName);
-	    //       	}
-	    //       	deferred.resolve($scope.countriesBeen);
-     //        })
-     //      .then(function(data) {
-	    //   	  deferred.resolve($scope.countriesBeen);
-	    //   	  return deferred.promise;
-     //      })
-     //  	}
+     //  var findCountriesBeen = function (allUserCheckins) {
+     //    for(var i = 0; i < allUserCheckins.data.length; i++) {
+     //      var place = allUserCheckins.data[i].place;
+     //      var country = 
+     //      if($scope.countriesBeen.indexOf(country) === -1) {
+     //        $scope.countriesBeen.push(country);
+     //      }
+     //      return $scope.countriesBeen;
+     //    }
      //  };
 
       // var addToShadedCountries = function () {
@@ -101,9 +94,8 @@ angular.module('waddle.map', [])
     //   FacebookMapData.getFacebookMapData()
     //   .then(function(data){
     //     handleFacebookData(data.data)
-		  // });
-
-
+      // });
+    
   	    
 	  });
 

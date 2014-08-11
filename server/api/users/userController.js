@@ -17,10 +17,12 @@ userController.userLogin = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
+
+  console.log(userData)
   User.createUniqueUser(userData)
   .then(function (userNode) { 
-    //note: this has the user node!
-    console.dir(userNode.node._data.data)
+    //note: this has the user node
+    //console.dir(userNode.node._data.data)
     user = userNode;
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
@@ -153,13 +155,17 @@ userController.addFoursquareData = function (req, res) {
 };
 
 userController.getUserData = function(req, res){
-  var userData = req.params.user;
+  var userData = {
+    facebookID: req.params.user
+  };
 
-  User.createUniqueUser(userData)
+  User.find(userData)
   .then(function(user){
+    console.log(user)
     return user.findAllCheckins();
   })
   .then(function(checkins){
+    console.log("checkins:", checkins)
     res.json(checkins);
     res.status(200).end();
   })
