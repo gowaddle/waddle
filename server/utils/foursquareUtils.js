@@ -129,6 +129,7 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
 
 utils.parseCheckin = function (checkin) {
   var formattedCheckin = {
+    'checkinID': checkin.id,
     'name': checkin.venue.name,
     'lat': checkin.venue.location.lat,
     'lng': checkin.venue.location.lng,
