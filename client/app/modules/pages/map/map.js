@@ -1,7 +1,6 @@
 angular.module('waddle.map', [])
   .controller('MapController', function ($scope, $state, $q, Auth, UserRequests, $rootScope) {
     $scope.data = {};
-          $state.go('map.friends')
 
     UserRequests.getUserData(window.sessionStorage.userFbID);
     console.log($scope.data)
@@ -9,7 +8,7 @@ angular.module('waddle.map', [])
     Auth.checkLogin()
     .then(function(){
 
-
+      $state.go('map.feed')
       $scope.logout = Auth.logout;
 
 

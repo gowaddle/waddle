@@ -31,16 +31,17 @@ angular.module('waddle', [
           templateUrl: '../app/modules/pages/map/map.html',
           controller: 'MapController'
         },
-        'feed@map': {
-          templateUrl: '../app/modules/pages/map/feed.html', 
-          controller: 'MapController'
-        }
       }
     })
     .state('map.friends', {
       url: '/friends',
       templateUrl: '../app/modules/pages/map/friends.html', 
       controller: 'FriendsController'
+    })
+    .state('map.feed', {
+      url: '/feed',
+      templateUrl: '../app/modules/pages/map/feed.html', 
+      controller: 'FeedController'
     })
 
   $urlRouterProvider.otherwise('/');
