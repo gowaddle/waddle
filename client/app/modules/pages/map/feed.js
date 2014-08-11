@@ -1,9 +1,9 @@
 angular.module('waddle.feed', [])
-  .controller('FeedController', function ($rootScope, $scope) {
-	  console.log($rootScope.allUserCheckins);
+  .controller('FeedController', function ($rootScope, $scope, UserRequests) {
+  console.log(UserRequests.allData)
   	$scope.allUserCheckinsFeed = {
     get: function(index, count, success) {
-        success($rootScope.allUserCheckins.data.allCheckins);
+        success(UserRequests.allData.data.allCheckins);
     }
   };
   });

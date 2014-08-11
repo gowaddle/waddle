@@ -22,8 +22,10 @@ angular.module('waddle.map', [])
       var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
         attributionControl: false,
         zoomControl: false,
-        worldCopyJump: true
-      }).setView([37.6, -122.45], 3);
+        worldCopyJump: true,
+        minZoom: 2,
+        bounceAtZoomLimits: false
+      }).setView([20.00, 0.00], 2);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
 
