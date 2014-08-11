@@ -58,7 +58,7 @@ utils.getUserFoursquareIDFromToken = function (user) {
     deferred.reject(err);
   });
   return deferred.promise;
-}
+};
 
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
@@ -85,7 +85,7 @@ utils.tabThroughFoursquareCheckinHistory = function (user) {
     deferred.resolve(Q.all(historyBucketContainer));
   });
   return deferred.promise;
-}
+};
 
 utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
   var deferred = Q.defer();

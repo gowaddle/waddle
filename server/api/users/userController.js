@@ -162,7 +162,6 @@ userController.getUserData = function(req, res){
 
   User.find(userData)
   .then(function(user){
-    console.log(user)
     return user.findAllCheckins();
   })
   .then(function(checkins){
