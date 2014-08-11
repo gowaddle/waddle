@@ -40,7 +40,7 @@ angular.module('waddle.map', [])
       var handleUserCheckinData = function (allUserCheckins) {
       	var deferred = $q.defer();
       	var placeLatLngs = [];
-		  	$scope.allUserCheckins = allUserCheckins;
+		  	$scope.allUserCheckinData = allUserCheckins.data;
 		  	console.log(allUserCheckins.data);
 		  	for(var i = 0; i < allUserCheckins.data.length; i++) {
           var place = allUserCheckins.data[i].place;
