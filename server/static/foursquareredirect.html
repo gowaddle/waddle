@@ -20,7 +20,7 @@
         request.send(JSON.stringify({facebookID: window.sessionStorage.userFbID, foursquareCode: code}));
       }
 
-      window.location.assign("http://localhost:8080/#/map");
+      window.location.assign('http://waddle.herokuapp.com/#/map');
       sendFoursquareCodeToServer(parseFoursquareCode());
 
     </script>

@@ -89,7 +89,7 @@ userController.userLogin = function (req, res) {
       // merge checkins and photos
       userFBPhotoData = fbParsedPhotoData;
       combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
-      return user.addCheckins(userData.facebookID, combinedFBCheckins);
+      return user.addCheckins(combinedFBCheckins);
     })
     .then(function (data) {
       return user.findAllCheckins();
@@ -142,7 +142,7 @@ userController.addFoursquareData = function (req, res) {
   .then(function (foursquareHistoryBucket) {
     var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
     var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
-    return user.addCheckins(userData.facebookID, allParsedFoursquareCheckins);
+    return user.addCheckins(allParsedFoursquareCheckins);
   })
   .then(function (data) {
     console.log('4s: ',data);
