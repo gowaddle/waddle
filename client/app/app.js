@@ -35,9 +35,13 @@ angular.module('waddle', [
           templateUrl: '../app/modules/pages/map/feed.html', 
           controller: 'MapController'
         }
-
       }
-    });
+    })
+    .state('map.friends', {
+      url: '/friends',
+      templateUrl: '../app/modules/pages/map/friends.html', 
+      controller: 'FriendsController'
+    })
 
   $urlRouterProvider.otherwise('/');
 
