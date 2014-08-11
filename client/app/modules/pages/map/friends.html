@@ -1,3 +1,5 @@
 <div class='waddlefriends' ui-scroll-viewport>
-  <h1>AAAAAAAAAAAAAAAAAA</h1>
+  <div ng-repeat='friend in data.friends'>
+  <button ng-click="clickFriend(friend.facebookID)">{{friend.name}}</button>
+  </div>
 </div>
