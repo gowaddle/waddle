@@ -1,12 +1,15 @@
 angular.module('waddle.map', [])
   .controller('MapController', function ($scope, $state, $q, Auth, UserRequests, $rootScope) {
-    UserRequests.getUserData(window.sessionStorage.userFbID);
+    $scope.data = {};
 
+    UserRequests.getUserData(window.sessionStorage.userFbID);
+    console.log($scope.data)
+    
     Auth.checkLogin()
     .then(function(){
 
-
       $scope.logout = Auth.logout;
+
 
       $scope.goToProvidersPage = function () {
         $state.go('providers');
@@ -42,8 +45,10 @@ angular.module('waddle.map', [])
       console.log(configuredMap.getZoom());
 
       var handleUserCheckinData = function (allUserCheckins) {
-      	var deferred = $q.defer();
-      	var placeLatLngs = [];
+        var deferred = $q.defer();
+        var placeLatLngs = [];
+        $scope.data.friends = UserRequests.allData.data.friends;
+
 		  	// $scope.allUserCheckins = allUserCheckins;
 		  	console.log(allUserCheckins.data.allCheckins);
 		  	for(var i = 0; i < allUserCheckins.data.allCheckins.length; i++) {
@@ -88,8 +93,8 @@ angular.module('waddle.map', [])
       // addToShadedCountries();
 
    
-         if($rootScope.allUserCheckins) {
-           handleUserCheckinData($rootScope.allUserCheckins);
+         if(UserRequests.allData !== undefined) {
+           handleUserCheckinData(UserRequests.allData);
          }
     //   FacebookMapData.getFacebookMapData()
     //   .then(function(data){

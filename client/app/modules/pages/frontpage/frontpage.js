@@ -27,6 +27,8 @@ angular.module('waddle.frontpage', [])
     $state.go('loading');
     UserRequests.sendUserData(userData)
     .then(function(data){
+      UserRequests.allData = data
+      console.log(UserRequests.allData)
       $rootScope.allUserCheckins = data;
       // console.log($rootScope.allUserCheckins);
         //$state.go('map') should occur here when we end up getting data from the database (and show a waddling penguin meanwhile)
