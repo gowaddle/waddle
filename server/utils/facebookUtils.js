@@ -151,6 +151,7 @@ utils.parseFBData = function (user, data) {
   _.each(data, function (datum) {
     if (datum.place) {
       var place = {
+        'checkinID': datum.id,
         'name': datum.place.name,
         'lat': datum.place.location.latitude,
         'lng': datum.place.location.longitude,
@@ -181,6 +182,7 @@ utils.parseFBData = function (user, data) {
 
       
       parsedData.push(place);
+      console.log(place)
       foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
     }
   });
