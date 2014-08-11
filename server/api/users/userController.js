@@ -17,8 +17,6 @@ userController.userLogin = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
-
-  console.log(userData)
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     //note: this has the user node
@@ -168,7 +166,7 @@ userController.getUserData = function(req, res){
     return user.findAllCheckins();
   })
   .then(function(checkins){
-    console.log("checkins:", checkins)
+    console.log("checkins: ", checkins.length)
     res.json(checkins);
     res.status(200).end();
   })

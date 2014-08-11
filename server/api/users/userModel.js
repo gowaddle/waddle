@@ -49,6 +49,7 @@ User.prototype.addFriends = function(friendsList){
     'MATCH (user:User {facebookID: {facebookID}})',
     'MERGE (friend:User {facebookID: {friendFacebookID}, name: {friendName}})',
     'MERGE (user)-[:hasFriend]->(friend)',
+    'MERGE (friend)-[:hasFriend]->(user)',
     //change to merge on foursquareID only
     'RETURN friend',
   ].join('\n');
