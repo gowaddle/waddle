@@ -147,7 +147,7 @@ utils.parseCheckin = function (checkin) {
     formattedCheckin.category = checkin.venue.categories[0].name;
   }
 
-  if (checkin.photos.count > 0) {
+  if (checkin.photos && checkin.photos.count > 0) {
     formattedCheckin.photoSmall = checkin.photos.items[0].prefix + 'cap300' + checkin.photos.items[0].suffix;
     formattedCheckin.photoLarge = checkin.photos.items[0].prefix + 'original' + checkin.photos.items[0].suffix;
   }
