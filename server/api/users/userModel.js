@@ -40,9 +40,10 @@ User.prototype.save = function (){
   return deferred.promise;
 };
 
-User.prototype.addFriends = function(facebookID, friends){
+User.prototype.addFriends = function(friendsList){
   var deferred = Q.defer();
 
+  var facebookID = this.getProperty('facebookID');
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
@@ -53,7 +54,7 @@ User.prototype.addFriends = function(facebookID, friends){
   ].join('\n');
 
   //?includeStats=true
-  var batchRequest = _.map(friends, function (friend, index) {
+  var batchRequest = _.map(friendsList, function (friend, index) {
     var singleRequest = {
       'method': "POST",
       'to': "/cypher?includeStats=true",

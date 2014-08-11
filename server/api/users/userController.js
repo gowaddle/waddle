@@ -62,7 +62,7 @@ userController.userLogin = function (req, res) {
     facebookUtils.getFBFriends(user)
     .then(function (fbRawUserData) {
       // Friends data
-      return user.addFriends(userData.facebookID, fbRawUserData.data);
+      return user.addFriends(fbRawUserData.data);
     })
     .then(function (friends) {
       // Parse Friends data
