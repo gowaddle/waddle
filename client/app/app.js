@@ -33,7 +33,7 @@ angular.module('waddle', [
         },
         'feed@map': {
           templateUrl: '../app/modules/pages/map/feed.html', 
-          controller: 'MapController'
+          controller: 'FeedController'
         }
 
       }
