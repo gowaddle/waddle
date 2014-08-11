@@ -1,5 +1,11 @@
 angular.module('waddle.friends', [])
-  .controller('FriendsController', function ($scope, $state) {
-      $scope.testing = ['a', 'friend'];
-      console.log($scope.testing);
+  .controller('FriendsController', function ($scope, $state, UserRequests) {
+
+      $scope.clickFriend = function (friend){
+        UserRequests.getUserData(friend)
+        .then(function(data){
+          console.log(data)
+          $scope.handleUserCheckinData(data.data)
+        });
+      }
   });

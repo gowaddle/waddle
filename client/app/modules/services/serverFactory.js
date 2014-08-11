@@ -14,6 +14,9 @@ angular.module('waddle.services.serverFactory', [])
     },
 
     getUserData: function(user){
+      if (!user){
+        return
+      }
       return $http({
         method: 'GET',
         url: '/api/users/' + user
