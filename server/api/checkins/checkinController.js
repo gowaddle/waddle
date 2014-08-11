@@ -16,7 +16,7 @@ var checkinController = {};
 //   });
 // }
 
-checkinController.realtimeCheckinData = function (req, res){
+checkinController.realtimeFoursquareData = function (req, res){
   var data = req.body;
   console.log(data);
 }
