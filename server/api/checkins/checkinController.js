@@ -1,5 +1,5 @@
 var Checkin = require('./checkinModel.js');
-var User = require('../users/userMode.js');
+var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
 
 var checkinController = {};
