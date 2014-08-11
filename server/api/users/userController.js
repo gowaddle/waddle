@@ -64,7 +64,7 @@ userController.userLogin = function (req, res) {
       var allFriends = _.map(friends, function(friend){
         return friend.body.data[0][0].data;
       })
-      userFBFriendsData = allFriends
+      userFBFriendsData = allFriends;
 
       //get tagged places
       return facebookUtils.getFBTaggedPlaces(user);
@@ -86,8 +86,7 @@ userController.userLogin = function (req, res) {
     .then(function (fbParsedPhotoData) {
       // merge checkins and photos
       userFBPhotoData = fbParsedPhotoData;
-      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData)
-      return user.addCheckins(userData.facebookID, combinedFBCheckins);
+      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
       return user.addCheckins(userData.facebookID, combinedFBCheckins);
     })
     .then(function (data) {
@@ -98,7 +97,7 @@ userController.userLogin = function (req, res) {
       var allData = {
         allCheckins: checkinsStored,
         friends: userFBFriendsData
-      }
+      };
       res.json(allData);
       res.status(200).end();
     })
@@ -151,6 +150,23 @@ userController.addFoursquareData = function (req, res) {
     console.log(err);
     res.status(500).end();
   })
+};
+
+userController.getUserData = function(req, res){
+  var userData = req.params.user;
+
+  User.createUniqueUser(userData)
+  .then(function(user){
+    return user.findAllCheckins();
+  })
+  .then(function(checkins){
+    res.json(checkins);
+    res.status(200).end();
+  })
+  .catch(function(err){
+    console.log(err);
+    res.status(500).end();
+  });
 };
 
 module.exports = userController;
