@@ -9,6 +9,7 @@ angular.module('waddle.map', [])
     .then(function(){
 
       $state.go('map.feed')
+
       $scope.logout = Auth.logout;
 
 
@@ -45,15 +46,14 @@ angular.module('waddle.map', [])
       };
       console.log(configuredMap.getZoom());
 
-      var handleUserCheckinData = function (allUserCheckins) {
+      $scope.handleUserCheckinData = function (allUserCheckins) {
         var deferred = $q.defer();
         var placeLatLngs = [];
-        $scope.data.friends = UserRequests.allData.data.friends;
 
 		  	// $scope.allUserCheckins = allUserCheckins;
-		  	console.log(allUserCheckins.data.allCheckins);
-		  	for(var i = 0; i < allUserCheckins.data.allCheckins.length; i++) {
-          var place = allUserCheckins.data.allCheckins[i].place;
+		  	console.log(allUserCheckins);
+		  	for(var i = 0; i < allUserCheckins.length; i++) {
+          var place = allUserCheckins[i].place;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
           makeMarker(place.name, placeLatLng);
@@ -95,7 +95,11 @@ angular.module('waddle.map', [])
 
    
          if(UserRequests.allData !== undefined) {
-           handleUserCheckinData(UserRequests.allData);
+           $scope.data.allData = UserRequests.allData.data;
+           $scope.data.friends = UserRequests.allData.data.friends; 
+           $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
+         } else {
+          $state.go('frontpage')
          }
     //   FacebookMapData.getFacebookMapData()
     //   .then(function(data){
