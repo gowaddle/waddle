@@ -14,7 +14,7 @@ var checkinController = {};
 //   })
 // }
 
-checkinController.realtimeFoursquareData = function (req, res){
+checkinController.realtimeFoursquareData = function (req, res) {
   var checkin = JSON.parse(req.body.checkin);
   var userFoursquareID = checkin.user.id;
   var user;
@@ -35,6 +35,6 @@ checkinController.realtimeFoursquareData = function (req, res){
     console.log(err);
     res.status(500).end();
   });
-}
+};
 
 module.exports = checkinController;
