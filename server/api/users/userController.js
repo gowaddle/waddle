@@ -40,8 +40,11 @@ userController.userLogin = function (req, res) {
       .then(function (neoUserData){
         var allData = {
           allCheckins: checkinsAlreadyStored,
-          friends: userFBFriendsData
+          friends: neoUserData
         }
+        console.log("---------------")
+        console.log(neoUserData)
+        console.log("---------------")
         res.json(allData);
         res.status(200).end();
       })
@@ -89,7 +92,7 @@ userController.userLogin = function (req, res) {
       // merge checkins and photos
       userFBPhotoData = fbParsedPhotoData;
       combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
-      return user.addCheckins(userData.facebookID, combinedFBCheckins);
+      return user.addCheckins(combinedFBCheckins);
     })
     .then(function (data) {
       return user.findAllCheckins();
@@ -142,7 +145,7 @@ userController.addFoursquareData = function (req, res) {
   .then(function (foursquareHistoryBucket) {
     var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
     var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
-    return user.addCheckins(userData.facebookID, allParsedFoursquareCheckins);
+    return user.addCheckins(allParsedFoursquareCheckins);
   })
   .then(function (data) {
     console.log('4s: ',data);

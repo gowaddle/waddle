@@ -90,10 +90,12 @@ User.prototype.addFriends = function(facebookID, friends){
 
 }
 
-User.prototype.addCheckins = function(facebookID, combinedCheckins){
-    var deferred = Q.defer();
+User.prototype.addCheckins = function(combinedCheckins){
+  var deferred = Q.defer();
 
-/*    var query = [
+  var facebookID = this.getProperty('facebookID');
+
+/*var query = [
     'MERGE (user:User {facebookID: {facebookID}})',
     'MERGE (user)-[:hasCheckin]->' +
     '(checkin:Checkin {checkinTime: {checkinTime},' +
@@ -226,7 +228,8 @@ User.createUniqueUser = function (data) {
 };
 
 User.find = function (data) {
-  var node = db.createNode(data);
+
+  var deferred = Q.defer();
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
@@ -235,7 +238,28 @@ User.find = function (data) {
 
   var params = data;
 
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+};
+
+User.findByFoursquareID = function (foursquareID) {
+
   var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {foursquareID: {foursquareID}})',
+    'RETURN user',
+  ].join('\n');
+
+  var params = {
+    foursquareID: foursquareID
+  };
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
