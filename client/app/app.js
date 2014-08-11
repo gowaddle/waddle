@@ -26,12 +26,8 @@ angular.module('waddle', [
     })
     .state('map', {
       url: '/map',
-      views: {
-        '': {
-          templateUrl: '../app/modules/pages/map/map.html',
-          controller: 'MapController'
-        },
-      }
+      templateUrl: '../app/modules/pages/map/map.html',
+      controller: 'MapController'
     })
     .state('map.friends', {
       url: '/friends',
@@ -41,6 +37,11 @@ angular.module('waddle', [
     .state('map.feed', {
       url: '/feed',
       templateUrl: '../app/modules/pages/map/feed.html', 
+      controller: 'FeedController'
+    })
+    .state('footprints', {
+      url: '/footprints',
+      templateUrl: '../app/modules/pages/map/footprints.html',
       controller: 'FeedController'
     })
 
