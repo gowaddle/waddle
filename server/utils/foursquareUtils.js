@@ -122,40 +122,40 @@ utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareChec
 };
 
 utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
-
- var parsedCheckins = [];
- _.each(foursquareCheckinArray, function(item) {
-
-    var placeCheckin = {
-        'name': item.venue.name,
-        'lat': item.venue.location.lat,
-        'lng': item.venue.location.lng,
-        'checkinTime': new Date(item.createdAt*1000),
-        'likes': 'null',
-        'photoSmall': 'null',
-        'photoLarge': 'null',
-        'caption': 'null',
-        'foursquareID': item.venue.id,
-        'country': item.venue.location.country,
-        'category': 'null',
-        'source': 'foursquare'
-      };
-
-
-    if(item.venue.categories[0]) {
-      placeCheckin.category = item.venue.categories[0].name;
-    }
-
-    if(item.photos.count > 0) {
-      placeCheckin.photoSmall = item.photos.items[0].prefix + 'cap300' + item.photos.items[0].suffix;
-      placeCheckin.photoLarge = item.photos.items[0].prefix + 'original' + item.photos.items[0].suffix;
-    }
-    if(item.shout) {
-      placeCheckin.caption = item.shout;
-    }
-    parsedCheckins.push(placeCheckin);
+  return _.map(foursquareCheckinArray, function(checkin) {
+    return utils.parseCheckin(checkin);
   });
- return parsedCheckins;
+};
+
+utils.parseCheckin = function (checkin) {
+  var formattedCheckin = {
+    'name': checkin.venue.name,
+    'lat': checkin.venue.location.lat,
+    'lng': checkin.venue.location.lng,
+    'checkinTime': new Date(checkin.createdAt*1000),
+    'likes': 'null',
+    'photoSmall': 'null',
+    'photoLarge': 'null',
+    'caption': 'null',
+    'foursquareID': checkin.venue.id,
+    'country': checkin.venue.location.country,
+    'category': 'null',
+    'source': 'foursquare'
+  };
+
+  if (checkin.venue.categories[0]) {
+    formattedCheckin.category = checkin.venue.categories[0].name;
+  }
+
+  if (checkin.photos.count > 0) {
+    formattedCheckin.photoSmall = checkin.photos.items[0].prefix + 'cap300' + checkin.photos.items[0].suffix;
+    formattedCheckin.photoLarge = checkin.photos.items[0].prefix + 'original' + checkin.photos.items[0].suffix;
+  }
+  if (checkin.shout) {
+    formattedCheckin.caption = checkin.shout;
+  }
+
+  return formattedCheckin;
 };
 
 utils.generateFoursquarePlaceID = function (user, name, latlng) {
