@@ -40,8 +40,11 @@ userController.userLogin = function (req, res) {
       .then(function (neoUserData){
         var allData = {
           allCheckins: checkinsAlreadyStored,
-          friends: userFBFriendsData
+          friends: neoUserData
         }
+        console.log("---------------")
+        console.log(neoUserData)
+        console.log("---------------")
         res.json(allData);
         res.status(200).end();
       })
