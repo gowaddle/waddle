@@ -17,8 +17,6 @@ userController.userLogin = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
-
-  console.log(userData)
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     //note: this has the user node
@@ -62,7 +60,7 @@ userController.userLogin = function (req, res) {
     facebookUtils.getFBFriends(user)
     .then(function (fbRawUserData) {
       // Friends data
-      return user.addFriends(userData.facebookID, fbRawUserData.data);
+      return user.addFriends(fbRawUserData.data);
     })
     .then(function (friends) {
       // Parse Friends data
@@ -168,7 +166,7 @@ userController.getUserData = function(req, res){
     return user.findAllCheckins();
   })
   .then(function(checkins){
-    console.log("checkins:", checkins)
+    console.log("checkins: ", checkins.length)
     res.json(checkins);
     res.status(200).end();
   })
