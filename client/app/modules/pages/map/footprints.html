@@ -1,1 +1,12 @@
-<div ui-scroll="checkin in allUserCheckinsFeed">{{checkin.place.name}}</div>
+<!-- <div class='waddlefootprints' ui-scroll-viewport>
+	<div class='waddlefootprintitem' ui-scroll="checkin in allUserCheckinsFeed" is-loading='true'>
+		{{checkin.place.name}}
+	</div>
+</div> -->
+
+<div masonry>
+    <div class="masonry-brick" ng-repeat="brick in allUserCheckinsFeed">
+        <!-- <img ng-src="{{ brick.src }}" alt="A masonry brick"> -->
+        <h2>{{brick.place.name}}</h2>
+    </div>
+</div>
