@@ -3,7 +3,8 @@ angular.module('waddle.feed', [])
   console.log(UserRequests.allData)
   	$scope.allUserCheckinsFeed = {
     get: function(index, count, success) {
-        success(UserRequests.allData.data.allCheckins);
+    	  var results = UserRequests.allData.data.allCheckins;
+        success(results);
     }
   };
   });

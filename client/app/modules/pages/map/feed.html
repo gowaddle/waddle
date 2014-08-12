@@ -1,3 +1,5 @@
 <div class='waddlefeed' ui-scroll-viewport>
-	<div ui-scroll="checkin in allUserCheckinsFeed">{{checkin.place.name}}</div>
+	<div class='waddlefeeditem' ui-scroll="checkin in allUserCheckinsFeed" is-loading='true'>
+		{{checkin.place.name}}
+	</div>
 </div>
