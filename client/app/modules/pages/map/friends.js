@@ -2,9 +2,9 @@ angular.module('waddle.friends', [])
   .controller('FriendsController', function ($scope, $state, UserRequests) {
     var data = {
       facebookID: window.sessionStorage.userFbID,
-      checkinID: $scope.data.currentCheckins[0]
+      checkinID: $scope.data.currentCheckins[0].checkin.checkinID
     }
-    //UserRequests.addToBucketList(data)
+    UserRequests.addToBucketList(data)
 
     $scope.clickFriend = function (friend){
       UserRequests.getUserData(friend)
