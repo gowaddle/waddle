@@ -48,7 +48,7 @@ Checkin.addToBucketList = function(facebookID, checkinID){
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      deferred.resolve(results);
     }
   });
 
