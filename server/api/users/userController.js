@@ -1,5 +1,6 @@
 var foursquareUtils = require('../../utils/foursquareUtils.js');
 var facebookUtils = require('../../utils/facebookUtils.js');
+var instagramUtils = require('../../utils/instagramUtils.js');
 var User = require('./userModel.js');
 var Place = require('../places/placeModel.js');
 var Checkin = require('../checkins/checkinModel.js');
@@ -32,7 +33,7 @@ userController.userLogin = function (req, res) {
     return user.findAllCheckins()
   })
   .then(function (checkinsAlreadyStored) {
-    console.log('fb checkins: ', checkinsAlreadyStored.length);
+    // console.log('fb checkins: ', checkinsAlreadyStored.length);
     if (checkinsAlreadyStored.length) {
       user.findAllFriends()
       .then(function (neoUserData){
@@ -80,7 +81,7 @@ userController.userLogin = function (req, res) {
     })
     .then(function (fbRawPhotoList) {
       // parse Photo data
-      console.log("# of photos", fbRawPhotoList.length)
+      // console.log("# of photos", fbRawPhotoList.length)
       return facebookUtils.parseFBData(user, fbRawPhotoList); 
     })
     .then(function (fbParsedPhotoData) {
@@ -93,7 +94,7 @@ userController.userLogin = function (req, res) {
       return user.findAllCheckins();
     })
     .then(function (checkinsStored) {
-      console.log('fb checkins: ', checkinsStored.length);
+      // console.log('fb checkins: ', checkinsStored.length);
       var allData = {
         allCheckins: checkinsStored,
         friends: userFBFriendsData
@@ -117,8 +118,6 @@ userController.addFoursquareData = function (req, res) {
   .then(function (userNode) { 
     // console.log("userNode: " + userNode);
     user = userNode;
-  })
-  .then(function () {
     return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
   })
   .then(function (foursquareAccessToken) {
@@ -143,13 +142,34 @@ userController.addFoursquareData = function (req, res) {
     return user.addCheckins(allParsedFoursquareCheckins);
   })
   .then(function (data) {
-    console.log('4s: ',data);
+    // console.log('4s: ', data);
     res.status(204).end();
   })
   .catch(function(err) {
     console.log(err);
     res.status(500).end();
   })
+};
+
+userController.addInstagramData = function (req, res) {
+
+  var userData = req.body;
+  var user;
+
+  User.find(userData)
+  .then(function (userNode) { 
+    user = userNode;
+    return instagramUtils.exchangeIGUserCodeForToken(userData.instagramCode);
+  })
+  .then(function (data) {
+    console.log('ig: ', data);
+    res.status(204).end();
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.status(500).end();
+  })
+
 };
 
 userController.getUserData = function(req, res){
@@ -162,7 +182,7 @@ userController.getUserData = function(req, res){
     return friend.findAllCheckins();
   })
   .then(function(checkins){
-    console.log("checkins: ", checkins.length)
+    // console.log("checkins: ", checkins.length)
     res.json(checkins);
     res.status(200).end();
   })

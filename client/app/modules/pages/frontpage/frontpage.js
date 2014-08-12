@@ -54,7 +54,7 @@ angular.module('waddle.frontpage', [])
             alert('Facebook login failed: ' + response.error);
           }
         }, {
-          scope: 'user_friends, user_tagged_places, user_photos'
+          scope: 'user_friends, user_tagged_places, user_photos, read_stream'
         });
   	  };
   	}
