@@ -6,7 +6,8 @@ angular.module('waddle', [
   'waddle.services',
 	'ui.router',
   'ui.scroll',
-  'ui.scroll.jqlite'
+  'ui.scroll.jqlite',
+  'wu.masonry'
 ])
 
 .config(function ($stateProvider, $urlRouterProvider) {
