@@ -35,15 +35,17 @@ Checkin.addToBucketList = function(facebookID, checkinID){
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})',
-    'MATCH (checkin:Checkin {checkinID: {checkinID}}',
+    'MATCH (checkin:Checkin {checkinID: {checkinID}})',
     'MERGE (user)-[:hasBucket]->(checkin)',
-    'RETURN checkin',
+    'RETURN checkin'
   ].join('\n');
 
   var params = {
     facebookID: facebookID,
-    checkin: checkinID
+    checkinID: checkinID
   };
+
+  console.log(params)
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }

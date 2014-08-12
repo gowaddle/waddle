@@ -40,7 +40,16 @@ checkinController.realtimeFoursquareData = function (req, res) {
 checkinController.addToBucketList = function (req, res){
   var checkinID = req.body.checkinID;
   var facebookID = req.body.facebookID;
-  Checkin.addToBucketList(facebookID, checkinID);
+  Checkin.addToBucketList(facebookID, checkinID)
+  .then(function (data){
+    console.log(data);
+    res.json(data);
+    res.status(202).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  });
 }
 
 module.exports = checkinController;
