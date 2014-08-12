@@ -1,3 +1,116 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lobster'), url(http://themes.googleusercontent.com/static/fonts/lobster/v6/MWVf-Rwh4GLQVBEwbyI61Q.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/k3k702ZOKiLJc3WVjuplzHhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/EInbV5DfGHOiMmvb1Xr-hnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/xjAJXh38I15wypJXxuGMBobN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+
+div{
+  line-height:1;
+  margin:0px;
+}
+
+h1{
+  font-family:'Open Sans', san-serif;
+  font-style: bold;
+  font-weight:1000;
+  font-size:100px;
+  color:#ffffff;
+  margin:0;
+  padding:0;
+  }
+h2{
+  font-family:'Open Sans', san-serif;
+  font-style: none;
+  font-weight:400;
+  font-size:20px;
+  color:#ffffff;
+  line-height:180%;
+  margin:0;
+  padding:0;
+  }
+h3{
+  font-family:'Open Sans', san-serif;
+  font-style: none;
+  font-weight:100;
+  font-size:20px;
+  color:#555555;
+  line-height:180%;
+  margin:0px;
+  padding:0px;
+  }
+h4{
+  font-family:'Open Sans', san-serif;
+  color:#a6a6a6;
+  display:inline;
+  font-size:15px;
+  font-weight:300;
+  margin:0px;
+  padding:0px;
+  }
+h5{
+  font-family:'Open Sans', san-serif;
+  color:#FFF;
+  display:inline;
+  font-size:55px;
+  }
+h6{
+  font-family:'Open Sans', san-serif;
+  color:#FFF;
+  display:inline;
+  font-size:12px;
+  font-style:none;
+  font-weight:400;
+  }
+h7{
+  font-family:'Open Sans', san-serif;
+  color:#F6E16E;
+  display:inline;
+  font-size:30px;
+  }
+h8{
+  font-family:'Open Sans', san-serif;
+  color:#888888;
+  display:inline;
+  font-size:10px;
+  }
+
 #signin {
   position: absolute;
   background-image: url('https://s3-us-west-2.amazonaws.com/waddle/waddleloginnotwitter.png');
@@ -96,14 +209,20 @@
 
 .waddlefeed {
    height: 700px;
-   width: 200px;
+   width: 250px;
+   float: right;
+   border-radius:5px;
+   background-color:rgba(255,255,255,0.9);
+}
+
+.waddlefeeditem {
+  height: 17.5%;
+  background-color: #fff;
+  margin: 5px;
+}
+.waddlefootprints {
+   height: 80%;
    float: right;
    border: solid 1px;
 }
 
-.waddlefeeditem {
-  height: 100px;
-  width: 180 px;
-  background-color: white;
-  margin: 5px;
-}
