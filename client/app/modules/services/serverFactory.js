@@ -28,7 +28,7 @@ angular.module('waddle.services.serverFactory', [])
         return
       }
       return $http({
-        method: 'DATA',
+        method: 'POST',
         data: data,
         url: '/api/checkins/bucketlist'
       });

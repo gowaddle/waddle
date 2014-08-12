@@ -5,8 +5,8 @@
 </div> -->
 
 <div masonry>
-    <div class="masonry-brick" ng-repeat="brick in allUserCheckinsFeed">
-        <!-- <img ng-src="{{ brick.src }}" alt="A masonry brick"> -->
-        <h2>{{brick.place.name}}</h2>
+    <div class="masonry-brick" ng-repeat="checkin in allUserCheckinsFootprints">
+        <h2>{{checkin.place.name}}</h2>
+       <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
     </div>
 </div>

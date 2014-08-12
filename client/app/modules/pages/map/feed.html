@@ -1,5 +1,8 @@
 <div class='waddlefeed' ui-scroll-viewport>
-	<div class='waddlefeeditem' ui-scroll="checkin in allUserCheckinsFeed" is-loading=true>
+	<div class='waddlefeeditem' ui-scroll="checkin in allUserCheckinsFeed" is-loading='true'>
+  <h4 ng-click="clickCheckin(checkin.checkin.checkinID)">
 		{{checkin.place.name}}
-	</div>
+  </h4>
+		 <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
+  </button>
 </div>
