@@ -52,6 +52,7 @@ angular.module('waddle.map', [])
         var deferred = $q.defer();
         var placeLatLngs = [];
 
+        $scope.data.currentCheckins = allUserCheckins;
         // $scope.allUserCheckins = allUserCheckins;
         console.log(allUserCheckins);
         for(var i = 0; i < allUserCheckins.length; i++) {
