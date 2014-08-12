@@ -42,14 +42,30 @@ checkinController.addToBucketList = function (req, res){
   var facebookID = req.body.facebookID;
   Checkin.addToBucketList(facebookID, checkinID)
   .then(function (data){
-    console.log(data);
     res.json(data);
-    res.status(202).end();
+    res.status(201).end();
   })
   .catch(function (err) {
     console.log(err);
     res.status(500).end();
   });
+}
+
+checkinController.addComment = function (req, res){
+  var clickerID = req.body.clickerID;
+  var checkinID = req.body.checkinID;
+  var text = req.body.text;
+
+  Checkin.addComment(clickerID, checkinID, text)
+  .then(function (data){
+    console.log(data);
+    res.json(data);
+    res.status(201).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  })
 }
 
 module.exports = checkinController;

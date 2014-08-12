@@ -45,8 +45,6 @@ Checkin.addToBucketList = function(facebookID, checkinID){
     checkinID: checkinID
   };
 
-  console.log(params)
-
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
@@ -55,6 +53,36 @@ Checkin.addToBucketList = function(facebookID, checkinID){
   });
 
   return deferred.promise;
-}
+};
+
+
+Checkin.addComment = function(clickerID, checkinID, text){
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (clicker:User {facebookID: {facebookID}})',
+  'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+  'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, time: timestamp()})' +
+  '-[:gotComment]->(checkin)',
+  'RETURN comment'
+  ].join('\n');
+
+  var params = {
+    'facebookID': clickerID,
+    'checkinID': checkinID,
+    'text': text
+  };
+
+  console.log(params);
+
+  db.query(query, params, function (err, results){
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results);
+    }
+  });
+
+  return deferred.promise;
+};
 
 module.exports = Checkin;
