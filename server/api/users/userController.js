@@ -154,12 +154,12 @@ userController.addFoursquareData = function (req, res) {
 
 userController.getUserData = function(req, res){
   var userData = {
-    facebookID: req.params.user
+    facebookID: req.params.friend
   };
 
   User.find(userData)
-  .then(function(user){
-    return user.findAllCheckins();
+  .then(function(friend){
+    return friend.findAllCheckins();
   })
   .then(function(checkins){
     console.log("checkins: ", checkins.length)

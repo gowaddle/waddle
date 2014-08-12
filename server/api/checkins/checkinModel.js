@@ -30,4 +30,29 @@ Checkin.prototype.save = function (){
   return deferred.promise;
 };
 
+Checkin.addToBucketList = function(facebookID, checkinID){
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'MATCH (checkin:Checkin {checkinID: {checkinID}}',
+    'MERGE (user)-[:hasBucket]->(checkin)',
+    'RETURN checkin',
+  ].join('\n');
+
+  var params = {
+    facebookID: facebookID,
+    checkin: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+}
+
 module.exports = Checkin;

@@ -37,4 +37,10 @@ checkinController.realtimeFoursquareData = function (req, res) {
   });
 };
 
+checkinController.addToBucketList = function (req, res){
+  var checkinID = req.body.checkinID;
+  var facebookID = req.body.facebookID;
+  Checkin.addToBucketList(facebookID, checkinID);
+}
+
 module.exports = checkinController;

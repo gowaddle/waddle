@@ -21,6 +21,17 @@ angular.module('waddle.services.serverFactory', [])
         method: 'GET',
         url: '/api/users/' + user
       });
+    },
+
+    addToBucketList: function(data){
+      if (!data){
+        return
+      }
+      return $http({
+        method: 'DATA',
+        data: data,
+        url: '/api/checkins/bucketlist'
+      });
     }
   };
 });
