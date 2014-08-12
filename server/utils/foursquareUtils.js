@@ -32,6 +32,7 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
   }).on('error', function(err) {
     deferred.reject(err);
   });
+  
   return deferred.promise; 
 };
 

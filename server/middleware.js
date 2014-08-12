@@ -18,7 +18,11 @@ module.exports = function (app, express) {
   app.get('/fsqredirect', function(req, res) {
     res.sendfile(__dirname + '/static/foursquareredirect.html');
   });
-  
+
+  app.get('/instagramredirect', function(req, res) {
+    res.sendfile(__dirname + '/static/instagramredirect.html');
+  });
+
   app.use(errorhandlers.errorLogger);
   app.use(errorhandlers.errorHandler);
 

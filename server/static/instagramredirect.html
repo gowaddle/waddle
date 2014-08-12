@@ -7,22 +7,22 @@
   <body>
     <script>
 
-      var parseFoursquareCode = function() {
+      var parseInstagramCode = function() {
         var url = window.location.href;
         var processedUrl = url.split('code=');
         var userCode = processedUrl[1].split('#');
         return userCode[0];
       };
 
-      var sendFoursquareCodeToServer = function(code) {
+      var sendInstagramCodeToServer = function(code) {
         var request = new XMLHttpRequest();
-        request.open('POST', '/api/users/userfoursquarecode', false);
+        request.open('POST', '/api/users/userinstagramcode', false);
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-        request.send(JSON.stringify({facebookID: window.sessionStorage.userFbID, foursquareCode: code}));
+        request.send(JSON.stringify({facebookID: window.sessionStorage.userFbID, instagramCode: code}));
       };
 
-      window.location.assign('http://waddle.herokuapp.com/#/map');
-      sendFoursquareCodeToServer(parseFoursquareCode());
+      window.location.assign('http://localhost:8080/#/map');
+      sendInstagramCodeToServer(parseInstagramCode());
 
     </script>
   </body>

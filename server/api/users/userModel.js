@@ -83,6 +83,7 @@ User.prototype.addFriends = function(friendsList){
   request.post(options, function(err, response, body) {
     if (err) { deferred.reject(err) }
     else {
+      console.log(body);
       deferred.resolve(body);
     }
   });
