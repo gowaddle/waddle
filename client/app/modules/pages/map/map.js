@@ -28,10 +28,9 @@ angular.module('waddle.map', [])
       }).setView([20.00, 0.00], 2);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
-    	// var facebookPlaces = L.layerGroup().addTo(configuredMap);
-      configuredMap.addLayer(aggregatedMarkers);
+
+      // var facebookPlaces = L.layerGroup().addTo(configuredMap);
     
       var makeMarker = function (placeName, latLng) {
         var marker = L.marker(latLng, {
@@ -49,12 +48,13 @@ angular.module('waddle.map', [])
       console.log(configuredMap.getZoom());
 
       $scope.handleUserCheckinData = function (allUserCheckins) {
+        aggregatedMarkers.clearLayers();
         var deferred = $q.defer();
         var placeLatLngs = [];
 
-		  	// $scope.allUserCheckins = allUserCheckins;
-		  	console.log(allUserCheckins);
-		  	for(var i = 0; i < allUserCheckins.length; i++) {
+        // $scope.allUserCheckins = allUserCheckins;
+        console.log(allUserCheckins);
+        for(var i = 0; i < allUserCheckins.length; i++) {
           var place = allUserCheckins[i].place;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
@@ -64,6 +64,7 @@ angular.module('waddle.map', [])
        return deferred.promise;
       };
 
+      configuredMap.addLayer(aggregatedMarkers);
     	// $scope.countriesBeen = [];
 
      //  var findCountriesBeen = function (allUserCheckins) {
