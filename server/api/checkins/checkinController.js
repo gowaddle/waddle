@@ -87,6 +87,22 @@ checkinController.addComment = function (req, res){
     console.log(err);
     res.status(500).end();
   })
+};
+
+checkinController.giveProps = function (req, res){
+  var clickerID = req.body.clickerID;
+  var checkinID = req.body.checkinID;
+
+  Checkin.giveProps(clickerID, checkinID)
+  .then(function (data){
+    console.log(data)
+    res.json(data);
+    res.status(201).end();
+  })
+  .catch(function (err){
+    console.log(err);
+    res.status(500).end();
+  })
 }
 
 module.exports = checkinController;

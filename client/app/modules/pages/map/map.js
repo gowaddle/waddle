@@ -1,5 +1,15 @@
 angular.module('waddle.map', [])
-  .controller('MapController', function ($scope, $state, $q, Auth, UserRequests, $rootScope) {
+  .controller('MapController', function ($scope, $state, $stateParams, $q, Auth, UserRequests, $rootScope) {
+    
+    //an alternative to reloading the entire view
+/*    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+      if (toState.name === 'map' && fromState.name !=='map'){
+        var current = $state.current;
+        var params = angular.copy($stateParams)
+        $state.transitionTo(current, params, { reload: true, inherit: true, notify: true });
+      }
+    });*/
+
     $scope.data = {};
 
     UserRequests.getUserData(window.sessionStorage.userFbID);
