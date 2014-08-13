@@ -1,4 +1,3 @@
-var request = require('request');
 var https = require('https');
 var qs = require('querystring');
 
@@ -6,9 +5,58 @@ var Q = require('q');
 
 var utils = {};
 
+utils.handleUpdate = function (update) {
+  var deferred = Q.defer();
+
+  var timestamp = update.time - 1;
+  
+  var igUserID = update.object_id;
+  var user;
+
+  User.findByInstagramID(igUserID)
+  .then(function (userNode) {
+    user = userNode;
+    deferred.resolve(utils.makeRequestForMedia(user, timestamp));
+  })
+  .catch(function (e) {
+    deferred.reject(e);
+  })
+
+  return deferred.promise;
+};
+
+utils.makeRequestForMedia = function (user, timestamp) {
+  var deferred = Q.defer();
+
+  var igUserID = user.getProperty('instagramID');
+  var accessToken = user.getProperty('igToken');
+
+  var query = {
+    access_token: accessToken,
+    min_timestamp: timestamp
+  };
+
+  var queryPath = 'https://api.instagram.com/v1/users/'+ igUserID + '/media/recent?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      deferred.resolve(JSON.parse(data));
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+};
+
 utils.exchangeIGUserCodeForToken = function (igCode) {
   var deferred = Q.defer();
-  console.log(igCode);
 
   var query = {
     client_id: process.env.WADDLE_INSTAGRAM_CLIENT_ID,

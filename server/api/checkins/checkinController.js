@@ -1,18 +1,39 @@
+
+var _ = require('lodash');
+
 var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
+var instagramUtils = require('../../utils/instagramUtils.js');
 
 var checkinController = {};
 
-// checkinController.userCheckinData = function (req, res){
-//   var data = req.body;
 
-//   Checkin.doStuff()
-//   .then(function (data) {
-//     console.log(data);
-//     res.status(204).end();
-//   })
-// }
+checkinController.instagramHubChallenge = function (req, res) {
+  var body = req.body;
+  console.log(body);
+  var challenge = body.hub.challenge;
+  res.send(challenge);
+};
+
+checkinController.handleIGPost = function (req, res) {
+  res.status(200).end()
+
+  var updateArr = req.body;
+
+  var posts = _.map(updateArr, function (update) {
+    return instagramUtils.handleUpdate(update);
+  })
+
+  Q.all(posts)
+  .then(function (postArr) {
+    //do stuff
+    void 0;
+  })
+  .catch(function (e) {
+    console.log(e);
+  })
+};
 
 checkinController.realtimeFoursquareData = function (req, res) {
   var checkin = JSON.parse(req.body.checkin);
