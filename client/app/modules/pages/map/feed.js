@@ -1,14 +1,21 @@
 angular.module('waddle.feed', [])
 
   .controller('FeedController', function ($rootScope, $scope, UserRequests) {
-    
+
     $scope.addCommentToCheckin = function (checkin){
-      var dummyData = {
+      console.log(checkin)
+      var node = document.querySelectorAll(".comment" + checkin + ".ng-dirty")
+      
+      var commentData = {
         clickerID: window.sessionStorage.userFbID,
         checkinID: checkin,
-        text: "we love dummy data"
+        text: node[0].value
       }
-      UserRequests.addComment(dummyData)     
+
+      UserRequests.addComment(commentData) 
+      .then(function (data){
+        test[0].value = "Comment Posted!" 
+      })    
     }
 
     $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;

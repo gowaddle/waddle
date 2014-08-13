@@ -36,7 +36,10 @@ angular.module('waddle.services.serverFactory', [])
 
     addComment: function(data){
       if (!data){
-        return
+        return;
+      }
+      if (data.text == undefined){
+        return;
       }
       return $http({
         method: 'POST',
