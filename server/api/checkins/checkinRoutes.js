@@ -7,4 +7,5 @@ module.exports = function (app) {
   app.post('/realtimeinstagram', checkinController.handleIGPost);
 
   app.post('/bucketlist', checkinController.addToBucketList);
+  app.post('/comment', checkinController.addComment);
 };
