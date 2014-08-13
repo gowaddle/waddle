@@ -28,25 +28,26 @@ angular.module('waddle.map', [])
       }).setView([20.00, 0.00], 2);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
+      // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
-    configuredMap.on('move', function() {
-    // Construct an empty list to fill with onscreen markers.
-      // var inBounds = [],
-      // // Get the map bounds - the top-left and bottom-right locations.
-          console.log(configuredMap.getBounds());
+    // configuredMap.on('move', function() {
+    // // Construct an empty list to fill with onscreen markers.
+    //   // var inBounds = [],
+    //   // // Get the map bounds - the top-left and bottom-right locations.
+    //       var bounds = configuredMap.getBounds();
 
-      // For each marker, consider whether it is currently visible by comparing
-      // with the current map bounds.
-      // myLayer.eachLayer(function(marker) {
-      //     if (bounds.contains(marker.getLatLng())) {
-      //         inBounds.push(marker.options.title);
-      //     }
-      // });
+    //   // For each marker, consider whether it is currently visible by comparing
+    //   // with the current map bounds.
+    //   aggregatedMarkers.eachLayer(function(marker) {
+    //       if (bounds.contains(marker.getLatLng())) {
+    //           console.log(marker.getLatLng());
+    //       }
+    //   });
 
-    // // Display a list of markers.
-    //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
-    });
+    // // // Display a list of markers.
+    // //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
+    // });
 
       // var facebookPlaces = L.layerGroup().addTo(configuredMap);
     
@@ -56,31 +57,64 @@ angular.module('waddle.map', [])
             'marker-color': '1087bf',
             'marker-size': 'large',
             'marker-symbol': 'circle-stroked'
-          })
+          }),
+          title: placeName
         })
         .bindPopup('<h2>' + placeName + '</h2>')
-        // .addTo(facebookPlaces);
 
         aggregatedMarkers.addLayer(marker);
       };
-      console.log(configuredMap.getZoom());
+
+      // var makeMarkerTemplate = function (placeName, latLng, checkinTime) {
+      //   var markerTemplate = {
+      //     type: 'Feature',
+      //     'geometry': {
+      //       'type': 'Point',
+      //       'coordinates': latLng
+      //     },
+      //     'properties': {
+      //       'marker-color': '1087bf',
+      //       'marker-size': 'large',
+      //       'marker-symbol': 'circle-stroked',
+      //       'placeName': placeName,
+      //       'checkinTime': checkinTime 
+      //     } 
+      //   }
+      //   return markerTemplate;
+      // }
+
+      // var buildGeoJSON = function(checkinData) {
+      //   var markerFeatures = [];
+      //   for(var i = 0; i < checkinData.length; i++) {
+
+      //   }
+      // }
 
       $scope.handleUserCheckinData = function (allUserCheckins) {
         aggregatedMarkers.clearLayers();
         var deferred = $q.defer();
         var placeLatLngs = [];
+        var markers = [];
 
         $scope.data.currentCheckins = allUserCheckins;
         // $scope.allUserCheckins = allUserCheckins;
         console.log(allUserCheckins);
         for(var i = 0; i < allUserCheckins.length; i++) {
           var place = allUserCheckins[i].place;
+          var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
+          // markers.push(makeMarkerTemplate(place.name, placeLatLng, checkin.checkinTime));
           makeMarker(place.name, placeLatLng);
         }
-       deferred.resolve(placeLatLngs);
-       return deferred.promise;
+        // placeMarkers.setGeoJSON({
+        //   type: 'FeatureCollection',
+        //   features: markers
+        // });
+        // console.log(placeMarkers);
+
+        deferred.resolve(placeLatLngs);
+        return deferred.promise;
       };
 
       configuredMap.addLayer(aggregatedMarkers);
