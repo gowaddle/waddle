@@ -56,7 +56,7 @@ Checkin.addToBucketList = function(facebookID, checkinID){
 };
 
 
-Checkin.addComment = function(clickerID, checkinID, text){
+Checkin.addComment = function (clickerID, checkinID, text){
   var deferred = Q.defer();
 
   var query = [
@@ -84,5 +84,31 @@ Checkin.addComment = function(clickerID, checkinID, text){
 
   return deferred.promise;
 };
+
+Checkin.giveProps = function (clickerID, checkinID){
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (clicker:User {facebookID: {facebookID}})',
+  'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+  'MERGE (clicker)-[:givesProps]->(checkin)',
+  'RETURN checkin'
+  ].join('\n');
+
+  var params = {
+    'facebookID': clickerID,
+    'checkinID': checkinID
+  };
+
+  db.query(query, params, function (err, results){
+    if (err) { deferred.reject(err) }
+    else {
+      console.log(results)
+      deferred.resolve(results);
+    }
+  });
+
+  return deferred.promise;
+}
 
 module.exports = Checkin;
