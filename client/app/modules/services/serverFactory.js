@@ -32,6 +32,31 @@ angular.module('waddle.services.serverFactory', [])
         data: data,
         url: '/api/checkins/bucketlist'
       });
+    },
+
+    addComment: function(data){
+      if (!data){
+        return;
+      }
+      if (data.text == undefined){
+        return;
+      }
+      return $http({
+        method: 'POST',
+        data: data,
+        url: '/api/checkins/comment'
+      });
+    },
+
+    giveProps: function(data){
+      if (!data){
+        return;
+      }
+      return $http({
+        method: 'POST',
+        data: data,
+        url: '/api/checkins/props'
+      });
     }
   };
 });

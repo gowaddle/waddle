@@ -1,8 +1,12 @@
 <div class='waddlefeed' ui-scroll-viewport>
 	<div class='waddlefeeditem' ui-scroll="checkin in allUserCheckinsFeed" is-loading='true'>
-  <h4 ng-click="clickCheckin(checkin.checkin.checkinID)">
+  <h4>
 		{{checkin.place.name}}
   </h4>
 		 <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
-  </button>
+  <button ng-click="addCheckinToBucketlist(checkin.checkin.checkinID)">Add Checkin To Bucketlist</button>
+  <button ng-click="addPropsToCheckin(checkin.checkin.checkinID)">Give Props</button>
+  <form ng-submit="addCommentToCheckin(checkin.checkin.checkinID)">
+    <input ng-model="blah" class="comment{{checkin.checkin.checkinID}}"></input>
+  </form>
 </div>
