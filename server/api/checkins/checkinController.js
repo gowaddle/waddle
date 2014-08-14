@@ -84,7 +84,7 @@ checkinController.giveProps = function (req, res){
   })
 };
 
-checkinController.getPropsAndCheckins = function (req, res){
+checkinController.getPropsAndComments = function (req, res){
   var checkinID = req.body.checkinID;
   var data = {}
 
