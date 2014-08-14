@@ -55,6 +55,7 @@ angular.module('waddle.map', [])
       // var facebookPlaces = L.layerGroup().addTo(configuredMap);
     
       var makeMarker = function (placeName, latLng) {
+        var img = Array.prototype.slice.call(arguments, 2);
         var marker = L.marker(latLng, {
           icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
@@ -63,8 +64,14 @@ angular.module('waddle.map', [])
           }),
           title: placeName
         })
-        .bindPopup('<h2>' + placeName + '</h2>')
 
+        if(img[0]) {
+          console.log(img);
+          marker.bindPopup('<h2>' + placeName + '</h2><img src="' + img[0] + '"/>');
+        }
+        else {
+          marker.bindPopup('<h2>' + placeName + '</h2>');
+        }
         aggregatedMarkers.addLayer(marker);
       };
 
@@ -107,8 +114,14 @@ angular.module('waddle.map', [])
           var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
+          if(checkin.photoSmall !=='null') {
+            console.log(checkin.photoSmall);
+            makeMarker(place.name, placeLatLng, checkin.photoSmall);
+          }
+          else {
+            makeMarker(place.name, placeLatLng);
+          }
           // markers.push(makeMarkerTemplate(place.name, placeLatLng, checkin.checkinTime));
-          makeMarker(place.name, placeLatLng);
         }
         // placeMarkers.setGeoJSON({
         //   type: 'FeatureCollection',
