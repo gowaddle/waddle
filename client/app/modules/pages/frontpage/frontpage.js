@@ -49,6 +49,7 @@ angular.module('waddle.frontpage', [])
   	  	openFB.login(function (response) {
           if(response.status === 'connected') {
             console.log('connected');
+            console.log('response: ' + JSON.stringify(response));
             enterSiteWhenConnected(response.authResponse.token);
           } else {
             alert('Facebook login failed: ' + response.error);

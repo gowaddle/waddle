@@ -55,7 +55,8 @@ angular.module('waddle.map', [])
       // var facebookPlaces = L.layerGroup().addTo(configuredMap);
     
       var makeMarker = function (placeName, latLng) {
-        var img = Array.prototype.slice.call(arguments, 2);
+        var args = Array.prototype.slice.call(arguments, 2);
+        var img = args[0];
         var marker = L.marker(latLng, {
           icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
@@ -65,12 +66,12 @@ angular.module('waddle.map', [])
           title: placeName
         })
 
-        if(img[0]) {
+        if(img) {
           console.log(img);
-          marker.bindPopup('<h2>' + placeName + '</h2><img src="' + img[0] + '"/>');
+          marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
         }
         else {
-          marker.bindPopup('<h2>' + placeName + '</h2>');
+          marker.bindPopup('<h3>' + placeName + '</h3>');
         }
         aggregatedMarkers.addLayer(marker);
       };

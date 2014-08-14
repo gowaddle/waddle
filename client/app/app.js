@@ -48,7 +48,7 @@ angular.module('waddle', [
       templateUrl: '../app/modules/pages/map/feed.html', 
       controller: 'FeedController'
     })
-    .state('footprints', {
+    .state('map.footprints', {
       url: '/footprints',
       templateUrl: '../app/modules/pages/map/footprints.html',
       controller: 'FeedController'
