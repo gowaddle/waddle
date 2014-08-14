@@ -20,13 +20,6 @@ angular.module('waddle.map', [])
 
       $state.go('map.feed')
 
-      $scope.logout = Auth.logout;
-
-
-      $scope.goToProvidersPage = function () {
-        $state.go('providers');
-      };
-
       L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
       var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
@@ -38,59 +31,107 @@ angular.module('waddle.map', [])
       }).setView([20.00, 0.00], 2);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
+      // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
-    configuredMap.on('move', function() {
-    // Construct an empty list to fill with onscreen markers.
-      // var inBounds = [],
-      // // Get the map bounds - the top-left and bottom-right locations.
-          console.log(configuredMap.getBounds());
+    // configuredMap.on('move', function() {
+    // // Construct an empty list to fill with onscreen markers.
+    //   // var inBounds = [],
+    //   // // Get the map bounds - the top-left and bottom-right locations.
+    //       var bounds = configuredMap.getBounds();
 
-      // For each marker, consider whether it is currently visible by comparing
-      // with the current map bounds.
-      // myLayer.eachLayer(function(marker) {
-      //     if (bounds.contains(marker.getLatLng())) {
-      //         inBounds.push(marker.options.title);
-      //     }
-      // });
+    //   // For each marker, consider whether it is currently visible by comparing
+    //   // with the current map bounds.
+    //   aggregatedMarkers.eachLayer(function(marker) {
+    //       if (bounds.contains(marker.getLatLng())) {
+    //           console.log(marker.getLatLng());
+    //       }
+    //   });
 
-    // // Display a list of markers.
-    //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
-    });
+    // // // Display a list of markers.
+    // //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
+    // });
 
       // var facebookPlaces = L.layerGroup().addTo(configuredMap);
     
       var makeMarker = function (placeName, latLng) {
+        var args = Array.prototype.slice.call(arguments, 2);
+        var img = args[0];
         var marker = L.marker(latLng, {
           icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
             'marker-size': 'large',
             'marker-symbol': 'circle-stroked'
-          })
+          }),
+          title: placeName
         })
-        .bindPopup('<h2>' + placeName + '</h2>')
-        // .addTo(facebookPlaces);
 
+        if(img) {
+          console.log(img);
+          marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
+        }
+        else {
+          marker.bindPopup('<h3>' + placeName + '</h3>');
+        }
         aggregatedMarkers.addLayer(marker);
       };
-      console.log(configuredMap.getZoom());
+
+      // var makeMarkerTemplate = function (placeName, latLng, checkinTime) {
+      //   var markerTemplate = {
+      //     type: 'Feature',
+      //     'geometry': {
+      //       'type': 'Point',
+      //       'coordinates': latLng
+      //     },
+      //     'properties': {
+      //       'marker-color': '1087bf',
+      //       'marker-size': 'large',
+      //       'marker-symbol': 'circle-stroked',
+      //       'placeName': placeName,
+      //       'checkinTime': checkinTime 
+      //     } 
+      //   }
+      //   return markerTemplate;
+      // }
+
+      // var buildGeoJSON = function(checkinData) {
+      //   var markerFeatures = [];
+      //   for(var i = 0; i < checkinData.length; i++) {
+
+      //   }
+      // }
 
       $scope.handleUserCheckinData = function (allUserCheckins) {
         aggregatedMarkers.clearLayers();
         var deferred = $q.defer();
         var placeLatLngs = [];
+        var markers = [];
 
         $scope.data.currentCheckins = allUserCheckins;
         // $scope.allUserCheckins = allUserCheckins;
         console.log(allUserCheckins);
         for(var i = 0; i < allUserCheckins.length; i++) {
           var place = allUserCheckins[i].place;
+          var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
-          makeMarker(place.name, placeLatLng);
+          if(checkin.photoSmall !=='null') {
+            console.log(checkin.photoSmall);
+            makeMarker(place.name, placeLatLng, checkin.photoSmall);
+          }
+          else {
+            makeMarker(place.name, placeLatLng);
+          }
+          // markers.push(makeMarkerTemplate(place.name, placeLatLng, checkin.checkinTime));
         }
-       deferred.resolve(placeLatLngs);
-       return deferred.promise;
+        // placeMarkers.setGeoJSON({
+        //   type: 'FeatureCollection',
+        //   features: markers
+        // });
+        // console.log(placeMarkers);
+
+        deferred.resolve(placeLatLngs);
+        return deferred.promise;
       };
 
       configuredMap.addLayer(aggregatedMarkers);

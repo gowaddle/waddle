@@ -9,15 +9,8 @@
     <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
   </head>
   <body ng-app='waddle'>
-    <div class='navigation'>
-       <ul>
-        <li><a href='#/signin' class='create'>sign in</a></li>
-        <li><a>sign out</a></li>
-        <li><a ui-sref='map.friends'>friends</a></li>
-        <li><a ui-sref='footprints'>my footprints</a></li>
-        <li><a ui-sref='map' ui-sref-opts="{reload: true}">my map</a></li>
-      </ul>
-    </div>
+    <div ui-view='navbar'></div>
+    <div ui-view='map'></div>
     <div ui-view></div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>

@@ -3,10 +3,14 @@
 		{{checkin.place.name}}
 	</div>
 </div> -->
-
-<div masonry>
-    <div class="masonry-brick" ng-repeat="checkin in allUserCheckinsFootprints">
-        <h2>{{checkin.place.name}}</h2>
-       <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
-    </div>
+<div class='footprints'>
+	<div masonry>
+	    <div class="masonry-brick" ng-repeat="checkin in allUserCheckinsFootprints">
+	    	<div class='footprintitem'>
+	        <h3>{{checkin.place.name}}</h3>
+	        <h4>{{checkin.checkin.checkinTime}}</h4>
+	       <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
+	      </div>
+	    </div>
+	</div>
 </div>

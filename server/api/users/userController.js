@@ -28,6 +28,15 @@ userController.userLogin = function (req, res) {
   .then(function (fbReqData) {
     return user.setProperty('fbToken', fbReqData.access_token);
   })
+  .then(function (userNode) {
+    user = userNode;
+    return facebookUtils.getFBProfilePicture(userData.facebookID);
+  })
+  .then(function (fbPicData) {
+    if(fbPicData.data.is_silhouette === false) {
+      return user.setProperty('fbProfilePicture', fbPicData.data.url); 
+    }
+  })
   .then(function (userNode) { 
     user = userNode;
     return user.findAllCheckins()
@@ -39,7 +48,8 @@ userController.userLogin = function (req, res) {
       .then(function (neoUserData){
         var allData = {
           allCheckins: checkinsAlreadyStored,
-          friends: neoUserData
+          friends: neoUserData,
+          fbProfilePicture: user.getProperty('fbProfilePicture')
         }
         res.json(allData);
         res.status(200).end();
@@ -55,9 +65,11 @@ userController.userLogin = function (req, res) {
 
   var getAndParseFBData = function () {
     // start getting data for checkins and photos
+
     facebookUtils.getFBFriends(user)
     .then(function (fbRawUserData) {
       // Friends data
+      console.log(fbRawUserData);
       return user.addFriends(fbRawUserData.data);
     })
     .then(function (friends) {

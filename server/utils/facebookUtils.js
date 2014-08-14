@@ -37,6 +37,27 @@ utils.exchangeFBAccessToken = function (fbToken) {
   return deferred.promise;
 };
 
+utils.getFBProfilePicture = function (userID) {
+  var deferred = Q.defer();
+
+  var queryPath = 'https://graph.facebook.com/' + userID + '/picture?redirect=false&type=large';
+
+  https.get(queryPath, function(res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function() {
+      deferred.resolve(JSON.parse(data));
+    })
+
+  }).on('error', function(e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+}
+
 utils.getFBFriends = function (user) {
   var deferred = Q.defer();
 
@@ -180,6 +201,7 @@ utils.parseFBData = function (user, data) {
 
       var latlng = place.lat.toString() + ',' + place.lng.toString();
 
+      
       parsedData.push(place);
       console.log(place)
       foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
