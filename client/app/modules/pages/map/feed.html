@@ -3,10 +3,11 @@
   <h4>
 		{{checkin.place.name}}
   </h4>
+  <h8>{{checkin.checkin.checkinTime.toString()}}</h8>
+  <img class='giveprops' alt="Give Props" ng-click="addPropsToCheckin(checkin.checkin.checkinID)"/>
 		 <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
   <button ng-click="addCheckinToBucketlist(checkin.checkin.checkinID)">Add Checkin To Bucketlist</button>
-  <button ng-click="addPropsToCheckin(checkin.checkin.checkinID)">Give Props</button>
-  <form ng-submit="addCommentToCheckin(checkin.checkin.checkinID)">
-    <input ng-model="blah" class="comment{{checkin.checkin.checkinID}}"></input>
+  <form class='comment_form' ng-submit="addCommentToCheckin(checkin.checkin.checkinID)">
+    <input ng-model="blah" placeholder='Leave a comment' class="comment{{checkin.checkin.checkinID}}"></input>
   </form>
 </div>

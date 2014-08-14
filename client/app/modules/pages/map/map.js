@@ -20,13 +20,6 @@ angular.module('waddle.map', [])
 
       $state.go('map.feed')
 
-      $scope.logout = Auth.logout;
-
-
-      $scope.goToProvidersPage = function () {
-        $state.go('providers');
-      };
-
       L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
       var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {

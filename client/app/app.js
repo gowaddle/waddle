@@ -27,8 +27,16 @@ angular.module('waddle', [
     })
     .state('map', {
       url: '/map',
-      templateUrl: '../app/modules/pages/map/map.html',
-      controller: 'MapController'
+      views: {
+        'navbar': {
+          templateUrl: '../app/modules/pages/partials/navbar.html',
+          controller: 'NavbarController'
+        },
+        'map': {
+          templateUrl: '../app/modules/pages/map/map.html',
+          controller: 'MapController'
+        }
+      }
     })
     .state('map.friends', {
       url: '/friends',
