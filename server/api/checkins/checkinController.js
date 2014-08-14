@@ -28,7 +28,7 @@ checkinController.handleIGPost = function (req, res) {
   Q.all(posts)
   .then(function (postArr) {
     //do stuff
-    void 0;
+    console.log(postArr);
   })
   .catch(function (e) {
     console.log(e);
@@ -70,7 +70,7 @@ checkinController.addToBucketList = function (req, res){
     console.log(err);
     res.status(500).end();
   });
-}
+};
 
 checkinController.addComment = function (req, res){
   var clickerID = req.body.clickerID;
@@ -127,6 +127,6 @@ checkinController.getPropsAndComments = function (req, res){
     console.log(err);
     res.status(500).end();
   })
-}
+};
 
 module.exports = checkinController;
