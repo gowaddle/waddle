@@ -109,6 +109,48 @@ Checkin.giveProps = function (clickerID, checkinID){
   });
 
   return deferred.promise;
+};
+
+Checkin.getProps = function (checkinID){
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (user)-[connection:givesProps]->(checkin:Checkin {checkinID: {checkinID}})',
+  'RETURN user, connection'
+  ].join('\n');
+
+  var params = {
+    'checkinID': checkinID
+  }
+
+  db.query(query, params, function (err, results){
+    if (err) { deferred.reject(err) }
+    else {
+      console.log(results)
+      deferred.resolve(results)
+    }
+  }
+}
+
+Checkin.getComments = function (checkinID){
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (user)-[:madeComment]->(comment)-[:gotComment]->(checkin:Checkin {checkinID: {checkinID}})',
+  'RETURN user, comment'
+  ].join('\n');
+
+  var params = {
+    'checkinID': checkinID
+  }
+
+  db.query(query, params, function (err, results){
+    if (err) { deferred.reject(err) }
+    else {
+      console.log(results)
+      deferred.resolve(results)
+    }
+  }
 }
 
 module.exports = Checkin;

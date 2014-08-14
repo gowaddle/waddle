@@ -82,6 +82,30 @@ checkinController.giveProps = function (req, res){
     console.log(err);
     res.status(500).end();
   })
+};
+
+checkinController.getPropsAndCheckins = function (req, res){
+  var checkinID = req.body.checkinID;
+  var data = {}
+
+  Checkin.getProps(checkinID)
+  .then(function (props){
+    console.log("props")
+    console.log(props);
+    data['props'] = props;
+    return Checkin.getComments;
+  })
+  .then(function (comments){
+    console.log("comments")
+    console.log(comments)
+    data['comments'] = comments;
+    res.json(data);
+    res.status(200).end();
+  })
+  .catch(function (err){
+    console.log(err);
+    res.status(500).end();
+  })
 }
 
 module.exports = checkinController;
