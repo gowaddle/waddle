@@ -14,7 +14,7 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
     client_id: process.env.WADDLE_FOURSQUARE_CLIENT_ID,
     client_secret: process.env.WADDLE_FOURSQUARE_CLIENT_SECRET,
     grant_type: 'authorization_code',
-    redirect_uri: 'http://localhost:8080/fsqredirect',
+    redirect_uri: 'http://waddle.herokuapp.com/fsqredirect',
     code: fsqCode
   };
 
