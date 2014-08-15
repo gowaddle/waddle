@@ -65,6 +65,12 @@ module.exports = function (grunt) {
 	  	}
 	  },
 
+	  bower: {
+	  	install: {
+
+	  	}
+	  }
+
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -74,6 +80,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-stylus');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-mocha-test');
+	grunt.loadNpmTasks('grunt-bower-task');
+
 
 	grunt.registerTask('dev', function () {
 		var nodemon = grunt.util.spawn({
@@ -89,7 +97,7 @@ module.exports = function (grunt) {
 		grunt.task.run(['clean', 'concat:client', 'stylus', 'watch']);
 	});
 
-	grunt.registerTask('build', ['clean', 'concat:client', 'stylus']);
+	grunt.registerTask('build', ['clean', 'bower', 'concat:client', 'stylus']);
 
 	grunt.registerTask('test', ['mochaTest']);
 
