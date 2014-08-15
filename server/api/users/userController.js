@@ -102,6 +102,12 @@ userController.userLogin = function (req, res) {
       combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
       return user.addCheckins(combinedFBCheckins);
     })
+    .then(function () {
+      return facebookUtils.getFBStatuses();
+    })
+    .then(function (fbRawStatusList) {
+      console.log(fbRawStatusList);
+    })
     .then(function (data) {
       return user.findAllCheckins();
     })

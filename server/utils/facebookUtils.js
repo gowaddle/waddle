@@ -163,6 +163,53 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
   return deferred.promise;
 };
 
+utils.getFBStatuses = function (user) {
+  var deferred = Q.defer();
+
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
+
+  var query = {
+    access_token: fbToken
+  };
+
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/statuses?' + qs.stringify(query);
+
+  var photoContainer = [];
+
+  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
+
+  return deferred.promise;
+}
+
+utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
+  var deferred = Q.defer();
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      var dataObj = JSON.parse(data);
+
+      statusContainer.push(dataObj.data)
+
+      if (! dataObj.paging) {
+        deferred.resolve(_.flatten(statusContainer, true));
+      } else {
+        deferred.resolve(utils.makeFBStatusesRequest(dataObj.paging.next, statusContainer));
+      }
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+};
+
 utils.parseFBData = function (user, data) {
   var deferred = Q.defer();
 
