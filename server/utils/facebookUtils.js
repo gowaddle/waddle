@@ -28,6 +28,7 @@ utils.exchangeFBAccessToken = function (fbToken) {
 
     res.on('end', function () {
       deferred.resolve(qs.parse(data));
+      console.log(data);
     })
 
   }).on('error', function (e) {
