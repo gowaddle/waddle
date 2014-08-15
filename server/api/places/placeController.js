@@ -1,20 +1,19 @@
 var Place = require('./placeModel.js');
 
-var placeController = {
-  updatePlace: function (req, res){
+var placeController = {};
 
-    var placeData = req.body;
+placeController.updatePlace = function (req, res){
 
-    Place.create(placeData)
-    .then(function(node) {
-      res.status(204).end();
-    })
-    .catch(function(err) {
-      console.log(err);
-      res.status(500).end();
-    });
+  var placeData = req.body;
 
-  }
-}
+  Place.create(placeData)
+  .then(function(node) {
+    res.status(204).end();
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.status(500).end();
+  });
+};
 
 module.exports = placeController;

@@ -1,75 +1,151 @@
 angular.module('waddle.map', [])
-  .controller('MapController', function ($scope, $state, $q, Auth, FacebookMapData, Geocoder) {
+  .controller('MapController', function ($scope, $state, $stateParams, $q, Auth, UserRequests, $rootScope) {
+    
+    //an alternative to reloading the entire view
+/*    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+      if (toState.name === 'map' && fromState.name !=='map'){
+        var current = $state.current;
+        var params = angular.copy($stateParams)
+        $state.transitionTo(current, params, { reload: true, inherit: true, notify: true });
+      }
+    });*/
+
+    $scope.data = {};
+
+    UserRequests.getUserData(window.sessionStorage.userFbID);
+    console.log($scope.data)
+    
     Auth.checkLogin()
     .then(function(){
 
-      $scope.logout = Auth.logout;
+      $state.go('map.feed')
 
-    	L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
+      L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
-    	var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
+      var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
         attributionControl: false,
         zoomControl: false,
-        worldCopyJump: true
-      }).setView([37.6, -122.45], 3);
+        worldCopyJump: true,
+        minZoom: 2,
+        bounceAtZoomLimits: false
+      }).setView([20.00, 0.00], 2);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-      var aggregatedMarkers = new L.MarkerClusterGroup();
-    	// var facebookPlaces = L.layerGroup().addTo(configuredMap);
-      configuredMap.addLayer(aggregatedMarkers);
+      // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
+      var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
+
+    // configuredMap.on('move', function() {
+    // // Construct an empty list to fill with onscreen markers.
+    //   // var inBounds = [],
+    //   // // Get the map bounds - the top-left and bottom-right locations.
+    //       var bounds = configuredMap.getBounds();
+
+    //   // For each marker, consider whether it is currently visible by comparing
+    //   // with the current map bounds.
+    //   aggregatedMarkers.eachLayer(function(marker) {
+    //       if (bounds.contains(marker.getLatLng())) {
+    //           console.log(marker.getLatLng());
+    //       }
+    //   });
+
+    // // // Display a list of markers.
+    // //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
+    // });
+
+      // var facebookPlaces = L.layerGroup().addTo(configuredMap);
     
-    	var makeMarker = function (placeName, latLng) {
+      var makeMarker = function (placeName, latLng) {
+        var args = Array.prototype.slice.call(arguments, 2);
+        var img = args[0];
         var marker = L.marker(latLng, {
-  	      icon: L.mapbox.marker.icon({
+          icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
             'marker-size': 'large',
             'marker-symbol': 'circle-stroked'
-          })
-  	    })
-  	    .bindPopup('<h2>' + placeName + '</h2>')
-  	    // .addTo(facebookPlaces);
+          }),
+          title: placeName
+        })
 
+        if(img) {
+          console.log(img);
+          marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
+        }
+        else {
+          marker.bindPopup('<h3>' + placeName + '</h3>');
+        }
         aggregatedMarkers.addLayer(marker);
       };
-    	console.log(configuredMap.getZoom());
 
-      var handleFacebookData = function (fbData) {
-      	var deferred = $q.defer();
-      	var checkinLatLngs = []
-		  	$scope.fbData = fbData;
-		  	console.log(fbData);
-		  	for(var i = 0; i < fbData.length; i++) {
-          var checkin = fbData[i].place;
-          var checkinLatLng = [checkin.location.latitude, checkin.location.longitude];
-          checkinLatLngs.push(checkinLatLng);
-          makeMarker(checkin.name, checkinLatLng);
+      // var makeMarkerTemplate = function (placeName, latLng, checkinTime) {
+      //   var markerTemplate = {
+      //     type: 'Feature',
+      //     'geometry': {
+      //       'type': 'Point',
+      //       'coordinates': latLng
+      //     },
+      //     'properties': {
+      //       'marker-color': '1087bf',
+      //       'marker-size': 'large',
+      //       'marker-symbol': 'circle-stroked',
+      //       'placeName': placeName,
+      //       'checkinTime': checkinTime 
+      //     } 
+      //   }
+      //   return markerTemplate;
+      // }
+
+      // var buildGeoJSON = function(checkinData) {
+      //   var markerFeatures = [];
+      //   for(var i = 0; i < checkinData.length; i++) {
+
+      //   }
+      // }
+
+      $scope.handleUserCheckinData = function (allUserCheckins) {
+        aggregatedMarkers.clearLayers();
+        var deferred = $q.defer();
+        var placeLatLngs = [];
+        var markers = [];
+
+        $scope.data.currentCheckins = allUserCheckins;
+        // $scope.allUserCheckins = allUserCheckins;
+        console.log(allUserCheckins);
+        for(var i = 0; i < allUserCheckins.length; i++) {
+          var place = allUserCheckins[i].place;
+          var checkin = allUserCheckins[i].checkin;
+          var placeLatLng = [place.lat, place.lng];
+          placeLatLngs.push(placeLatLng);
+          if(checkin.photoSmall !=='null') {
+            console.log(checkin.photoSmall);
+            makeMarker(place.name, placeLatLng, checkin.photoSmall);
+          }
+          else {
+            makeMarker(place.name, placeLatLng);
+          }
+          // markers.push(makeMarkerTemplate(place.name, placeLatLng, checkin.checkinTime));
         }
-       deferred.resolve(checkinLatLngs);
-       return deferred.promise;
+        // placeMarkers.setGeoJSON({
+        //   type: 'FeatureCollection',
+        //   features: markers
+        // });
+        // console.log(placeMarkers);
+
+        deferred.resolve(placeLatLngs);
+        return deferred.promise;
       };
 
-    	// $scope.countriesBeen = ["United States", "China"];
+      configuredMap.addLayer(aggregatedMarkers);
+    	// $scope.countriesBeen = [];
 
-     //  var findCountriesBeen = function (fbData) {
-     //  	var deferred = $q.defer();
-     //  	deferredPromises = [];
-     //  	$scope.countriesBeen = [];
-     //  	for(var j = 0; j < fbData.length; j++) {
-	    //   	var deferred = $q.defer();
-     //  		var checkin = fbData[j].place;
-	    //   	Geocoder.reverseGeocode(checkin.location.longitude, checkin.location.latitude)
-     //        .then(function(data) {
-     //        	var countryName = data.data.features[0].place_name;
-	    //       	if($scope.countriesBeen.indexOf(countryName) === -1) {
-	    //       		$scope.countriesBeen.push(countryName);
-	    //       	}
-	    //       	deferred.resolve($scope.countriesBeen);
-     //        })
-     //      .then(function(data) {
-	    //   	  deferred.resolve($scope.countriesBeen);
-	    //   	  return deferred.promise;
-     //      })
-     //  	}
+     //  var findCountriesBeen = function (allUserCheckins) {
+     //    for(var i = 0; i < allUserCheckins.data.length; i++) {
+     //      var place = allUserCheckins.data[i].place;
+     //      var country = 
+     //      if($scope.countriesBeen.indexOf(country) === -1) {
+     //        $scope.countriesBeen.push(country);
+     //      }
+     //      return $scope.countriesBeen;
+     //    }
      //  };
 
       // var addToShadedCountries = function () {
@@ -91,12 +167,18 @@ angular.module('waddle.map', [])
       // addToShadedCountries();
 
    
-
-
-      FacebookMapData.getFacebookMapData()
-      .then(function(data){
-        handleFacebookData(data.data)
-		  });
+         if(UserRequests.allData !== undefined) {
+           $scope.data.allData = UserRequests.allData.data;
+           $scope.data.friends = UserRequests.allData.data.friends; 
+           $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
+         } else {
+          $state.go('frontpage')
+         }
+    //   FacebookMapData.getFacebookMapData()
+    //   .then(function(data){
+    //     handleFacebookData(data.data)
+      // });
+    
   	    
 	  });
 

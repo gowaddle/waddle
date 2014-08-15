@@ -1,7 +1,14 @@
 var neo4j = require('neo4j');
 var Q = require('q');
+var qs = require('querystring');
+var request = require('request');
+var _ = require('lodash');
 
-var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
+var neo4jUrl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474';
+var db = new neo4j.GraphDatabase(neo4jUrl);
+
+var Checkin = require('../checkins/checkinModel.js');
+var Place = require('../places/placeModel.js');
 
 var User = function (node){
 	this.node = node;
@@ -9,15 +16,6 @@ var User = function (node){
 
 User.prototype.id = function(){
 	return this.node.id;
-};
-
-User.prototype.setName = function(name){
-	this.node.data['name'] = name;
-  return this.save();
-};
-
-User.prototype.getName = function(){
-  return this.node.data['name'];
 };
 
 User.prototype.setProperty = function(property, value) {
@@ -42,17 +40,185 @@ User.prototype.save = function (){
   return deferred.promise;
 };
 
-User.createOrFind = function (data) {
-  var node = db.createNode(data);
+User.prototype.addFriends = function(friendsList){
+  var deferred = Q.defer();
+
+  var facebookID = this.getProperty('facebookID');
 
   var query = [
-    'MERGE (user:User {facebookID: {facebookID}, name: {name}})',
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'MERGE (friend:User {facebookID: {friendFacebookID}, name: {friendName}})',
+    'MERGE (user)-[:hasFriend]->(friend)',
+    'MERGE (friend)-[:hasFriend]->(user)',
+    //change to merge on foursquareID only
+    'RETURN friend',
+  ].join('\n');
+
+  //?includeStats=true
+  var batchRequest = _.map(friendsList, function (friend, index) {
+    var singleRequest = {
+      'method': "POST",
+      'to': "/cypher?includeStats=true",
+      'body': {
+        'query': query,
+        'params': {
+          friendName: friend.name,
+          friendFacebookID: friend.id,
+          facebookID: facebookID
+        }
+      },
+      'id': index
+    };
+
+    return singleRequest;
+  });
+
+  var options = {
+    'url': neo4jUrl + '/db/data/batch',
+    'method': 'POST',
+    'json': true,
+    'body': JSON.stringify(batchRequest)
+  };
+
+  request.post(options, function(err, response, body) {
+    if (err) { deferred.reject(err) }
+    else {
+      console.log(body);
+      deferred.resolve(body);
+    }
+  });
+
+  return deferred.promise;
+
+
+}
+
+User.prototype.addCheckins = function(combinedCheckins){
+  var deferred = Q.defer();
+
+  var facebookID = this.getProperty('facebookID');
+
+/*var query = [
+    'MERGE (user:User {facebookID: {facebookID}})',
+    'MERGE (user)-[:hasCheckin]->' +
+    '(checkin:Checkin {checkinTime: {checkinTime},' +
+    'likes: {likes}, photos: {photos}, caption: {caption},' +
+    'foursquareID: {foursquareID}})',
+    'MERGE (checkin)-[:hasPlace]->' +
+    '(place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}})',
+    'RETURN user, checkin, place',
+  ].join('\n');*/
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'MERGE (checkin:Checkin {checkinID: {checkinID}})',
+    'ON CREATE SET checkin = {checkinID: {checkinID}, likes: {likes}, photoSmall: {photoSmall}, photoLarge: {photoLarge}, caption: {caption}, checkinTime: {checkinTime}, source: {source}}',
+    'ON MATCH SET checkin.checkinTime = {checkinTime}, checkin.likes = {likes}, checkin.photoSmall = {photoSmall}, checkin.photoLarge = {photoLarge}, checkin.caption = {caption}, checkin.source = {source}',
+    //change to merge on foursquareID only
+    'MERGE (place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}, foursquareID: {foursquareID}})',
+    'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)',
+    'RETURN user, checkin, place',
+  ].join('\n');
+
+  var batchRequest = _.map(combinedCheckins, function (checkin, index) {
+    var singleRequest = {
+      'method': "POST",
+      'to': "/cypher",
+      'body': {
+        'query': query,
+        'params': checkin
+      },
+      'id': index
+    };
+
+    singleRequest.body.params.facebookID = facebookID;
+
+    return singleRequest;
+  });
+
+  var options = {
+    'url': neo4jUrl + '/db/data/batch',
+    'method': 'POST',
+    'json': true,
+    'body': JSON.stringify(batchRequest)
+  };
+
+  request.post(options, function(err, response, body) {
+    if (err) { deferred.reject(err) }
+    else {
+      deferred.resolve(body);
+    }
+  });
+
+  return deferred.promise;
+};
+
+User.prototype.findAllFriends = function () {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasFriend]->(friend:User)',
+    'RETURN friend',
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (friend) {
+        return friend.friend._data.data
+      })
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+};
+
+User.prototype.findAllCheckins = function () {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(c:Checkin)-[:hasPlace]->(p:Place)',
+    'RETURN c, p',
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (item) {
+        return {
+          checkin: item.c.data,
+          place: item.p.data
+        }
+      })
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+};
+
+User.createUniqueUser = function (data) {
+  var deferred = Q.defer();
+
+  var query = [
+    'MERGE (user:User {facebookID: {facebookID}})',
+    'SET user.name = {name}',
     'RETURN user',
   ].join('\n');
 
   var params = data;
-
-  var deferred = Q.defer();
+  //data has a user's facebook ID and name
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
@@ -64,13 +230,67 @@ User.createOrFind = function (data) {
   return deferred.promise;
 };
 
-User.get = function (id) {
+User.find = function (data) {
+
   var deferred = Q.defer();
 
-  db.getNodeById(id, function (err, node) {
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})',
+    'RETURN user',
+  ].join('\n');
+
+  var params = data;
+
+  db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(node));
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+};
+
+User.findByFoursquareID = function (foursquareID) {
+
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {foursquareID: {foursquareID}})',
+    'RETURN user',
+  ].join('\n');
+
+  var params = {
+    foursquareID: foursquareID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+};
+
+User.findByInstagramID = function (instagramID) {
+
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {instagramID: {instagramID}})',
+    'RETURN user',
+  ].join('\n');
+
+  var params = {
+    instagramiD: InstagramID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
     }
   });
 

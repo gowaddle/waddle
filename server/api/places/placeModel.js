@@ -5,14 +5,15 @@ var db = new neo4j.GraphDatabase(process.env['GRAPHENEDB_URL'] || 'http://localh
 
 var Place = function(node){
   this.node = node;
-}
-
-Place.prototype.getName= function(){
-  return this.node.data['name'];
 };
 
-Place.prototype.setName= function(name){
-  this.node.data['name'] = name;
+Place.prototype.setProperty = function(property, value) {
+  this.node.data[property] = value;
+  return this.save();
+};
+
+Place.prototype.getProperty = function(property) {
+  return this.node.data[property];
 };
 
 Place.prototype.save = function (){
@@ -33,7 +34,7 @@ Place.create = function(data){
   var place = new Place(node);
 
   var query = [
-    'MERGE (place:Place {name: {name}, xcoord: {xcoord}, ycoord: {ycoord}})',
+    'MERGE (place:Place foursquareID: {foursquareID}, {name: {name}, lat: {lat}, lng: {lng}, country: {country}})',
     'RETURN place',
   ].join('\n');
 
@@ -45,9 +46,30 @@ Place.create = function(data){
     if (err) { deferred.reject(err); }
     else {
       var place = new Place(results[0]['place']);
-      deferred.resolve(user);
+      deferred.resolve(place);
+    }
+  });
+}
+
+Place.find = function (data){
+
+  var query = [
+    'MATCH (place:Place {foursquareID: {foursquareID}})',
+    'RETURN place'
+  ].join('\n');
+  var params = data;
+
+  var deferred = Q.defer();
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var place = new Place(results[0]['place']);
+      deferred.resolve(place);
     }
   });
 
-  return deferred.promise
-}
+  return deferred.promise;
+};
+
+module.exports = Place;

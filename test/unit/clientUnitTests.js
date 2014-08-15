@@ -13,7 +13,7 @@ describe('Angular testing framework', function() {
     expect(element[0].textContent).toBe('hello');
   });    
 
-  it('The test should inject compile and rootScope for testing', function () {
+  it('should inject compile and rootScope for testing', function () {
     scope.$digest()  //use apply?
     expect(element.html()).toBe('4');
   });

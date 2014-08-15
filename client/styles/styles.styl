@@ -1,3 +1,116 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lobster'), url(http://themes.googleusercontent.com/static/fonts/lobster/v6/MWVf-Rwh4GLQVBEwbyI61Q.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/k3k702ZOKiLJc3WVjuplzHhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/EInbV5DfGHOiMmvb1Xr-hnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/xjAJXh38I15wypJXxuGMBobN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+
+div{
+  line-height:1;
+  margin:0px;
+}
+
+h1{
+  font-family:'Open Sans', san-serif;
+  font-style: bold;
+  font-weight:1000;
+  font-size:100px;
+  color:#ffffff;
+  margin:0;
+  padding:0;
+  }
+h2{
+  font-family:'Open Sans', san-serif;
+  font-style: none;
+  font-weight:400;
+  font-size:20px;
+  color:#ffffff;
+  line-height:180%;
+  margin:0;
+  padding:0;
+  }
+h3{
+  font-family:'Open Sans', san-serif;
+  font-style: none;
+  font-weight:100;
+  font-size:20px;
+  color:#555555;
+  line-height:180%;
+  margin:0px;
+  padding:0px;
+  }
+h4{
+  font-family:'Open Sans', san-serif;
+  color:#a6a6a6;
+  display:inline;
+  font-size:15px;
+  font-weight:300;
+  margin:0px;
+  padding:0px;
+  }
+h5{
+  font-family:'Open Sans', san-serif;
+  color:#FFF;
+  display:inline;
+  font-size:55px;
+  }
+h6{
+  font-family:'Open Sans', san-serif;
+  color:#FFF;
+  display:inline;
+  font-size:12px;
+  font-style:none;
+  font-weight:400;
+  }
+h7{
+  font-family:'Open Sans', san-serif;
+  color:#F6E16E;
+  display:inline;
+  font-size:30px;
+  }
+h8{
+  font-family:'Open Sans', san-serif;
+  color:#888888;
+  display:inline;
+  font-size:10px;
+  }
+
 #signin {
   position: absolute;
   background-image: url('https://s3-us-west-2.amazonaws.com/waddle/waddleloginnotwitter.png');
@@ -59,3 +172,118 @@
   width:100%; 
   z-index: -1; 
 }
+
+.navigation {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 30px;
+  top: 0;
+  background-color: #FFFFFF;
+  opacity: 0.8
+}
+
+.navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navigation li {
+  float: left;
+}
+
+.navigation li a {
+  width: 100px;
+  height: 10px;
+  line-height: 10px;
+  padding: 10px;
+  display: block;
+  text-align: center;
+}
+
+.navigation li a:hover {
+  background-color: #ddd;
+}
+
+.navigation li a.selected {
+  background-color: #ccc;
+}
+
+.waddlefeed {
+   margin-top: 40px;
+   height: 800px;
+   width: 250px;
+   float: right;
+   border-radius:5px;
+   background-color:rgba(255,255,255,0.9);
+}
+
+.waddlefeeditem {
+  height: 20%;
+  background-color: #fff;
+  margin: 5px;
+  overflow: hidden;
+}
+
+.waddlefeeditem img {
+  max-height: 80%;
+}
+
+.waddlefeedfriend {
+  height: 15%;
+  background-color: #fff;
+  margin: 5px;
+}
+
+.friendname {
+  margin: 5px;
+  cursor:pointer;
+}
+
+.friendname:hover {
+  color: Teal;
+}
+
+.footprints {
+   margin-top: 60px;
+   margin-left: 50px;
+   height: 720px;
+   width: 1100px;
+   background-color:rgba(255,255,255,0.9);
+   overflow-y: scroll;
+}
+
+.footprintitem {
+  border: 1px solid #a6a6a6;
+  margin: 10px;
+  padding: 5px;
+}
+
+.giveprops {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png');
+}
+
+.giveprops:hover {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Active_01.png');
+}
+
+.comment_form input {
+  height:12px; 
+  width:220px; 
+  padding:5px 8px;
+  box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+  border-radius: 3px;
+  border: none;
+}
+
+.comment_form input:focus {
+    outline: none;
+}
+
+::-webkit-input-placeholder {
+   color: silver;
+   font-family: 'Open-Sans', sans-serif;
+   font-size: 13px;
+}
+

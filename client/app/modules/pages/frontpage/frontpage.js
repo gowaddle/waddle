@@ -1,6 +1,6 @@
 angular.module('waddle.frontpage', [])
 
-.controller('FrontpageController', function ($scope, $state, UserRequests) {
+.controller('FrontpageController', function ($scope, $state, UserRequests, $rootScope) {
 
   var enterSiteWhenConnected = function (fbToken) {
     openFB.api({
@@ -13,6 +13,9 @@ angular.module('waddle.frontpage', [])
   };
   
   var sendUserDataToServer = function(fbToken, data){
+    
+    window.sessionStorage.userFbID = data.id;
+
     var userData = {
       facebookID: data.id,
       name: data.name,
@@ -21,12 +24,15 @@ angular.module('waddle.frontpage', [])
 
     console.log("userDataPassedToServer: ", userData)
 
+    $state.go('loading');
     UserRequests.sendUserData(userData)
-    .then(function(){
-        //$state.go('map') should occur here when we end up getting data from the database (and show a waddling penguin meanwhile)
+    .then(function(data){
+      UserRequests.allData = data
+      console.log(UserRequests.allData)
+      $state.go('map');
     });
 
-    $state.go('map');
+
   };
 
   openFB.getLoginStatus(function (response){
@@ -40,12 +46,13 @@ angular.module('waddle.frontpage', [])
   	  	openFB.login(function (response) {
           if(response.status === 'connected') {
             console.log('connected');
+            console.log('response: ' + JSON.stringify(response));
             enterSiteWhenConnected(response.authResponse.token);
           } else {
             alert('Facebook login failed: ' + response.error);
           }
         }, {
-          scope: 'user_friends, user_tagged_places'
+          scope: 'user_friends, user_tagged_places, user_photos, read_stream'
         });
   	  };
   	}

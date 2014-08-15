@@ -1,34 +1,220 @@
-var utils = require('../../utils.js');
+var foursquareUtils = require('../../utils/foursquareUtils.js');
+var facebookUtils = require('../../utils/facebookUtils.js');
+var instagramUtils = require('../../utils/instagramUtils.js');
 var User = require('./userModel.js');
+var Place = require('../places/placeModel.js');
+var Checkin = require('../checkins/checkinModel.js');
+var _ = require('lodash');
 
-var userController = {
-  updateUser: function (req, res) {
+var userController = {};
 
-    var userData = req.body;
-    var user;
+userController.userLogin = function (req, res) {
 
-    User.createOrFind(userData)
-    .then(function (u) { 
-      user = u;
+  var userData = req.body;
+  var user;
+  var userFBCheckinData = [];
+  var userFBPhotoData = [];
+  var userFBFriendsData;
+  var combinedFBCheckins;
+  var alreadyExists = false;
+
+  User.createUniqueUser(userData)
+  .then(function (userNode) { 
+    //note: this has the user node
+    //console.dir(userNode.node._data.data)
+    user = userNode;
+    return facebookUtils.exchangeFBAccessToken(userData.fbToken);
+  })
+  .then(function (fbReqData) {
+    return user.setProperty('fbToken', fbReqData.access_token);
+  })
+  .then(function (userNode) {
+    user = userNode;
+    return facebookUtils.getFBProfilePicture(userData.facebookID);
+  })
+  .then(function (fbPicData) {
+    if(fbPicData.data.is_silhouette === false) {
+      return user.setProperty('fbProfilePicture', fbPicData.data.url); 
+    }
+  })
+  .then(function (userNode) { 
+    user = userNode;
+    return user.findAllCheckins()
+  })
+  .then(function (checkinsAlreadyStored) {
+    // console.log('fb checkins: ', checkinsAlreadyStored.length);
+    if (checkinsAlreadyStored.length) {
+      user.findAllFriends()
+      .then(function (neoUserData){
+        var allData = {
+          allCheckins: checkinsAlreadyStored,
+          friends: neoUserData,
+          fbProfilePicture: user.getProperty('fbProfilePicture')
+        }
+        res.json(allData);
+        res.status(200).end();
+      })
+    } else {
+      getAndParseFBData();
+    }
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.status(500).end();
+  });
+
+  var getAndParseFBData = function () {
+    // start getting data for checkins and photos
+
+    facebookUtils.getFBFriends(user)
+    .then(function (fbRawUserData) {
+      // Friends data
+      console.log(fbRawUserData);
+      return user.addFriends(fbRawUserData.data);
     })
-    .then(function () {
-      return utils.exchangeFBAccessToken(userData.fbToken);
+    .then(function (friends) {
+      // Parse Friends data
+      var allFriends = _.map(friends, function(friend){
+        return friend.body.data[0][0].data;
+      })
+      userFBFriendsData = allFriends;
+
+      //get tagged places
+      return facebookUtils.getFBTaggedPlaces(user);
     })
-    .then(function (d) {
-      return user.setProperty('fbToken', d.access_token);
+    .then(function (fbRawCheckinData) {
+      // parse Checkin data
+      return facebookUtils.parseFBData(user, fbRawCheckinData.data);
     })
-    .then(function (user) {
-      return utils.getFBTaggedPlaces(user);
+    .then(function (fbParsedCheckinData) {
+      userFBCheckinData = fbParsedCheckinData;
+      // get Picture data
+      return facebookUtils.getFBPhotos(user);
     })
-    .then(function (d) {
-      console.log(d);
-      res.status(204).end();
+    .then(function (fbRawPhotoList) {
+      // parse Photo data
+      // console.log("# of photos", fbRawPhotoList.length)
+      return facebookUtils.parseFBData(user, fbRawPhotoList); 
+    })
+    .then(function (fbParsedPhotoData) {
+      // merge checkins and photos
+      userFBPhotoData = fbParsedPhotoData;
+      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
+      return user.addCheckins(combinedFBCheckins);
+    })
+    .then(function (data) {
+      return user.findAllCheckins();
+    })
+    .then(function (checkinsStored) {
+      // console.log('fb checkins: ', checkinsStored.length);
+      var allData = {
+        allCheckins: checkinsStored,
+        friends: userFBFriendsData
+      };
+      res.json(allData);
+      res.status(200).end();
     })
     .catch(function(err) {
       console.log(err);
       res.status(500).end();
     });
   }
-}
+};
+
+userController.addFoursquareData = function (req, res) {
+
+  var userData = req.body;
+  var user;
+
+  User.find(userData)
+  .then(function (userNode) { 
+    // console.log("userNode: " + userNode);
+    user = userNode;
+    return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
+  })
+  .then(function (foursquareAccessToken) {
+    // console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
+    return user.setProperty('fsqToken', foursquareAccessToken.access_token);
+  })
+  .then(function (userNode) {
+    user = userNode;
+    return foursquareUtils.getUserFoursquareIDFromToken(user);
+  })
+  .then(function (userFoursquareData) {
+    console.log(userFoursquareData.response.user.id);
+    return user.setProperty('foursquareID', userFoursquareData.response.user.id);
+  })
+  .then(function (userNode) {
+    user = userNode;
+    return foursquareUtils.tabThroughFoursquareCheckinHistory(user);
+  })
+  .then(function (foursquareHistoryBucket) {
+    var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
+    var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    return user.addCheckins(allParsedFoursquareCheckins);
+  })
+  .then(function (data) {
+    // console.log('4s: ', data);
+    res.status(204).end();
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.status(500).end();
+  })
+};
+
+userController.addInstagramData = function (req, res) {
+
+  var userData = req.body;
+  var user;
+  var igUserData;
+
+  User.find(userData)
+  .then(function (userNode) { 
+    user = userNode;
+    return instagramUtils.exchangeIGUserCodeForToken(userData.instagramCode);
+  })
+  .then(function (igData) {
+    igUserData = igData;
+    return user.setProperty('igToken', igUserData.access_token);
+  })
+  .then(function (userNode) { 
+    user = userNode;
+    return user.setProperty('instagramID', igUserData.user.id);
+  })
+  .then(function (userNode) { 
+    user = userNode;
+    return 'done';
+  })
+  .then(function (data) {
+    console.log('ig: ', data);
+    res.status(204).end();
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.status(500).end();
+  })
+
+};
+
+userController.getUserData = function(req, res){
+  var userData = {
+    facebookID: req.params.friend
+  };
+
+  User.find(userData)
+  .then(function(friend){
+    return friend.findAllCheckins();
+  })
+  .then(function(checkins){
+    // console.log("checkins: ", checkins.length)
+    res.json(checkins);
+    res.status(200).end();
+  })
+  .catch(function(err){
+    console.log(err);
+    res.status(500).end();
+  });
+};
 
 module.exports = userController;

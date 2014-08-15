@@ -1,0 +1,16 @@
+<!-- <div class='waddlefootprints' ui-scroll-viewport>
+	<div class='waddlefootprintitem' ui-scroll="checkin in allUserCheckinsFeed" is-loading='true'>
+		{{checkin.place.name}}
+	</div>
+</div> -->
+<div class='footprints'>
+	<div masonry>
+	    <div class="masonry-brick" ng-repeat="checkin in allUserCheckinsFootprints">
+	    	<div class='footprintitem'>
+	        <h3>{{checkin.place.name}}</h3>
+	        <h4>{{checkin.checkin.checkinTime}}</h4>
+	       <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
+	      </div>
+	    </div>
+	</div>
+</div>
