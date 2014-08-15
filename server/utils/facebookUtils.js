@@ -256,6 +256,10 @@ utils.parseFBData = function (user, data) {
         place.likes = datum.likes.data.length;
       }
 
+      if(datum.message) {
+        place.caption = datum.message;
+      }
+
       if (datum.picture) {
         place.photoSmall = datum.picture;
       }
