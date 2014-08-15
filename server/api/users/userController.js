@@ -12,8 +12,9 @@ userController.userLogin = function (req, res) {
 
   var userData = req.body;
   var user;
-  var userFBCheckinData = [];
+  var userFBTaggedPostsData = [];
   var userFBPhotoData = [];
+  var userFBStatusesData = [];
   var userFBFriendsData;
   var combinedFBCheckins;
   var alreadyExists = false;
@@ -80,14 +81,15 @@ userController.userLogin = function (req, res) {
       userFBFriendsData = allFriends;
 
       //get tagged places
-      return facebookUtils.getFBTaggedPlaces(user);
+      return facebookUtils.getFBTaggedPosts(user);
     })
-    .then(function (fbRawCheckinData) {
+    .then(function (fbRawTaggedPostsData) {
       // parse Checkin data
-      return facebookUtils.parseFBData(user, fbRawCheckinData.data);
+      console.log(fbRawTaggedPostsData);
+      return facebookUtils.parseFBData(user, fbRawTaggedPostsData);
     })
-    .then(function (fbParsedCheckinData) {
-      userFBCheckinData = fbParsedCheckinData;
+    .then(function (fbParsedTaggedPostsData) {
+      userFBTaggedPostsData = fbParsedTaggedPostsData;
       // get Picture data
       return facebookUtils.getFBPhotos(user);
     })
@@ -97,9 +99,19 @@ userController.userLogin = function (req, res) {
       return facebookUtils.parseFBData(user, fbRawPhotoList); 
     })
     .then(function (fbParsedPhotoData) {
-      // merge checkins and photos
+      // merge tagged places and photos
       userFBPhotoData = fbParsedPhotoData;
-      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
+      combinedFBCheckins = userFBTaggedPostsData.concat(userFBPhotoData);
+      //get statuses posted by user
+      return facebookUtils.getFBStatuses(user);
+    })
+    .then(function (fbRawStatusList) {
+      return facebookUtils.parseFBData(user, fbRawStatusList);
+    })
+    .then(function (fbParsedStatusesData) {
+      userFBStatusesData = fbParsedStatusesData;
+      combinedFBCheckins = combinedFBCheckins.concat(userFBStatusesData);
+      console.log("combinedCheckins: " + combinedFBCheckins);
       return user.addCheckins(combinedFBCheckins);
     })
     .then(function (data) {

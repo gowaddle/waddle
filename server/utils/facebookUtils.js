@@ -88,17 +88,27 @@ utils.getFBFriends = function (user) {
   return deferred.promise;
 };
 
-utils.getFBTaggedPlaces = function (user) {
+utils.getFBTaggedPosts = function (user) {
   var deferred = Q.defer();
 
   var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
-  
+
   var query = {
     access_token: fbToken
   };
 
-  var queryPath = 'https://graph.facebook.com/'+fbID+'/tagged_places?' + qs.stringify(query);
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/tagged?' + qs.stringify(query);
+
+  var taggedPostsContainer = [];
+
+  deferred.resolve(utils.makeFBTaggedPostsRequest(queryPath, taggedPostsContainer));
+
+  return deferred.promise;
+};
+
+utils.makeFBTaggedPostsRequest = function (queryPath, taggedPostsContainer) {
+  var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -107,7 +117,15 @@ utils.getFBTaggedPlaces = function (user) {
     });
 
     res.on('end', function () {
-      deferred.resolve(JSON.parse(data));
+      var dataObj = JSON.parse(data);
+
+      taggedPostsContainer.push(dataObj.data)
+
+      if (! dataObj.paging) {
+        deferred.resolve(_.flatten(taggedPostsContainer, true));
+      } else {
+        deferred.resolve(utils.makeFBTaggedPostsRequest(dataObj.paging.next, taggedPostsContainer));
+      }
     })
 
   }).on('error', function (e) {
@@ -115,7 +133,7 @@ utils.getFBTaggedPlaces = function (user) {
   });
 
   return deferred.promise;
-};
+}
 
 utils.getFBPhotos = function (user) {
   var deferred = Q.defer();
@@ -154,6 +172,53 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
         deferred.resolve(_.flatten(photoContainer, true));
       } else {
         deferred.resolve(utils.makeFBPhotosRequest(dataObj.paging.next, photoContainer));
+      }
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+};
+
+utils.getFBStatuses = function (user) {
+  var deferred = Q.defer();
+
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
+
+  var query = {
+    access_token: fbToken
+  };
+
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/statuses?' + qs.stringify(query);
+
+  var photoContainer = [];
+
+  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
+
+  return deferred.promise;
+}
+
+utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
+  var deferred = Q.defer();
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      var dataObj = JSON.parse(data);
+
+      statusContainer.push(dataObj.data)
+
+      if (! dataObj.paging) {
+        deferred.resolve(_.flatten(statusContainer, true));
+      } else {
+        deferred.resolve(utils.makeFBStatusesRequest(dataObj.paging.next, statusContainer));
       }
     })
 
