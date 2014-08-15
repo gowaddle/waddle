@@ -87,17 +87,27 @@ utils.getFBFriends = function (user) {
   return deferred.promise;
 };
 
-utils.getFBTaggedPlaces = function (user) {
+utils.getFBTaggedPosts = function (user) {
   var deferred = Q.defer();
 
   var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
-  
+
   var query = {
     access_token: fbToken
   };
 
-  var queryPath = 'https://graph.facebook.com/'+fbID+'/tagged_places?' + qs.stringify(query);
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/tagged?' + qs.stringify(query);
+
+  var taggedPostsContainer = [];
+
+  deferred.resolve(utils.makeFBTaggedPostsRequest(queryPath, taggedPostsContainer));
+
+  return deferred.promise;
+};
+
+utils.makeFBTaggedPostsRequest = function (queryPath, taggedPostsContainer) {
+  var deferred = Q.defer();
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -106,7 +116,15 @@ utils.getFBTaggedPlaces = function (user) {
     });
 
     res.on('end', function () {
-      deferred.resolve(JSON.parse(data));
+      var dataObj = JSON.parse(data);
+
+      taggedPostsContainer.push(dataObj.data)
+
+      if (! dataObj.paging) {
+        deferred.resolve(_.flatten(taggedPostsContainer, true));
+      } else {
+        deferred.resolve(utils.makeFBTaggedPostsRequest(dataObj.paging.next, taggedPostsContainer));
+      }
     })
 
   }).on('error', function (e) {
@@ -114,7 +132,7 @@ utils.getFBTaggedPlaces = function (user) {
   });
 
   return deferred.promise;
-};
+}
 
 utils.getFBPhotos = function (user) {
   var deferred = Q.defer();
