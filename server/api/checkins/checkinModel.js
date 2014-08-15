@@ -111,7 +111,7 @@ Checkin.giveProps = function (clickerID, checkinID){
   return deferred.promise;
 };
 
-Checkin.getProps = function (checkinID){
+Checkin.getProps = function (checkinID) {
   var deferred = Q.defer();
 
   var query = [
@@ -123,14 +123,14 @@ Checkin.getProps = function (checkinID){
     'checkinID': checkinID
   }
 
-  db.query(query, params, function (err, results){
+  db.query(query, params, function (err, results)  {
     if (err) { deferred.reject(err) }
     else {
       console.log(results)
       deferred.resolve(results)
     }
-  }
-}
+  });
+};
 
 Checkin.getComments = function (checkinID){
   var deferred = Q.defer();
@@ -150,7 +150,7 @@ Checkin.getComments = function (checkinID){
       console.log(results)
       deferred.resolve(results)
     }
-  }
-}
+  });
+};
 
 module.exports = Checkin;

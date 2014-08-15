@@ -274,6 +274,29 @@ User.findByFoursquareID = function (foursquareID) {
   return deferred.promise;
 };
 
+User.findByInstagramID = function (instagramID) {
+
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {instagramID: {instagramID}})',
+    'RETURN user',
+  ].join('\n');
+
+  var params = {
+    instagramiD: InstagramID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+};
+
 User.getAll = function () {
 
   var query = [
