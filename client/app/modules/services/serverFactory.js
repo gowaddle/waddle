@@ -2,9 +2,12 @@ angular.module('waddle.services.serverFactory', [])
 
 .factory('UserRequests', function($http){
   var data = undefined;
+  var footprintData = undefined;
 
   return {
     allData: data,
+    currentFootprint: footprintData,
+
     sendUserData: function(data){
       return $http({
         method: 'POST',
@@ -56,6 +59,16 @@ angular.module('waddle.services.serverFactory', [])
         method: 'POST',
         data: data,
         url: '/api/checkins/props'
+      });
+    },
+
+    getFootprintInteractions: function(data){
+      if (!data){
+        return;
+      }
+      return $http({
+        method: 'GET',
+        url: '/api/checkins/interactions/' + data
       });
     }
   };

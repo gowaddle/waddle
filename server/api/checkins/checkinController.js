@@ -106,7 +106,7 @@ checkinController.giveProps = function (req, res){
 };
 
 checkinController.getPropsAndComments = function (req, res){
-  var checkinID = req.body.checkinID;
+  var checkinID = req.params.checkinid;
   var data = {}
 
   Checkin.getProps(checkinID)
@@ -114,13 +114,30 @@ checkinController.getPropsAndComments = function (req, res){
     console.log("props")
     console.log(props);
     data['props'] = props;
-    return Checkin.getComments;
+    return Checkin.getComments(checkinID);
   })
   .then(function (comments){
     console.log("comments")
     console.log(comments)
+    if (typeof comments === "object")
     data['comments'] = comments;
-    res.json(data);
+    var parsedData = {
+      props: data.props.length,
+      propGivers: [],
+      comments: []
+    };
+
+    for (var i = 0; i < data.props.length; i++){
+      parsedData.propGivers.push(data.props[i].user._data.data)
+    };
+    for (var i = 0; i < data.comments.length; i++){
+      parsedData.comments.push({
+        commenter: data.comments[i].user._data.data, 
+        comment: data.comments[i].comment._data.data
+      })
+    };
+
+    res.json(parsedData);
     res.status(200).end();
   })
   .catch(function (err){
