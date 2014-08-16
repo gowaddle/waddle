@@ -58,33 +58,32 @@ utils.getUserFoursquareIDFromToken = function (user) {
   }).on('error', function(err) {
     deferred.reject(err);
   });
+
   return deferred.promise;
 };
 
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
-  var offset = 0;
-  var historyBucketContainer = [];
 
   var fsqAccessToken = user.getProperty('fsqToken');
 
   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
   .then(function(checkinHistory) {
-    console.log('checkinHistory: ' + checkinHistory);
 
     var checkinCount = checkinHistory.response.checkins.count;
-    console.log('checkinCount: ' + checkinCount);
+    var historyBucketContainer = [];
+    
+    var offset = 0;
 
-    var numberOfTimesToTabThroughHistory = Math.ceil(checkinCount/250);
-
-    for(var i = 0; i < numberOfTimesToTabThroughHistory; i++) {
+    while(offset < checkinCount) {
       historyBucketContainer.push(utils.getFoursquareCheckinHistory(fsqAccessToken, offset));
       offset += 250;  
     }
-    console.log('historyBucketContainer: ' + historyBucketContainer);
+
     deferred.resolve(Q.all(historyBucketContainer));
   });
+
   return deferred.promise;
 };
 
@@ -119,6 +118,7 @@ utils.convertFoursquareHistoryToSingleArrayOfCheckins = function (foursquareChec
   var allCheckins =  _.map(foursquareCheckinHistoryBucketContainer, function(checkinBucket) {
     return checkinBucket.response.checkins.items;
   });
+  
   return _.flatten(allCheckins, true);
 };
 
