@@ -61,6 +61,9 @@ angular.module('waddle.feed', [])
       .then(function (data){
         UserRequests.currentFootprint = data.data
         console.log(UserRequests.currentFootprint)
+        $scope.data.footprint.propNumber = data.data.props;
+        $scope.data.footprint.propGivers = data.data.propGivers;
+        $scope.data.footprint.comments = data.data.comments;
       })
     }
   });
