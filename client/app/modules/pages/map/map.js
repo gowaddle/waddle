@@ -34,6 +34,9 @@ angular.module('waddle.map', [])
       // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
+      $scope.setProfilePicture = UserRequests.allData.data.fbProfilePicture;
+      console.log(UserRequests.allData.data.fbProfilePicture);
+
     // configuredMap.on('move', function() {
     // // Construct an empty list to fill with onscreen markers.
     //   // var inBounds = [],
