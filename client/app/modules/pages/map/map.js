@@ -57,6 +57,7 @@ angular.module('waddle.map', [])
       var makeMarker = function (placeName, latLng) {
         var args = Array.prototype.slice.call(arguments, 2);
         var img = args[0];
+        var caption = args[1];
         var marker = L.marker(latLng, {
           icon: L.mapbox.marker.icon({
             'marker-color': '1087bf',
@@ -66,9 +67,14 @@ angular.module('waddle.map', [])
           title: placeName
         })
 
-        if(img) {
-          console.log(img);
+        if(img && caption) {
+          marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4><img src="' + img + '"/>');
+        }
+        else if(img) {
           marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
+        }
+        else if(caption) {
+          marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4>');
         }
         else {
           marker.bindPopup('<h3>' + placeName + '</h3>');
@@ -115,9 +121,15 @@ angular.module('waddle.map', [])
           var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
           placeLatLngs.push(placeLatLng);
-          if(checkin.photoSmall !=='null') {
+          if(checkin.photoSmall !=='null' && checkin.caption !== 'null') {
             console.log(checkin.photoSmall);
+            makeMarker(place.name, placeLatLng, checkin.photoSmall, checkin.caption);
+          }
+          else if(checkin.photoSmall !== 'null') {
             makeMarker(place.name, placeLatLng, checkin.photoSmall);
+          }
+          else if(checkin.caption !== 'null') {
+            makeMarker(place.name, placeLatLng, null, checkin.caption);
           }
           else {
             makeMarker(place.name, placeLatLng);
