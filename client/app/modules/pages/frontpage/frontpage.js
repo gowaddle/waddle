@@ -41,21 +41,20 @@ angular.module('waddle.frontpage', [])
       enterSiteWhenConnected(response.authResponse.token);
     } else {
       console.log('not connected')
-
-  	  $scope.login = function(){
-  	  	openFB.login(function (response) {
-          if(response.status === 'connected') {
-            console.log('connected');
-            console.log('response: ' + JSON.stringify(response));
-            enterSiteWhenConnected(response.authResponse.token);
-          } else {
-            alert('Facebook login failed: ' + response.error);
-          }
-        }, {
-          scope: 'user_friends, user_tagged_places, user_photos, read_stream'
-        });
-  	  };
   	}
   })
+
+  $scope.login = function(){
+    openFB.login(function (response) {
+      if(response.status === 'connected') {
+        console.log('connected');
+        enterSiteWhenConnected(response.authResponse.token);
+      } else {
+        alert('Facebook login failed: ' + response.error);
+      }
+    }, {
+      scope: 'user_friends, user_tagged_places, user_photos, read_stream'
+    });
+  };
 
 });
