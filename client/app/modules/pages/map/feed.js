@@ -56,9 +56,11 @@ angular.module('waddle.feed', [])
     }
 
     $scope.getFootprint = function (footprint) {
-      console.log($scope.selectedFootprint);
       $scope.selectedFootprint = footprint;
-      console.log($scope.selectedFootprint);
-
+      UserRequests.getFootprintInteractions(footprint.checkin.checkinID)
+      .then(function (data){
+        UserRequests.currentFootprint = data.data
+        console.log(UserRequests.currentFootprint)
+      })
     }
   });
