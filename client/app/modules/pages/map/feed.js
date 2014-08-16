@@ -4,6 +4,9 @@ angular.module('waddle.feed', [])
 
 
     $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;
+    $scope.selectedFootprint = null;
+
+
     console.log(UserRequests.allData);
     $scope.allUserCheckinsFeed = {
       get: function(index, count, success) {
@@ -14,13 +17,13 @@ angular.module('waddle.feed', [])
       }
     };
 
-    $scope.addCommentToCheckin = function (checkin){
-      //console.log(checkin)
-      var node = document.querySelectorAll(".comment" + checkin + ".ng-dirty")
+    $scope.addCommentToCheckin = function (checkinID){
+      //console.log(checkinID)
+      var node = document.querySelectorAll(".comment" + checkinID + ".ng-dirty")
       
       var commentData = {
         clickerID: window.sessionStorage.userFbID,
-        checkinID: checkin,
+        checkinID: checkinID,
         text: node[0].value
       }
 
@@ -30,12 +33,12 @@ angular.module('waddle.feed', [])
       })    
     }
 
-    $scope.addPropsToCheckin = function (checkin){
-      console.log(checkin);
+    $scope.addPropsToCheckin = function (checkinID){
+      console.log(checkinID);
 
       var propsData = {
         clickerID: window.sessionStorage.userFbID,
-        checkinID: checkin
+        checkinID: checkinID
       }
 
       UserRequests.giveProps(propsData)
@@ -44,11 +47,18 @@ angular.module('waddle.feed', [])
       });
     }
 
-    $scope.addCheckinToBucketlist = function (checkin){
+    $scope.addCheckinToBucketlist = function (checkinID){
       var data = {
         facebookID: window.sessionStorage.userFbID,
-        checkinID: checkin
+        checkinID: checkinID
       }
        UserRequests.addToBucketList(data)
+    }
+
+    $scope.getFootprint = function (footprint) {
+      console.log($scope.selectedFootprint);
+      $scope.selectedFootprint = footprint;
+      console.log($scope.selectedFootprint);
+
     }
   });
