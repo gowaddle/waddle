@@ -15,7 +15,6 @@ FriendsController = function ($scope, $state, UserRequests){
         success(results);
     }
   };
-
 };
 
 FriendsController.$inject = ['$scope', '$state', 'UserRequests'];
