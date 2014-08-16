@@ -11,6 +11,7 @@ angular.module('waddle.map', [])
     });*/
 
     $scope.data = {};
+    $scope.data.footprint = {};
 
     UserRequests.getUserData(window.sessionStorage.userFbID);
     console.log($scope.data)
