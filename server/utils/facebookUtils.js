@@ -29,7 +29,7 @@ utils.exchangeFBAccessToken = function (fbToken) {
     res.on('end', function () {
       deferred.resolve(qs.parse(data));
       console.log(data);
-    })
+    });
 
   }).on('error', function (e) {
     deferred.reject(e);
@@ -50,7 +50,7 @@ utils.getFBProfilePicture = function (userID) {
     });
     res.on('end', function() {
       deferred.resolve(JSON.parse(data));
-    })
+    });
 
   }).on('error', function(e) {
     deferred.reject(e);
@@ -79,7 +79,7 @@ utils.getFBFriends = function (user) {
 
     res.on('end', function () {
       deferred.resolve(JSON.parse(data));
-    })
+    });
 
   }).on('error', function (e) {
     deferred.reject(e);
@@ -126,7 +126,7 @@ utils.makeFBTaggedPostsRequest = function (queryPath, taggedPostsContainer) {
       } else {
         deferred.resolve(utils.makeFBTaggedPostsRequest(dataObj.paging.next, taggedPostsContainer));
       }
-    })
+    });
 
   }).on('error', function (e) {
     deferred.reject(e);
@@ -173,7 +173,7 @@ utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
       } else {
         deferred.resolve(utils.makeFBPhotosRequest(dataObj.paging.next, photoContainer));
       }
-    })
+    });
 
   }).on('error', function (e) {
     deferred.reject(e);
@@ -199,7 +199,7 @@ utils.getFBStatuses = function (user) {
   deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
 
   return deferred.promise;
-}
+};
 
 utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
   var deferred = Q.defer();
@@ -220,7 +220,7 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
       } else {
         deferred.resolve(utils.makeFBStatusesRequest(dataObj.paging.next, statusContainer));
       }
-    })
+    });
 
   }).on('error', function (e) {
     deferred.reject(e);
@@ -270,7 +270,6 @@ utils.parseFBData = function (user, data) {
       }
 
       var latlng = place.lat.toString() + ',' + place.lng.toString();
-
       
       parsedData.push(place);
       console.log(place)
