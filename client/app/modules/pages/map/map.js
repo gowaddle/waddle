@@ -18,8 +18,6 @@ angular.module('waddle.map', [])
     Auth.checkLogin()
     .then(function(){
 
-      $state.go('map.feed')
-
       L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
       var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
@@ -34,19 +32,10 @@ angular.module('waddle.map', [])
       // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
+    // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
     configuredMap.on('move', function() {
-    // Construct an empty list to fill with onscreen markers.
-      // // Get the map bounds - the top-left and bottom-right locations.
       var bounds = configuredMap.getBounds();
-      var inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      console.log(inBounds);
-
-      // For each marker, consider whether it is currently visible by comparing
-      // with the current map bounds.
-      // aggregatedMarkers.eachLayer(function(marker) {
-      //     if (bounds.contains(marker.getLatLng())) {
-      //         console.log(marker.getLatLng());
-      //     }
+      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
     });
 
     // // // Display a list of markers.
@@ -112,6 +101,7 @@ angular.module('waddle.map', [])
         aggregatedMarkers.clearLayers();
         var placeLatLngs;
         var markers = [];
+        $scope.inBounds = [];
 
         $scope.data.currentCheckins = allUserCheckins;
         // $scope.allUserCheckins = allUserCheckins;
@@ -121,7 +111,8 @@ angular.module('waddle.map', [])
           var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
 
-          placeLatLngs ? placeLatLngs.insert(placeLatLng, checkin.checkinID) : placeLatLngs = new MapFactory.QuadTree(placeLatLng, checkin.checkinID);
+          $scope.inBounds.push(checkin);
+          placeLatLngs ? placeLatLngs.insert(placeLatLng, checkin) : placeLatLngs = new MapFactory.QuadTree(placeLatLng, checkin);
 
           if(checkin.photoSmall !=='null' && checkin.caption !== 'null') {
             makeMarker(place.name, placeLatLng, checkin.photoSmall, checkin.caption);
@@ -183,6 +174,8 @@ angular.module('waddle.map', [])
            $scope.data.allData = UserRequests.allData.data;
            $scope.data.friends = UserRequests.allData.data.friends; 
            MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
+           console.log( $scope.inBounds );
+           // $state.go('map.feed')
          } else {
           $state.go('frontpage')
          }

@@ -1,7 +1,7 @@
 angular.module('waddle.feed', [])
 
   .controller('FeedController', function ($rootScope, $scope, UserRequests) {
-
+    console.log($scope.inBounds);
 
     $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;
     $scope.selectedFootprint = null;
