@@ -2,7 +2,7 @@ angular.module('waddle.services.mapFactory', [])
 
 .factory('MapFactory', function($q){
 
-  var MarkerQuadTree = function (latlng, id) {
+  var QuadTree = function (latlng, id) {
     this.lat = latlng[0];
     this.lng = latlng[1];
     this.id = id;
@@ -12,26 +12,26 @@ angular.module('waddle.services.mapFactory', [])
     this.SW = null;
   }
 
-  MarkerQuadTree.prototype.insert = function (latlng, id) {
+  QuadTree.prototype.insert = function (latlng, id) {
     var myLat = latlng[0];
     var myLng = latlng[1];
 
     if (myLat >= this.lat && myLng >= this.lng) {
-      this.NE ? this.NE.insert(latlng, id) : this.NE = new MarkerQuadTree(latlng, id);
+      this.NE ? this.NE.insert(latlng, id) : this.NE = new QuadTree(latlng, id);
     } else if (myLat < this.lat && myLng >= this.lng) {
-      this.SE ? this.SE.insert(latlng, id) : this.SE = new MarkerQuadTree(latlng, id);
+      this.SE ? this.SE.insert(latlng, id) : this.SE = new QuadTree(latlng, id);
     } else if (myLat >= this.lat && myLng < this.lng) {
-      this.NW ? this.NW.insert(latlng, id) : this.NW = new MarkerQuadTree(latlng, id);
+      this.NW ? this.NW.insert(latlng, id) : this.NW = new QuadTree(latlng, id);
     } else if (myLat < this.lat && myLng < this.lng) {
-      this.SW ? this.SW.insert(latlng, id) : this.SW = new MarkerQuadTree(latlng, id);
+      this.SW ? this.SW.insert(latlng, id) : this.SW = new QuadTree(latlng, id);
     }
   };
 
-  MarkerQuadTree.prototype.markersInBounds = function (NE, SW) {
-    var upperLat = NE[0];
-    var upperLng = NE[1];
-    var lowerLat = SW[0];
-    var lowerLng = SW[1];
+  QuadTree.prototype.markersInBounds = function (SW, NE) {
+    var upperLat = NE.lat;
+    var upperLng = NE.lng;
+    var lowerLat = SW.lat;
+    var lowerLng = SW.lng;
 
     var res = [];
 
@@ -67,8 +67,11 @@ angular.module('waddle.services.mapFactory', [])
 
     return res;
   };
+
+  var markerQuadTree = null;
   
 	return {
-		MarkerQuadTree: MarkerQuadTree
+    QuadTree: QuadTree,
+		markerQuadTree: markerQuadTree
 	};
 });

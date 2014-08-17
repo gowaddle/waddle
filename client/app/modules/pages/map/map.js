@@ -14,7 +14,6 @@ angular.module('waddle.map', [])
     $scope.data.footprint = {};
 
     UserRequests.getUserData(window.sessionStorage.userFbID);
-    console.log($scope.data)
     
     Auth.checkLogin()
     .then(function(){
@@ -35,19 +34,20 @@ angular.module('waddle.map', [])
       // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
-    // configuredMap.on('move', function() {
-    // // Construct an empty list to fill with onscreen markers.
-    //   // var inBounds = [],
-    //   // // Get the map bounds - the top-left and bottom-right locations.
-    //       var bounds = configuredMap.getBounds();
+    configuredMap.on('move', function() {
+    // Construct an empty list to fill with onscreen markers.
+      // // Get the map bounds - the top-left and bottom-right locations.
+      var bounds = configuredMap.getBounds();
+      var inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      console.log(inBounds);
 
-    //   // For each marker, consider whether it is currently visible by comparing
-    //   // with the current map bounds.
-    //   aggregatedMarkers.eachLayer(function(marker) {
-    //       if (bounds.contains(marker.getLatLng())) {
-    //           console.log(marker.getLatLng());
-    //       }
-    //   });
+      // For each marker, consider whether it is currently visible by comparing
+      // with the current map bounds.
+      // aggregatedMarkers.eachLayer(function(marker) {
+      //     if (bounds.contains(marker.getLatLng())) {
+      //         console.log(marker.getLatLng());
+      //     }
+    });
 
     // // // Display a list of markers.
     // //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
@@ -110,20 +110,20 @@ angular.module('waddle.map', [])
 
       $scope.handleUserCheckinData = function (allUserCheckins) {
         aggregatedMarkers.clearLayers();
-        var deferred = $q.defer();
-        var placeLatLngs = [];
+        var placeLatLngs;
         var markers = [];
 
         $scope.data.currentCheckins = allUserCheckins;
         // $scope.allUserCheckins = allUserCheckins;
-        console.log(allUserCheckins);
+
         for(var i = 0; i < allUserCheckins.length; i++) {
           var place = allUserCheckins[i].place;
           var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
-          placeLatLngs.push(placeLatLng);
+
+          placeLatLngs ? placeLatLngs.insert(placeLatLng, checkin.checkinID) : placeLatLngs = new MapFactory.QuadTree(placeLatLng, checkin.checkinID);
+
           if(checkin.photoSmall !=='null' && checkin.caption !== 'null') {
-            console.log(checkin.photoSmall);
             makeMarker(place.name, placeLatLng, checkin.photoSmall, checkin.caption);
           }
           else if(checkin.photoSmall !== 'null') {
@@ -143,8 +143,7 @@ angular.module('waddle.map', [])
         // });
         // console.log(placeMarkers);
 
-        deferred.resolve(placeLatLngs);
-        return deferred.promise;
+        return placeLatLngs;
       };
 
       configuredMap.addLayer(aggregatedMarkers);
@@ -183,7 +182,7 @@ angular.module('waddle.map', [])
          if(UserRequests.allData !== undefined) {
            $scope.data.allData = UserRequests.allData.data;
            $scope.data.friends = UserRequests.allData.data.friends; 
-           $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
+           MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
          } else {
           $state.go('frontpage')
          }
