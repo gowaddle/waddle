@@ -1,5 +1,5 @@
 angular.module('waddle.map', [])
-  .controller('MapController', function ($scope, $state, $stateParams, $q, Auth, UserRequests, $rootScope) {
+  .controller('MapController', function ($scope, $state, $stateParams, $q, Auth, UserRequests, $rootScope, MapFactory) {
     
     //an alternative to reloading the entire view
 /*    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
@@ -54,7 +54,7 @@ angular.module('waddle.map', [])
     // });
 
       // var facebookPlaces = L.layerGroup().addTo(configuredMap);
-    
+
       var makeMarker = function (placeName, latLng) {
         var args = Array.prototype.slice.call(arguments, 2);
         var img = args[0];
