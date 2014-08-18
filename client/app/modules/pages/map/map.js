@@ -20,7 +20,7 @@ angular.module('waddle.map', [])
 
       L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
-      var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
+      $scope.configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
         attributionControl: false,
         zoomControl: false,
         worldCopyJump: true,
@@ -28,25 +28,10 @@ angular.module('waddle.map', [])
         bounceAtZoomLimits: false
       }).setView([20.00, 0.00], 2);
 
-      var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
+      var shadedCountries = L.mapbox.featureLayer().addTo($scope.configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
-    // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
-    configuredMap.on('move', function() {
-      filterFeedByBounds();
-    });
-
-    var filterFeedByBounds = function () {
-      var bounds = configuredMap.getBounds();
-      var markers = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      $scope.inBounds = {
-        get: function(index, count, success) {
-            success(markers);
-        }
-      };
-      console.log( $scope.inBounds );
-    };
-
+      
       var makeMarker = function (placeName, latLng) {
         var args = Array.prototype.slice.call(arguments, 2);
         var img = args[0];
@@ -109,7 +94,7 @@ angular.module('waddle.map', [])
         return placeLatLngs;
       };
 
-      configuredMap.addLayer(aggregatedMarkers);
+      $scope.configuredMap.addLayer(aggregatedMarkers);
     	// $scope.countriesBeen = [];
 
      //  var findCountriesBeen = function (allUserCheckins) {
@@ -145,8 +130,7 @@ angular.module('waddle.map', [])
         $scope.data.allData = UserRequests.allData.data;
         $scope.data.friends = UserRequests.allData.data.friends; 
         MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
-        filterFeedByBounds();
-        $state.go('map.feed')
+        $state.go('map.feed');
       } else {
         $state.go('frontpage')
       }	    
