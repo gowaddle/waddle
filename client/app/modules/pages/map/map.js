@@ -34,29 +34,31 @@ angular.module('waddle.map', [])
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
       // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
+      console.log('getBounds: ' + JSON.stringify(configuredMap.getBounds()));
 
       $scope.setProfilePicture = UserRequests.allData.data.fbProfilePicture;
       console.log(UserRequests.allData.data.fbProfilePicture);
 
-    // configuredMap.on('move', function() {
-    // // Construct an empty list to fill with onscreen markers.
-    //   // var inBounds = [],
-    //   // // Get the map bounds - the top-left and bottom-right locations.
-    //       var bounds = configuredMap.getBounds();
+    configuredMap.on('move', function() {
+    // Construct an empty list to fill with onscreen markers.
+      // var inBounds = [],
+      // // Get the map bounds - the top-left and bottom-right locations.
+          var bounds = configuredMap.getBounds();
 
-    //   // For each marker, consider whether it is currently visible by comparing
-    //   // with the current map bounds.
-    //   aggregatedMarkers.eachLayer(function(marker) {
-    //       if (bounds.contains(marker.getLatLng())) {
-    //           console.log(marker.getLatLng());
-    //       }
-    //   });
+      // For each marker, consider whether it is currently visible by comparing
+      // with the current map bounds.
+      aggregatedMarkers.eachLayer(function(marker) {
+          if (bounds.contains(marker.getLatLng())) {
+              console.log(marker.getLatLng());
+          }
+      });
 
     // // // Display a list of markers.
     // //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
     // });
 
       // var facebookPlaces = L.layerGroup().addTo(configuredMap);
+
     
       var makeMarker = function (placeName, latLng) {
         var args = Array.prototype.slice.call(arguments, 2);
