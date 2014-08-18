@@ -1,24 +1,16 @@
 angular.module('waddle.feed', [])
 
   .controller('FeedController', function ($rootScope, $scope, UserRequests) {
-    console.log($scope.inBounds);
 
     $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;
     $scope.selectedFootprint = null;
 
+    console.log('InBounds: ', $scope.inBounds);
+    console.log('AllUserCheckins: ', $scope.allUserCheckinsFootprints);
 
-    console.log(UserRequests.allData);
-    $scope.allUserCheckinsFeed = {
-      get: function(index, count, success) {
-          //var results = UserRequests.allData.data.allCheckins;
-          var results = $scope.data.currentCheckins;
-          console.log(results)
-          success(results);
-      }
-    };
+    $scope.allUserCheckinsFeed = $scope.inBounds;
 
     $scope.addCommentToCheckin = function (checkinID){
-      //console.log(checkinID)
       var node = document.querySelectorAll(".comment" + checkinID + ".ng-dirty")
       
       var commentData = {

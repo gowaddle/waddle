@@ -29,20 +29,23 @@ angular.module('waddle.map', [])
       }).setView([20.00, 0.00], 2);
 
       var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
-      // var placeMarkers = L.mapbox.featureLayer().addTo(configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
     // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
     configuredMap.on('move', function() {
-      var bounds = configuredMap.getBounds();
-      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      filterFeedByBounds();
     });
 
-    // // // Display a list of markers.
-    // //   document.getElementById('coordinates').innerHTML = inBounds.join('\n');
-    // });
-
-      // var facebookPlaces = L.layerGroup().addTo(configuredMap);
+    var filterFeedByBounds = function () {
+      var bounds = configuredMap.getBounds();
+      var markers = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      $scope.inBounds = {
+        get: function(index, count, success) {
+            success(markers);
+        }
+      };
+      console.log( $scope.inBounds );
+    };
 
       var makeMarker = function (placeName, latLng) {
         var args = Array.prototype.slice.call(arguments, 2);
@@ -72,31 +75,6 @@ angular.module('waddle.map', [])
         aggregatedMarkers.addLayer(marker);
       };
 
-      // var makeMarkerTemplate = function (placeName, latLng, checkinTime) {
-      //   var markerTemplate = {
-      //     type: 'Feature',
-      //     'geometry': {
-      //       'type': 'Point',
-      //       'coordinates': latLng
-      //     },
-      //     'properties': {
-      //       'marker-color': '1087bf',
-      //       'marker-size': 'large',
-      //       'marker-symbol': 'circle-stroked',
-      //       'placeName': placeName,
-      //       'checkinTime': checkinTime 
-      //     } 
-      //   }
-      //   return markerTemplate;
-      // }
-
-      // var buildGeoJSON = function(checkinData) {
-      //   var markerFeatures = [];
-      //   for(var i = 0; i < checkinData.length; i++) {
-
-      //   }
-      // }
-
       $scope.handleUserCheckinData = function (allUserCheckins) {
         aggregatedMarkers.clearLayers();
         var placeLatLngs;
@@ -104,15 +82,15 @@ angular.module('waddle.map', [])
         $scope.inBounds = [];
 
         $scope.data.currentCheckins = allUserCheckins;
-        // $scope.allUserCheckins = allUserCheckins;
 
         for(var i = 0; i < allUserCheckins.length; i++) {
           var place = allUserCheckins[i].place;
           var checkin = allUserCheckins[i].checkin;
           var placeLatLng = [place.lat, place.lng];
+          var footprint = {checkin:checkin, place:place};
 
-          $scope.inBounds.push(checkin);
-          placeLatLngs ? placeLatLngs.insert(placeLatLng, checkin) : placeLatLngs = new MapFactory.QuadTree(placeLatLng, checkin);
+          // $scope.inBounds.push(footprint);
+          placeLatLngs ? placeLatLngs.insert(placeLatLng, footprint) : placeLatLngs = new MapFactory.QuadTree(placeLatLng, footprint);
 
           if(checkin.photoSmall !=='null' && checkin.caption !== 'null') {
             makeMarker(place.name, placeLatLng, checkin.photoSmall, checkin.caption);
@@ -126,13 +104,7 @@ angular.module('waddle.map', [])
           else {
             makeMarker(place.name, placeLatLng);
           }
-          // markers.push(makeMarkerTemplate(place.name, placeLatLng, checkin.checkinTime));
         }
-        // placeMarkers.setGeoJSON({
-        //   type: 'FeatureCollection',
-        //   features: markers
-        // });
-        // console.log(placeMarkers);
 
         return placeLatLngs;
       };
@@ -169,25 +141,16 @@ angular.module('waddle.map', [])
       // }
       // addToShadedCountries();
 
-   
-         if(UserRequests.allData !== undefined) {
-           $scope.data.allData = UserRequests.allData.data;
-           $scope.data.friends = UserRequests.allData.data.friends; 
-           MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
-           console.log( $scope.inBounds );
-           // $state.go('map.feed')
-         } else {
-          $state.go('frontpage')
-         }
-    //   FacebookMapData.getFacebookMapData()
-    //   .then(function(data){
-    //     handleFacebookData(data.data)
-      // });
-    
-  	    
+      if(UserRequests.allData !== undefined) {
+        $scope.data.allData = UserRequests.allData.data;
+        $scope.data.friends = UserRequests.allData.data.friends; 
+        MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
+        filterFeedByBounds();
+        $state.go('map.feed')
+      } else {
+        $state.go('frontpage')
+      }	    
 	  });
-
-
   });
 
 
