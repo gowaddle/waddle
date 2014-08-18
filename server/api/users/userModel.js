@@ -244,7 +244,12 @@ User.find = function (data) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      if (results && results[0] && results[0]['user']) {
+        deferred.resolve(new User(results[0]['user']));
+      }
+      else {
+        deferred.reject(new Error('user does not exist'));
+      }
     }
   });
 
