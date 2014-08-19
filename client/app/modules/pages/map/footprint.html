@@ -2,11 +2,11 @@
 <h3>{{data.footprint}}</h3>
 <div class="footprintitem">
 <h2>{{selectedFootprint.place.name}}</h2>
-<h3>"{{selectedFootprint.checkin.caption}}"</h3>
-<img ng-src="{{selectedFootprint.checkin.photoSmall}}">
+<h3 ng-if="selectedFootprint.checkin.caption !== 'null'">"{{selectedFootprint.checkin.caption}}"</h3>
+<img ng-if="selectedFootprint.checkin.photoSmall !== 'null'"ng-src="{{selectedFootprint.checkin.photoSmall}}">
 <span>
 <img src="https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png">
-{{data.footprint.propNumber}}
+<h4>{{data.footprint.propNumber}}</h4>
 </span>
-<div>{{data.footprint.comments}}</div>
+<div ng-if="data.footprint.comments.length">{{data.footprint.comments}}</div>
 </div>
