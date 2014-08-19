@@ -51,7 +51,7 @@ h1{
   font-style: bold;
   font-weight:1000;
   font-size:100px;
-  color:#ffffff;
+  color:#a6a6a6;
   margin:0;
   padding:0;
   }
@@ -60,7 +60,7 @@ h2{
   font-style: none;
   font-weight:400;
   font-size:20px;
-  color:#ffffff;
+  color:#a6a6a6;
   line-height:180%;
   margin:0;
   padding:0;
@@ -69,7 +69,7 @@ h3{
   font-family:'Open Sans', san-serif;
   font-style: none;
   font-weight:100;
-  font-size:20px;
+  font-size:16px;
   color:#555555;
   line-height:180%;
   margin:0px;
@@ -221,7 +221,7 @@ h8{
 }
 
 .waddlefeeditem {
-  height: 20%;
+  height: 25%;
   background-color: #fff;
   margin: 5px;
   overflow: hidden;
@@ -258,17 +258,29 @@ h8{
 
 
 .footprintitem {
-  border: 1px solid #a6a6a6;
   margin: 10px;
   padding: 5px;
+  width: 800px;
+  position: absolute;
+  background-color: rgba(255,255,255,0.9);
 }
 
 .giveprops {
   content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png');
+  float:right;
 }
 
 .giveprops:hover {
   content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Active_01.png');
+}
+
+.addbucket {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Inactive_01.png');
+  float:right;
+}
+
+.addbucket:hover {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Active_01.png');
 }
 
 .comment_form input {

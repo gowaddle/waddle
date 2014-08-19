@@ -4,13 +4,13 @@
   <h4 ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
     {{footprint.place.name}}
   </h4>
-  <h8>{{footprint.checkin.checkinTime.toString()}}</h8>
-  <img class='giveprops' alt="Give Props" ng-click="addPropsToCheckin(footprint.checkin.checkinID)"/>
+  <h8>{{footprint.checkin.checkinTime.toString().split("T")[0]}}</h8>
+  <img class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)"/>
+  <img class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint.checkin.checkinID)"/>
   <div class = 'feedphoto'>
     <img ng-if="footprint.checkin.photoSmall != 'null'" ng-src="{{footprint.checkin.photoSmall}}">
   </div>
   <h8 ng-if="footprint.checkin.caption != 'null'">{{footprint.checkin.caption}}</h8>
-  <button ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)">Add Checkin To Bucketlist</button>
   <form name="customSubmit" data-custom-submit='{{footprint.checkin.checkinID}}' info='someinfo' class='comment_form' novalidate>
     <input ng-model='data.currentComment' name='comment' placeholder='Leave a comment' class="comment{{footprint.checkin.checkinID}}" data-ng-minlength="1" data-ng-maxlength="120" required>
     <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
