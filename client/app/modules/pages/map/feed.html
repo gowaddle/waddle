@@ -1,6 +1,6 @@
 <div ui-view></div>
-<div class='waddlefeed' ng-repeat="footprint in inBounds | limitTo:5 | orderBy:'checkin.checkinTime'">
-  <div class='waddlefeeditem'>
+<div class='waddlefeed'>
+  <div class='waddlefeeditem' ng-repeat="footprint in inBounds | orderBy:'-checkin.checkinTime' | limitTo:20 ">
   <h4 ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
     {{footprint.place.name}}
   </h4>
