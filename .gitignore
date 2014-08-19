@@ -28,6 +28,7 @@ dist/
 node_modules/
 bower_components/
 coverage/
+client/bower_components/
 
 # globals
 globals.js
