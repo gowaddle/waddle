@@ -5,41 +5,20 @@ angular.module('waddle.feed', [])
     $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;
     $scope.selectedFootprint = null;
 
-    // console.log('InBounds: ', $scope.inBounds);
     console.log('AllUserCheckins: ', $scope.allUserCheckinsFootprints);
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
-      $scope.markers = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      console.log('filterfeed')
+      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      console.log($scope.inBounds)
     };
-
-    filterFeedByBounds();
-
-    $scope.inBounds = {
-      get: function(index, count, success) {
-        $timeout(function () {
-          success($scope.markers);
-        }, 0);
-      }
-    };
-
-    $scope.$watch('markers', function(newMarkers) {
-      console.log($scope.markers)
-      $scope.inBounds = {
-        get: function(index, count, success) {
-          $timeout(function () {
-            success(newMarkers);
-          }, 0);
-        }
-      };
-    });
 
     // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
     $scope.configuredMap.on('move', function() {
-      filterFeedByBounds();
+      $scope.$apply(filterFeedByBounds); 
     });
 
+    filterFeedByBounds();
 
     $scope.addPropsToCheckin = function (checkinID){
       console.log(checkinID);

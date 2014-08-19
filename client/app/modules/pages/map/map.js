@@ -30,7 +30,6 @@ angular.module('waddle.map', [])
 
       var shadedCountries = L.mapbox.featureLayer().addTo($scope.configuredMap);
       var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
-
       
       var makeMarker = function (placeName, latLng) {
         var args = Array.prototype.slice.call(arguments, 2);
