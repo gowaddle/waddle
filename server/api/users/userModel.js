@@ -23,6 +23,15 @@ User.prototype.setProperty = function(property, value) {
   return this.save();
 };
 
+User.prototype.setProperties = function(properties) {
+  for (var key in properties){
+    if (properties.hasOwnPropery(key)){
+      this.node.data[key] = properties[key]
+    }
+  }
+  return this.save();
+};
+
 User.prototype.getProperty = function(property) {
   return this.node.data[property];
 };

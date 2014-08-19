@@ -1,3 +1,5 @@
+//This data should only be entered into the database one time
+
 //run python -m SimpleHTTPServer in this folder
 //node countryModel.js
 
