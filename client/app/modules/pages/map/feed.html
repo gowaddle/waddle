@@ -1,6 +1,6 @@
 <div ui-view></div>
 <div class='waddlefeed' ui-scroll-viewport>
-  <div class='waddlefeeditem' ui-scroll="checkin in allUserCheckinsFeed" is-loading='true'>
+  <div class='waddlefeeditem' ui-scroll="checkin in inBounds" is-loading='true'>
   <h4 ng-click="getFootprint(checkin)" ui-sref='map.feed.footprint({footprint: checkin.place.foursquareID})'>
     {{checkin.place.name}}
   </h4>
