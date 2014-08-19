@@ -95,16 +95,19 @@ angular.module('waddle.feed', [])
                     return false;
                 }
                 
+                console.log("element")
+                console.log($element)               
                 console.log("scope")
-                console.log(scope.data.currentComment)
+                console.log(scope)
                 // From this point and below, we can assume that the form is valid.
                 scope.$eval( attributes.customSubmit );
 
                 //Text can be found with $element[0][0].value or scope.data.currentComment
+                //ID can be found with $element.context.dataset['customSubmit']
                 var commentData = {
                   clickerID: window.sessionStorage.userFbID,
-                  checkinID: $element.context.dataset['customSubmit'],
-                  text: $element[0][0].value
+                  checkinID: scope.footprint.checkin.checkinID,
+                  text: scope.comment
                 }
 
                 UserRequests.addComment(commentData)
@@ -113,7 +116,7 @@ angular.module('waddle.feed', [])
                   //$element[0][0].value = ''
                 })
                 console.log(commentData)
-                
+                scope.comment = ""
                 scope.$apply();
             });
         }
