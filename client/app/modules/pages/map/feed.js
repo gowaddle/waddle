@@ -29,22 +29,6 @@ angular.module('waddle.feed', [])
 
     filterFeedByBounds();
 
-   //TODO: move functions for user interaction to custom directive
-    $scope.addCommentToCheckin = function (checkinID){
-      var node = document.querySelectorAll(".comment" + checkinID + ".ng-dirty")
-      
-      var commentData = {
-        clickerID: window.sessionStorage.userFbID,
-        checkinID: checkinID,
-        text: node[0].value
-      }
-
-      UserRequests.addComment(commentData) 
-      .then(function (data){
-        node[0].value = "Comment Posted!" 
-      })    
-    }
-
     $scope.addPropsToCheckin = function (checkinID){
       console.log(checkinID);
 
@@ -67,6 +51,7 @@ angular.module('waddle.feed', [])
        UserRequests.addToBucketList(data)
     }
 
+    //Send request to database for user props and comments data
     $scope.getFootprint = function (footprint) {
       $scope.selectedFootprint = footprint;
       UserRequests.getFootprintInteractions(footprint.checkin.checkinID)
@@ -78,4 +63,68 @@ angular.module('waddle.feed', [])
         $scope.data.footprint.comments = data.data.comments;
       })
     }
-  });
+  })
+
+.directive( 'customSubmit' , function(UserRequests)
+{
+    return {
+        restrict: 'A',
+        link: function( scope , element , attributes )
+        {
+            var $element = angular.element(element);
+            
+            // Add novalidate to the form element.
+            attributes.$set( 'novalidate' , 'novalidate' );
+            
+            $element.bind( 'submit' , function( e ) {
+                e.preventDefault();
+                
+                // Remove the class pristine from all form elements.
+                $element.find( '.ng-pristine' ).removeClass( 'ng-pristine' );
+                
+                // Get the form object.
+                var form = scope[ attributes.name ];
+                
+                // Set all the fields to dirty and apply the changes on the scope so that
+                // validation errors are shown on submit only.
+                angular.forEach( form , function( formElement , fieldName ) {
+                    // If the fieldname starts with a '$' sign, it means it's an Angular
+                    // property or function. Skip those items.
+                    if ( fieldName[0] === '$' ) return;
+                    
+                    formElement.$pristine = false;
+                    formElement.$dirty = true;
+                });
+                
+                // Do not continue if the form is invalid.
+                if ( form.$invalid ) {
+                    // Focus on the first field that is invalid.
+                    $element.find( '.ng-invalid' ).first().focus();
+                    
+                    return false;
+                }
+                
+                console.log("scope")
+                console.log(scope.data.currentComment)
+                // From this point and below, we can assume that the form is valid.
+                scope.$eval( attributes.customSubmit );
+
+                //Text can be found with $element[0][0].value or scope.data.currentComment
+                var commentData = {
+                  clickerID: window.sessionStorage.userFbID,
+                  checkinID: $element.context.dataset['customSubmit'],
+                  text: $element[0][0].value
+                }
+
+                UserRequests.addComment(commentData)
+                .then(function (data){
+                  scope.data.currentComment = ''
+                  //$element[0][0].value = ''
+                })
+                console.log(commentData)
+                
+                scope.$apply();
+            });
+        }
+    };
+});
