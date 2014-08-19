@@ -9,7 +9,7 @@
      <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
   <h8 ng-if="checkin.checkin.caption != 'null'">{{checkin.checkin.caption}}</h8>
   <button ng-click="addCheckinToBucketlist(checkin.checkin.checkinID)">Add Checkin To Bucketlist</button>
-  <form class='comment_form' ng-submit="addCommentToCheckin(checkin.checkin.checkinID)">
-    <input ng-model="blah" placeholder='Leave a comment' class="comment{{checkin.checkin.checkinID}}"></input>
+  <form name="customSubmit" data-custom-submit='{{checkin.checkin.checkinID}}' info='someinfo' class='comment_form' novalidate>
+    <input ng-model='data.happy' placeholder='Leave a comment' class="comment{{checkin.checkin.checkinID}}"></input>
   </form>
 </div>
