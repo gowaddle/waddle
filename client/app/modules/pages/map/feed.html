@@ -1,18 +1,18 @@
 <div ui-view></div>
-<div class='waddlefeed' ui-scroll-viewport>
-  <div class='waddlefeeditem' ui-scroll="checkin in inBounds" is-loading='true'>
-  <h4 ng-click="getFootprint(checkin)" ui-sref='map.feed.footprint({footprint: checkin.place.foursquareID})'>
-    {{checkin.place.name}}
+<div class='waddlefeed' ng-repeat="footprint in inBounds | limitTo:5 | orderBy:'checkin.checkinTime'">
+  <div class='waddlefeeditem'>
+  <h4 ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+    {{footprint.place.name}}
   </h4>
-  <h8>{{checkin.checkin.checkinTime.toString()}}</h8>
-  <img class='giveprops' alt="Give Props" ng-click="addPropsToCheckin(checkin.checkin.checkinID)"/>
+  <h8>{{footprint.checkin.checkinTime.toString()}}</h8>
+  <img class='giveprops' alt="Give Props" ng-click="addPropsToCheckin(footprint.checkin.checkinID)"/>
   <div class = 'feedphoto'>
-    <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
+    <img ng-if="footprint.checkin.photoSmall != 'null'" ng-src="{{footprint.checkin.photoSmall}}">
   </div>
-  <h8 ng-if="checkin.checkin.caption != 'null'">{{checkin.checkin.caption}}</h8>
-  <button ng-click="addCheckinToBucketlist(checkin.checkin.checkinID)">Add Checkin To Bucketlist</button>
-  <form name="customSubmit" data-custom-submit='{{checkin.checkin.checkinID}}' info='someinfo' class='comment_form' novalidate>
-    <input ng-model='data.currentComment' name='comment' placeholder='Leave a comment' class="comment{{checkin.checkin.checkinID}}" data-ng-minlength="1" data-ng-maxlength="120" required>
+  <h8 ng-if="footprint.checkin.caption != 'null'">{{footprint.checkin.caption}}</h8>
+  <button ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)">Add Checkin To Bucketlist</button>
+  <form name="customSubmit" data-custom-submit='{{footprint.checkin.checkinID}}' info='someinfo' class='comment_form' novalidate>
+    <input ng-model='data.currentComment' name='comment' placeholder='Leave a comment' class="comment{{footprint.checkin.checkinID}}" data-ng-minlength="1" data-ng-maxlength="120" required>
     <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
   </form>
 </div>
