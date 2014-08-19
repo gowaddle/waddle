@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 		concat: {
 			client: {
 				dest: 'client/dist/app.js',
-				src: ['client/utils/*.js', 'client/app/app.js', 'client/app/modules/**/*.js', 'client/bower_components/ngLazy/dist/ngLazy.js']
+				src: ['client/utils/*.js', 'client/app/app.js', 'client/app/modules/**/*.js']
 			},
 		},
 		
@@ -28,13 +28,16 @@ module.exports = function (grunt) {
 
 		nodemon: {
 			dev: {
-				script: 'server/server.js'
+				script: 'server/server.js',
+				options: {
+					ignore: ['client/bower_components/**'],
+				}
 			}
 		},
 
 		watch: {
 			build: {
-			  files: ['client/**/*.js', 'client/styles/*.styl'],
+			  files: ['client/app/**/*.js', 'client/styles/*.styl'],
 			  tasks: ['concat:client', 'stylus']
 			},
 
@@ -68,7 +71,8 @@ module.exports = function (grunt) {
 	  bower: {
 	  	install: {
 	  		options: {
-		  		targetDir: './client/bower_components'
+		  		targetDir: './client/bower_components',
+		  		cleanBowerDir: true
 	  		}
 	  	}
 	  }
