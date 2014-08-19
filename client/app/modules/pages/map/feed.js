@@ -11,20 +11,18 @@ angular.module('waddle.feed', [])
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
-      var markers = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      $scope.inBounds = {
-        get: function(index, count, success) {
-            success(markers);
-        }
-      };
-      console.log('filterfeed')
-      console.log( $scope.inBounds );
-      console.log( $state.current );
+      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      console.log($scope.inBounds)
+      // $scope.inBounds = {
+      //   get: function(index, count, success) {
+      //       success(markers);
+      //   }
+      // };
     };
 
     // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
     $scope.configuredMap.on('move', function() {
-      filterFeedByBounds();
+      $scope.$apply(filterFeedByBounds); 
     });
 
     filterFeedByBounds();
