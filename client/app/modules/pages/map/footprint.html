@@ -1,3 +1,12 @@
-<h1>HII<h1>
 <h4>{{selectedFootprint}}<h4>
 <h3>{{data.footprint}}</h3>
+<div class="footprintitem">
+<h2>{{selectedFootprint.place.name}}</h2>
+<h3>"{{selectedFootprint.checkin.caption}}"</h3>
+<img ng-src="{{selectedFootprint.checkin.photoSmall}}">
+<span>
+<img src="https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png">
+{{data.footprint.propNumber}}
+</span>
+<div>{{data.footprint.comments}}</div>
+</div>
