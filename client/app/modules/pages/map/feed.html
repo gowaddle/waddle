@@ -6,7 +6,9 @@
   </h4>
   <h8>{{checkin.checkin.checkinTime.toString()}}</h8>
   <img class='giveprops' alt="Give Props" ng-click="addPropsToCheckin(checkin.checkin.checkinID)"/>
-     <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
+  <div class = 'feedphoto'>
+    <img ng-if="checkin.checkin.photoSmall != 'null'" ng-src="{{checkin.checkin.photoSmall}}">
+  </div>
   <h8 ng-if="checkin.checkin.caption != 'null'">{{checkin.checkin.caption}}</h8>
   <button ng-click="addCheckinToBucketlist(checkin.checkin.checkinID)">Add Checkin To Bucketlist</button>
   <form class='comment_form' ng-submit="addCommentToCheckin(checkin.checkin.checkinID)">

@@ -29,7 +29,7 @@ angular.module('waddle.feed', [])
 
     filterFeedByBounds();
 
-
+   //TODO: move functions for user interaction to custom directive
     $scope.addCommentToCheckin = function (checkinID){
       var node = document.querySelectorAll(".comment" + checkinID + ".ng-dirty")
       
