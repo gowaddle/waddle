@@ -1,8 +1,8 @@
 angular.module('waddle.services.serverFactory', [])  
 
 .factory('UserRequests', function($http){
-  var data = undefined;
-  var footprintData = undefined;
+  var data;
+  var footprintData;
 
   return {
     allData: data,
@@ -38,17 +38,13 @@ angular.module('waddle.services.serverFactory', [])
     },
 
     addComment: function(data){
-      if (!data){
-        return;
+      if (data && data.text){
+        return $http({
+          method: 'POST',
+          data: data,
+          url: '/api/checkins/comment'
+        });
       }
-      if (data.text == undefined){
-        return;
-      }
-      return $http({
-        method: 'POST',
-        data: data,
-        url: '/api/checkins/comment'
-      });
     },
 
     giveProps: function(data){
