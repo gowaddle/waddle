@@ -63,6 +63,7 @@ angular.module('waddle.feed', [])
        UserRequests.addToBucketList(data)
     }
 
+    //Send request to database for user props and comments data
     $scope.getFootprint = function (footprint) {
       $scope.selectedFootprint = footprint;
       UserRequests.getFootprintInteractions(footprint.checkin.checkinID)
@@ -115,10 +116,12 @@ angular.module('waddle.feed', [])
                     return false;
                 }
                 
-                console.log(attributes.customSubmit)
+                console.log("scope")
+                console.log(scope.data.currentComment)
                 // From this point and below, we can assume that the form is valid.
                 scope.$eval( attributes.customSubmit );
 
+                //Text can be found with $element[0][0].value or scope.data.currentComment
                 var commentData = {
                   clickerID: window.sessionStorage.userFbID,
                   checkinID: $element.context.dataset['customSubmit'],
@@ -127,7 +130,8 @@ angular.module('waddle.feed', [])
 
                 UserRequests.addComment(commentData)
                 .then(function (data){
-                  $element[0][0].value = ""
+                  scope.data.currentComment = ''
+                  //$element[0][0].value = ''
                 })
                 console.log(commentData)
                 

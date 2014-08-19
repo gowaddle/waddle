@@ -23,6 +23,17 @@ User.prototype.setProperty = function(property, value) {
   return this.save();
 };
 
+User.prototype.setProperties = function(properties) {
+  for (var key in properties){
+    console.log(key)
+    if (properties.hasOwnProperty(key)){
+      this.node.data[key] = properties[key]
+    }
+  }
+  console.log(this.node.data)
+  return this.save();
+};
+
 User.prototype.getProperty = function(property) {
   return this.node.data[property];
 };
@@ -95,7 +106,7 @@ User.prototype.addFriends = function(friendsList){
 
 User.prototype.addCheckins = function(combinedCheckins){
   var deferred = Q.defer();
-
+  //need to check for params!
   var facebookID = this.getProperty('facebookID');
 
 /*var query = [
