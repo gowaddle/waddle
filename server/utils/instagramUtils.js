@@ -95,8 +95,8 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
   return deferred.promise;
 };
 
-/*utils.parseIGData = function (user, data) {
-  var deferred = Q.defer();
+utils.parseIGData = function (data) {
+  //var deferred = Q.defer();
 
   var parsedData = [];
   var foursquareVenueQueries = [];
@@ -105,9 +105,9 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
     if (datum.place) {
       var place = {
         'checkinID': datum.id,
-        'name': datum.place.name,
-        'lat': datum.place.location.latitude,
-        'lng': datum.place.location.longitude,
+        'name': datum.location.name,
+        'lat': datum.location.latitude,
+        'lng': datum.location.longitude,
         'checkinTime': new Date(datum.created_time),
         'likes': 'null',
         'photoSmall': 'null',
@@ -120,19 +120,21 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
       }
 
       if (datum.likes) {
-        place.likes = datum.likes.data.length;
+        place.likes = datum.likes.count;
       }
 
-      if(datum.message) {
-        place.caption = datum.message;
+      if(datum.caption) {
+        place.caption = datum.caption.text;
       }
 
-      if (datum.picture) {
-        place.photoSmall = datum.picture;
-      }
+      if (datum.images) {
+        if (datum.images.thumbnail){
+          place.photoSmall = datum.images.thumbnail.url;
+        }
+        if (datum.images.standard_resolution){
+          place.photoLarge = datum.images.standard_resolution.url;
+        }
 
-      if (datum.source) {
-        place.photoLarge = datum.source;
       }
 
       var latlng = place.lat.toString() + ',' + place.lng.toString();
@@ -143,7 +145,7 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
     }
   });
 
-  Q.all(foursquareVenueQueries)
+  /*Q.all(foursquareVenueQueries)
   .then(function (foursquareVenueIDs) {
     _.each(parsedData, function (datum, index) {
       datum.foursquareID = foursquareVenueIDs[index];
@@ -152,9 +154,10 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
   })
   .catch(function (err) {
     deferred.reject(err);
-  });
+  });*/
 
-  return deferred.promise;
-};*/
+  //return deferred.promise;
+  return parsedData;
+};
 
 module.exports = utils;
