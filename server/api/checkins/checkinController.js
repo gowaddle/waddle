@@ -1,5 +1,5 @@
 var _ = require('lodash');
-
+var Q = require('q');
 var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
@@ -23,6 +23,16 @@ checkinController.handleIGPost = function (req, res) {
   Q.all(posts)
   .then(function (postArr) {
     //do stuff
+    //postArr[i].data.location.latitude
+    //.data.location.longitude
+    //.data.location.name
+    //.data.caption.text
+    //.data.createdAt
+    //.data.[picturessmalllarge]
+    //.data.images.thumbnail
+    //.data.images.standard_resolution
+
+    //.pagination.next_url
     console.log(postArr);
   })
   .catch(function (e) {
