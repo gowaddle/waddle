@@ -22,8 +22,7 @@ checkinController.handleIGPost = function (req, res) {
 
   Q.all(posts)
   .then(function (postArr) {
-    //do stuff
-    //postArr[i].data.location.latitude
+    //data[i].location.latitude
     //.data.location.longitude
     //.data.location.name
     //.data.caption.text
@@ -31,9 +30,13 @@ checkinController.handleIGPost = function (req, res) {
     //.data.[picturessmalllarge]
     //.data.images.thumbnail
     //.data.images.standard_resolution
+    //.data.id
 
-    //.pagination.next_url
+    if (postArr.pagination && postArr.pagination.next_url){
+      console.log("MORE DATA!!")
+    }
     console.log(postArr);
+    console.log(instagramUtils.parseIGData(postArr.data));
   })
   .catch(function (e) {
     console.log(e);
