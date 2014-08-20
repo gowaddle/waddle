@@ -1,1 +1,1 @@
-angular.module('waddle.services', ['waddle.services.auth', 'waddle.services.mapFactory', 'waddle.services.serverFactory', 'waddle.services.geocoder']);
+angular.module('waddle.services', ['waddle.services.auth', 'waddle.services.mapFactory', 'waddle.services.userRequestsFactory', 'waddle.services.geocoder']);

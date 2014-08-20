@@ -126,7 +126,7 @@ angular.module('waddle.map', [])
       // }
       // addToShadedCountries();
 
-      if(UserRequests.allData !== undefined) {
+      if(UserRequests.allData) {
         $scope.data.allData = UserRequests.allData.data;
         $scope.data.friends = UserRequests.allData.data.friends; 
         MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.data.allCheckins);
