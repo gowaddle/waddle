@@ -1,4 +1,3 @@
-
 var _ = require('lodash');
 
 var Checkin = require('./checkinModel.js');
@@ -7,7 +6,6 @@ var foursquareUtils = require('../../utils/foursquareUtils.js');
 var instagramUtils = require('../../utils/instagramUtils.js');
 
 var checkinController = {};
-
 
 checkinController.instagramHubChallenge = function (req, res) {
   var body = req.body;
@@ -44,8 +42,10 @@ checkinController.realtimeFoursquareData = function (req, res) {
   .then(function (userNode) {
     user = userNode;
     return foursquareUtils.parseCheckin(checkin);
+    console.log("checkin", checkin);
   })
   .then(function (parsedCheckin) {
+    console.log("parsed", parsedCheckin)
     return user.addCheckins([parsedCheckin]);
   })
   .then(function (data) {

@@ -132,6 +132,7 @@ User.prototype.addCheckins = function(combinedCheckins){
   ].join('\n');
 
   var batchRequest = _.map(combinedCheckins, function (checkin, index) {
+
     var singleRequest = {
       'method': "POST",
       'to': "/cypher",
@@ -283,7 +284,13 @@ User.findByFoursquareID = function (foursquareID) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      console.log('results', results);
+      if (results && results[0] && results[0]['user']) {
+        deferred.resolve(new User(results[0]['user']));
+      }
+      else {
+        deferred.reject(new Error('user does not exist'));
+      }
     }
   });
 
