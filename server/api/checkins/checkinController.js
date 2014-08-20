@@ -41,6 +41,12 @@ checkinController.handleIGPost = function (req, res) {
   res.status(200).end();
 };
 
+checkinController.facebookHubChallenge = function (req, res) {
+  console.dir(req.query)
+  res.status(200).send(req.query['hub.challenge']);
+};
+
+
 checkinController.realtimeFoursquareData = function (req, res) {
   var checkin = JSON.parse(req.body.checkin);
   var userFoursquareID = checkin.user.id;

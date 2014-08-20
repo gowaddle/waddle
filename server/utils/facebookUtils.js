@@ -257,6 +257,10 @@ utils.parseFBData = function (user, data) {
         place.likes = datum.likes.data.length;
       }
 
+       if (datum.updated_time) {
+        place.checkinTime = new Date(datum.updated_time);
+      }
+
       if(datum.message) {
         place.caption = datum.message;
       }
