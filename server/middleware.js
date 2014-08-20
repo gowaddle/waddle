@@ -8,7 +8,14 @@ module.exports = function (app, express) {
 	var checkinRouter = express.Router();
 
   app.use(morgan('dev'));
-  app.use(bodyParser.urlencoded({extended: true}));
+  //app.use(bodyParser.urlencoded({extended: true}));
+  // app.get('/:anything', function(req, res) {
+  //   var body = req.body;
+  //   console.log("body: " + body);
+  //   var challenge = body.hub.challenge;
+  //   res.send(challenge);
+  //   res.end();
+  // });
   app.use(bodyParser.json());
   app.use(express.static(path.join(__dirname, '../client')));
 
@@ -22,6 +29,7 @@ module.exports = function (app, express) {
   app.get('/instagramredirect', function(req, res) {
     res.sendfile(__dirname + '/static/instagramredirect.html');
   });
+
 
   app.use(errorhandlers.errorLogger);
   app.use(errorhandlers.errorHandler);
