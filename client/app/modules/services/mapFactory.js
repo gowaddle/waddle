@@ -10,7 +10,7 @@ angular.module('waddle.services.mapFactory', [])
     this.SE = null;
     this.NW = null;
     this.SW = null;
-  }
+  };
 
   QuadTree.prototype.insert = function (latlng, footprint) {
     var myLat = latlng[0];

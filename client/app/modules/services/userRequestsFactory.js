@@ -1,12 +1,10 @@
 angular.module('waddle.services.userRequestsFactory', [])  
 
 .factory('UserRequests', function ($http) {
-  var data;
-  var footprintData;
+  var userData;
 
   return {
-    allData: data,
-    currentFootprint: footprintData,
+    allData: userData,
 
     sendUserData: function (data) {
       if(data) {
@@ -23,45 +21,6 @@ angular.module('waddle.services.userRequestsFactory', [])
         return $http({
           method: 'GET',
           url: '/api/users/' + userFbID
-        });
-      }
-    },
-
-    addToBucketList: function (data) {
-      if (data) {
-        return $http({
-          method: 'POST',
-          data: data,
-          url: '/api/checkins/bucketlist'
-        });
-      }
-    },
-
-    addComment: function (data) {
-      if (data && data.text) {
-        return $http({
-          method: 'POST',
-          data: data,
-          url: '/api/checkins/comment'
-        });
-      }
-    },
-
-    giveProps: function (data) {
-      if (data) {
-        return $http({
-          method: 'POST',
-          data: data,
-          url: '/api/checkins/props'
-        });
-      }
-    },
-
-    getFootprintInteractions: function (data) {
-      if (data) {
-        return $http({
-          method: 'GET',
-          url: '/api/checkins/interactions/' + data
         });
       }
     }

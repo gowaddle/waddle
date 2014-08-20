@@ -60,38 +60,36 @@ angular.module('waddle.map', [])
         aggregatedMarkers.addLayer(marker);
       };
 
-      $scope.handleUserCheckinData = function (allUserCheckins) {
+      $scope.handleUserCheckinData = function (allFootprints) {
         aggregatedMarkers.clearLayers();
-        var placeLatLngs;
+        
+        var footprintQuadtree;
         var markers = [];
-        $scope.inBounds = [];
 
-        $scope.data.currentCheckins = allUserCheckins;
+        $scope.data.currentCheckins = allFootprints;
 
-        for(var i = 0; i < allUserCheckins.length; i++) {
-          var place = allUserCheckins[i].place;
-          var checkin = allUserCheckins[i].checkin;
-          var placeLatLng = [place.lat, place.lng];
-          var footprint = {checkin:checkin, place:place};
+        _.each(allFootprints, function (footprint) {
+          var place = footprint.place;
+          var checkin = footprint.checkin;
+          var latLng = [place.lat, place.lng];
 
-          // $scope.inBounds.push(footprint);
-          placeLatLngs ? placeLatLngs.insert(placeLatLng, footprint) : placeLatLngs = new MapFactory.QuadTree(placeLatLng, footprint);
+          footprintQuadtree ? footprintQuadtree.insert(latLng, footprint) : footprintQuadtree = new MapFactory.QuadTree(latLng, footprint);
 
           if(checkin.photoSmall !=='null' && checkin.caption !== 'null') {
-            makeMarker(place.name, placeLatLng, checkin.photoSmall, checkin.caption);
+            makeMarker(place.name, latLng, checkin.photoSmall, checkin.caption);
           }
           else if(checkin.photoSmall !== 'null') {
-            makeMarker(place.name, placeLatLng, checkin.photoSmall);
+            makeMarker(place.name, latLng, checkin.photoSmall);
           }
           else if(checkin.caption !== 'null') {
-            makeMarker(place.name, placeLatLng, null, checkin.caption);
+            makeMarker(place.name, latLng, null, checkin.caption);
           }
           else {
-            makeMarker(place.name, placeLatLng);
+            makeMarker(place.name, latLng);
           }
-        }
+        });
 
-        return placeLatLngs;
+        return footprintQuadtree;
       };
 
       $scope.configuredMap.addLayer(aggregatedMarkers);
