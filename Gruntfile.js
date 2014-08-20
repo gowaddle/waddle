@@ -72,7 +72,8 @@ module.exports = function (grunt) {
 	  	install: {
 	  		options: {
 		  		targetDir: './client/bower_components',
-		  		cleanBowerDir: true
+		  		cleanBowerDir: true,
+		  		verbose: true
 	  		}
 	  	}
 	  }
