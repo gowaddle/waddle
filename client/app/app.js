@@ -5,8 +5,6 @@ angular.module('waddle', [
 	'waddle.directives',
   'waddle.services',
 	'ui.router',
-  'ui.scroll',
-  'ui.scroll.jqlite',
   'wu.masonry'
 ])
 

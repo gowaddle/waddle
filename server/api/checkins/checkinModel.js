@@ -149,8 +149,7 @@ Checkin.getComments = function (checkinID){
   db.query(query, params, function (err, results){
     if (err) { deferred.reject(err) }
     else {
-      console.log("AASDDDDDDDDDDDDDDDDDDDDDDDDDDd")
-      console.log(results)
+      console.log("comments query: ", results)
       deferred.resolve(results)
     }
   });
