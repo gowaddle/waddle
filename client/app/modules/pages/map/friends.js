@@ -7,14 +7,8 @@ FriendsController = function ($scope, $state, UserRequests){
       $state.go('map.feed')
     });
   };
-  $scope.allUserFriends = {
-    get: function(index, count, success) {
-        //var results = UserRequests.allData.data.allCheckins;
-        var results = UserRequests.allData.data.friends;
-        console.log(results)
-        success(results);
-    }
-  };
+  
+  $scope.allUserFriends = UserRequests.allData.data.friends;
 };
 
 FriendsController.$inject = ['$scope', '$state', 'UserRequests'];
