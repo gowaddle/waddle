@@ -38,16 +38,12 @@ checkinController.realtimeFoursquareData = function (req, res) {
   var userFoursquareID = checkin.user.id;
   var user;
 
-  console.log(checkin);
-
   User.findByFoursquareID(userFoursquareID)
   .then(function (userNode) {
     user = userNode;
     return foursquareUtils.parseCheckin(checkin);
-    console.log("checkin", checkin);
   })
   .then(function (parsedCheckin) {
-    console.log("parsed", parsedCheckin)
     return user.addCheckins([parsedCheckin]);
   })
   .then(function (data) {
@@ -117,14 +113,10 @@ checkinController.getPropsAndComments = function (req, res){
 
   Checkin.getProps(checkinID)
   .then(function (props){
-    console.log("props")
-    console.log(props);
     data['props'] = props;
     return Checkin.getComments(checkinID);
   })
   .then(function (comments){
-    console.log("comments")
-    console.log(comments)
     if (typeof comments === "object")
     data['comments'] = comments;
     var parsedData = {
@@ -133,15 +125,25 @@ checkinController.getPropsAndComments = function (req, res){
       comments: []
     };
 
-    for (var i = 0; i < data.props.length; i++){
-      parsedData.propGivers.push(data.props[i].user._data.data)
-    };
-    for (var i = 0; i < data.comments.length; i++){
-      parsedData.comments.push({
-        commenter: data.comments[i].user._data.data, 
-        comment: data.comments[i].comment._data.data
-      })
-    };
+    // for (var i = 0; i < data.props.length; i++){
+    //   parsedData.propGivers.push(data.props[i].user._data.data)
+    // };    
+    parsedData.propGivers = _.map(data.props, function (prop) {
+      return prop.user._data.data
+    });
+
+    // for (var i = 0; i < data.comments.length; i++){
+    //   parsedData.comments.push({
+    //     commenter: data.comments[i].user._data.data, 
+    //     comment: data.comments[i].comment._data.data
+    //   })
+    // };
+    parsedData.comments = _.map(data.comments, function (comment) {
+      return {
+        commenter: comment.user._data.data, 
+        comment: comment.comment._data.data
+      }
+    });
 
     res.json(parsedData);
     res.status(200).end();
