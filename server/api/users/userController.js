@@ -169,7 +169,7 @@ userController.addFoursquareData = function (req, res) {
     return user.addCheckins(allParsedFoursquareCheckins);
   })
   .then(function (data) {
-    // console.log('4s: ', data);
+    console.log('4s: ', data);
     res.status(204).end();
   })
   .catch(function(err) {

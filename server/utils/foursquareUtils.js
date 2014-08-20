@@ -26,7 +26,6 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
       data += chunk;
     });
     res.on('end', function() {
-      console.log(data);
       deferred.resolve(JSON.parse(data));
     })
   }).on('error', function(err) {
