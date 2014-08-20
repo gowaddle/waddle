@@ -25,6 +25,7 @@ angular.module('waddle.map', [])
         zoomControl: false,
         worldCopyJump: true,
         minZoom: 2,
+        // maxBounds: [[80,200],[-80,-200]],
         bounceAtZoomLimits: false
       }).setView([20.00, 0.00], 2);
 
