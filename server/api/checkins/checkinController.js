@@ -9,7 +9,7 @@ var checkinController = {};
 
 checkinController.instagramHubChallenge = function (req, res) {
   var body = req.body;
-  console.log(body);
+  console.log("body: " + body);
   var challenge = body.hub.challenge;
   res.send(challenge);
 };
