@@ -12,12 +12,15 @@ userController.userLogin = function (req, res) {
 
   var userData = req.body;
   var user;
-  var userFBCheckinData = [];
+  var FBAccessToken;
+  var userFBTaggedPostsData = [];
   var userFBPhotoData = [];
+  var userFBStatusesData = [];
   var userFBFriendsData;
   var combinedFBCheckins;
   var alreadyExists = false;
 
+  //Start creation of new user or update and retrieval of existing user
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     //note: this has the user node
@@ -25,22 +28,25 @@ userController.userLogin = function (req, res) {
     user = userNode;
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
+  //Store acces token on scope, Get profile pictures from Facebook
   .then(function (fbReqData) {
-    return user.setProperty('fbToken', fbReqData.access_token);
-  })
-  .then(function (userNode) {
-    user = userNode;
+    FBAccessToken = fbReqData.access_token
     return facebookUtils.getFBProfilePicture(userData.facebookID);
   })
   .then(function (fbPicData) {
+    var properties = {
+      'fbToken': FBAccessToken,
+    };
     if(fbPicData.data.is_silhouette === false) {
-      return user.setProperty('fbProfilePicture', fbPicData.data.url); 
+      properties['fbProfilePicture'] = fbPicData.data.url;
     }
+    return user.setProperties(properties);
   })
   .then(function (userNode) { 
     user = userNode;
     return user.findAllCheckins()
   })
+  //Path forks here for existing vs new users
   .then(function (checkinsAlreadyStored) {
     // console.log('fb checkins: ', checkinsAlreadyStored.length);
     if (checkinsAlreadyStored.length) {
@@ -69,7 +75,6 @@ userController.userLogin = function (req, res) {
     facebookUtils.getFBFriends(user)
     .then(function (fbRawUserData) {
       // Friends data
-      console.log(fbRawUserData);
       return user.addFriends(fbRawUserData.data);
     })
     .then(function (friends) {
@@ -80,14 +85,14 @@ userController.userLogin = function (req, res) {
       userFBFriendsData = allFriends;
 
       //get tagged places
-      return facebookUtils.getFBTaggedPlaces(user);
+      return facebookUtils.getFBTaggedPosts(user);
     })
-    .then(function (fbRawCheckinData) {
+    .then(function (fbRawTaggedPostsData) {
       // parse Checkin data
-      return facebookUtils.parseFBData(user, fbRawCheckinData.data);
+      return facebookUtils.parseFBData(user, fbRawTaggedPostsData);
     })
-    .then(function (fbParsedCheckinData) {
-      userFBCheckinData = fbParsedCheckinData;
+    .then(function (fbParsedTaggedPostsData) {
+      userFBTaggedPostsData = fbParsedTaggedPostsData;
       // get Picture data
       return facebookUtils.getFBPhotos(user);
     })
@@ -97,9 +102,19 @@ userController.userLogin = function (req, res) {
       return facebookUtils.parseFBData(user, fbRawPhotoList); 
     })
     .then(function (fbParsedPhotoData) {
-      // merge checkins and photos
+      // merge tagged places and photos
       userFBPhotoData = fbParsedPhotoData;
-      combinedFBCheckins = userFBCheckinData.concat(userFBPhotoData);
+      combinedFBCheckins = userFBTaggedPostsData.concat(userFBPhotoData);
+      //get statuses posted by user
+      return facebookUtils.getFBStatuses(user);
+    })
+    .then(function (fbRawStatusList) {
+      return facebookUtils.parseFBData(user, fbRawStatusList);
+    })
+    .then(function (fbParsedStatusesData) {
+      userFBStatusesData = fbParsedStatusesData;
+      combinedFBCheckins = combinedFBCheckins.concat(userFBStatusesData);
+      console.log("combinedCheckins: " + combinedFBCheckins);
       return user.addCheckins(combinedFBCheckins);
     })
     .then(function (data) {
@@ -126,14 +141,14 @@ userController.addFoursquareData = function (req, res) {
   var userData = req.body;
   var user;
 
+  console.log('add 4s data');
+
   User.find(userData)
   .then(function (userNode) { 
-    // console.log("userNode: " + userNode);
     user = userNode;
     return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
   })
   .then(function (foursquareAccessToken) {
-    // console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
     return user.setProperty('fsqToken', foursquareAccessToken.access_token);
   })
   .then(function (userNode) {
@@ -141,7 +156,6 @@ userController.addFoursquareData = function (req, res) {
     return foursquareUtils.getUserFoursquareIDFromToken(user);
   })
   .then(function (userFoursquareData) {
-    console.log(userFoursquareData.response.user.id);
     return user.setProperty('foursquareID', userFoursquareData.response.user.id);
   })
   .then(function (userNode) {
@@ -151,10 +165,11 @@ userController.addFoursquareData = function (req, res) {
   .then(function (foursquareHistoryBucket) {
     var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
     var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    console.log("4s checkin len:", allParsedFoursquareCheckins.length);
     return user.addCheckins(allParsedFoursquareCheckins);
   })
   .then(function (data) {
-    // console.log('4s: ', data);
+    console.log('4s: ', data);
     res.status(204).end();
   })
   .catch(function(err) {

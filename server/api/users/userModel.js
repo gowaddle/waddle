@@ -23,6 +23,15 @@ User.prototype.setProperty = function(property, value) {
   return this.save();
 };
 
+User.prototype.setProperties = function(properties) {
+  for (var key in properties){
+    if (properties.hasOwnProperty(key)){
+      this.node.data[key] = properties[key]
+    }
+  }
+  return this.save();
+};
+
 User.prototype.getProperty = function(property) {
   return this.node.data[property];
 };
@@ -83,19 +92,16 @@ User.prototype.addFriends = function(friendsList){
   request.post(options, function(err, response, body) {
     if (err) { deferred.reject(err) }
     else {
-      console.log(body);
       deferred.resolve(body);
     }
   });
 
   return deferred.promise;
-
-
 }
 
 User.prototype.addCheckins = function(combinedCheckins){
   var deferred = Q.defer();
-
+  //need to check for params!
   var facebookID = this.getProperty('facebookID');
 
 /*var query = [
@@ -121,6 +127,7 @@ User.prototype.addCheckins = function(combinedCheckins){
   ].join('\n');
 
   var batchRequest = _.map(combinedCheckins, function (checkin, index) {
+
     var singleRequest = {
       'method': "POST",
       'to': "/cypher",
@@ -244,7 +251,12 @@ User.find = function (data) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      if (results && results[0] && results[0]['user']) {
+        deferred.resolve(new User(results[0]['user']));
+      }
+      else {
+        deferred.reject(new Error('user does not exist'));
+      }
     }
   });
 
@@ -267,7 +279,12 @@ User.findByFoursquareID = function (foursquareID) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      if (results && results[0] && results[0]['user']) {
+        deferred.resolve(new User(results[0]['user']));
+      }
+      else {
+        deferred.reject(new Error('user does not exist'));
+      }
     }
   });
 

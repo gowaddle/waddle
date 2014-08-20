@@ -1,0 +1,28 @@
+<!-- <h4>{{selectedFootprint}}<h4>
+<h3>{{data.footprint}}</h3> -->
+<div class="footprintitem">
+	<span ui-sref='map.feed' class="closefootprint">X</span>
+	<h2>{{selectedFootprint.place.name}}</h2>
+	<h3 ng-if="selectedFootprint.checkin.caption !== 'null'">"{{selectedFootprint.checkin.caption}}"</h3>
+	<img ng-if="selectedFootprint.checkin.photoLarge !== 'null'"ng-src="{{selectedFootprint.checkin.photoLarge}}">
+	<img ng-if="selectedFootprint.checkin.photoLarge === 'null' && selectedFootprint.checkin.photoSmall !== 'null'"ng-src="{{selectedFootprint.checkin.photoSmall}}">
+	<span>
+		<img src="https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png">
+		<h4>{{data.footprint.propNumber}}</h4>
+	</span>
+	<div>
+	  <h4 ng-if="data.footprint.comments.length === 0">Be the first to comment!</h4>
+	   <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
+	    <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
+	    <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
+    </form>
+	</div>
+	<div class='footprintcomments' ng-repeat="comment in data.footprint.comments">
+		<div class='footprintcommentpiccontainer'>
+			<img class='footprintcommentpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+		</div>
+		<p>{{comment.comment.text}}</p>
+		<h7>{{comment.comment.time | date : shortDate}}</h7>
+		<h4 class="commentername">{{comment.commenter.name}}</h4>
+	</div>
+</div>

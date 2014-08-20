@@ -51,7 +51,7 @@ h1{
   font-style: bold;
   font-weight:1000;
   font-size:100px;
-  color:#ffffff;
+  color:#a6a6a6;
   margin:0;
   padding:0;
   }
@@ -60,7 +60,7 @@ h2{
   font-style: none;
   font-weight:400;
   font-size:20px;
-  color:#ffffff;
+  color:#a6a6a6;
   line-height:180%;
   margin:0;
   padding:0;
@@ -69,7 +69,7 @@ h3{
   font-family:'Open Sans', san-serif;
   font-style: none;
   font-weight:100;
-  font-size:20px;
+  font-size:16px;
   color:#555555;
   line-height:180%;
   margin:0px;
@@ -100,9 +100,9 @@ h6{
   }
 h7{
   font-family:'Open Sans', san-serif;
-  color:#F6E16E;
+  color:#a6a6a6;
   display:inline;
-  font-size:30px;
+  font-size:9px;
   }
 h8{
   font-family:'Open Sans', san-serif;
@@ -110,6 +110,11 @@ h8{
   display:inline;
   font-size:10px;
   }
+p{
+  display:inline;
+  font-size:12px
+  font-family:'Open Sans', san-serif;
+}
 
 #signin {
   position: absolute;
@@ -212,24 +217,27 @@ h8{
 
 .waddlefeed {
    margin-top: 40px;
-   height: 800px;
+   height: 700px;
    width: 250px;
    float: right;
    border-radius:5px;
    background-color:rgba(255,255,255,0.9);
+   overflow-y: scroll;
 }
 
 .waddlefeeditem {
-  height: 20%;
+  padding: 5px;
+  height: 25%;
   background-color: #fff;
   margin: 5px;
   overflow: hidden;
 }
 
-.waddlefeeditem img {
-  max-height: 80%;
+.feedphoto {
+  max-width: 100px;
+  max-height: 100px;
+  overflow:hidden;
 }
-
 .waddlefeedfriend {
   height: 15%;
   background-color: #fff;
@@ -254,23 +262,66 @@ h8{
    overflow-y: scroll;
 }
 
+
 .footprintitem {
-  border: 1px solid #a6a6a6;
   margin: 10px;
   padding: 5px;
+  width: 800px;
+  height: 700px;
+  overflow-y: scroll;
+  position: absolute;
+  background-color: rgba(255,255,255,0.9);
+  over
+}
+
+.closefootprint {
+    font-family:'Open Sans', san-serif;
+    float:right;
+    cursor:pointer;
+    color: #a6a6a6;
+    font-size: 31px;
+    font-weight: bold;
+    display: inline-block;
+    line-height: 0px;
+    padding: 11px 3px;    
+}
+
+.footprintcommentpiccontainer {
+  display: inline;
+  width: 50px;
+  overflow: hidden;
+}
+
+.footprintcommentpic {
+  width: 70px;
+  height: auto;
+}
+
+.commentername {
+  display: block;
 }
 
 .giveprops {
   content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png');
+  float:right;
 }
 
 .giveprops:hover {
   content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Active_01.png');
 }
 
+.addbucket {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Inactive_01.png');
+  float:right;
+}
+
+.addbucket:hover {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Active_01.png');
+}
+
 .comment_form input {
   height:12px; 
-  width:220px; 
+  width:215px; 
   padding:5px 8px;
   box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
   border-radius: 3px;
@@ -285,5 +336,9 @@ h8{
    color: silver;
    font-family: 'Open-Sans', sans-serif;
    font-size: 13px;
+}
+
+.mapuiview {
+
 }
 

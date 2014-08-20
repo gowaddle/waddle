@@ -5,8 +5,6 @@ angular.module('waddle', [
 	'waddle.directives',
   'waddle.services',
 	'ui.router',
-  'ui.scroll',
-  'ui.scroll.jqlite',
   'wu.masonry'
 ])
 
@@ -47,6 +45,10 @@ angular.module('waddle', [
       url: '/feed',
       templateUrl: '../app/modules/pages/map/feed.html', 
       controller: 'FeedController'
+    })
+    .state('map.feed.footprint', {
+      url: '/:footprint',
+      templateUrl: '../app/modules/pages/map/footprint.html'
     })
     .state('map.footprints', {
       url: '/footprints',

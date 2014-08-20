@@ -18,6 +18,8 @@
     "tests"
   ],
   "dependencies": {
-    "angular-masonry": "~0.9.0"
+    "angular-masonry": "~0.9.0",
+    "angular": "~1.2.22",
+    "jquery": "~2.1.1"
   }
 }

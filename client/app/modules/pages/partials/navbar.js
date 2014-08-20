@@ -4,7 +4,6 @@ angular.module('waddle.navbar', [])
 
 	  $scope.logout = Auth.logout;
 
-
     $scope.goToProvidersPage = function () {
       $state.go('providers');
     };

@@ -1,4 +1,3 @@
-
 var _ = require('lodash');
 
 var Checkin = require('./checkinModel.js');
@@ -7,7 +6,6 @@ var foursquareUtils = require('../../utils/foursquareUtils.js');
 var instagramUtils = require('../../utils/instagramUtils.js');
 
 var checkinController = {};
-
 
 checkinController.instagramHubChallenge = function (req, res) {
   var body = req.body;
@@ -75,7 +73,11 @@ checkinController.addToBucketList = function (req, res){
 checkinController.addComment = function (req, res){
   var clickerID = req.body.clickerID;
   var checkinID = req.body.checkinID;
-  var text = req.body.text;
+  if (req.body.text) {
+    var text = req.body.text;
+  } else {
+    res.status(404).end()
+  }
 
   Checkin.addComment(clickerID, checkinID, text)
   .then(function (data){
@@ -106,21 +108,44 @@ checkinController.giveProps = function (req, res){
 };
 
 checkinController.getPropsAndComments = function (req, res){
-  var checkinID = req.body.checkinID;
+  var checkinID = req.params.checkinid;
   var data = {}
 
   Checkin.getProps(checkinID)
   .then(function (props){
-    console.log("props")
-    console.log(props);
     data['props'] = props;
-    return Checkin.getComments;
+    return Checkin.getComments(checkinID);
   })
   .then(function (comments){
-    console.log("comments")
-    console.log(comments)
+    if (typeof comments === "object")
     data['comments'] = comments;
-    res.json(data);
+    var parsedData = {
+      props: data.props.length,
+      propGivers: [],
+      comments: []
+    };
+
+    // for (var i = 0; i < data.props.length; i++){
+    //   parsedData.propGivers.push(data.props[i].user._data.data)
+    // };    
+    parsedData.propGivers = _.map(data.props, function (prop) {
+      return prop.user._data.data
+    });
+
+    // for (var i = 0; i < data.comments.length; i++){
+    //   parsedData.comments.push({
+    //     commenter: data.comments[i].user._data.data, 
+    //     comment: data.comments[i].comment._data.data
+    //   })
+    // };
+    parsedData.comments = _.map(data.comments, function (comment) {
+      return {
+        commenter: comment.user._data.data, 
+        comment: comment.comment._data.data
+      }
+    });
+
+    res.json(parsedData);
     res.status(200).end();
   })
   .catch(function (err){

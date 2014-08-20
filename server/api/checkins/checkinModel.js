@@ -130,13 +130,15 @@ Checkin.getProps = function (checkinID) {
       deferred.resolve(results)
     }
   });
+
+  return deferred.promise;
 };
 
 Checkin.getComments = function (checkinID){
   var deferred = Q.defer();
 
   var query = [
-  'MATCH (user)-[:madeComment]->(comment)-[:gotComment]->(checkin:Checkin {checkinID: {checkinID}})',
+  'MATCH (user)-[:madeComment]->(comment:Comment)-[:gotComment]->(checkin:Checkin {checkinID: {checkinID}})',
   'RETURN user, comment'
   ].join('\n');
 
@@ -147,10 +149,12 @@ Checkin.getComments = function (checkinID){
   db.query(query, params, function (err, results){
     if (err) { deferred.reject(err) }
     else {
-      console.log(results)
+      console.log("comments query: ", results)
       deferred.resolve(results)
     }
   });
+
+  return deferred.promise;
 };
 
 module.exports = Checkin;
