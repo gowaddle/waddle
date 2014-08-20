@@ -1,11 +1,8 @@
 angular.module('waddle.feed', [])
 
-  .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state, $timeout, $stateParams) {
+  .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state, $timeout, $stateParams, FootprintRequests) {
 
-    $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;
     $scope.selectedFootprint = null;
-
-    console.log('AllUserCheckins: ', $scope.allUserCheckinsFootprints);
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
@@ -28,7 +25,7 @@ angular.module('waddle.feed', [])
         checkinID: checkinID
       }
 
-      UserRequests.giveProps(propsData)
+      FootprintRequests.giveProps(propsData)
       .then(function (data){
         console.log(data);
       });
@@ -39,16 +36,16 @@ angular.module('waddle.feed', [])
         facebookID: window.sessionStorage.userFbID,
         checkinID: checkinID
       }
-       UserRequests.addToBucketList(data)
+       FootprintRequests.addToBucketList(data)
     }
 
     //Send request to database for user props and comments data
     $scope.getFootprint = function (footprint) {
       $scope.selectedFootprint = footprint;
-      UserRequests.getFootprintInteractions(footprint.checkin.checkinID)
+      FootprintRequests.getFootprintInteractions(footprint.checkin.checkinID)
       .then(function (data){
-        UserRequests.currentFootprint = data.data
-        console.log(UserRequests.currentFootprint)
+        FootprintRequests.currentFootprint = data.data
+        console.log(FootprintRequests.currentFootprint)
         $scope.data.footprint.propNumber = data.data.props;
         $scope.data.footprint.propGivers = data.data.propGivers;
         $scope.data.footprint.comments = data.data.comments;
@@ -56,7 +53,7 @@ angular.module('waddle.feed', [])
     }
   })
 
-.directive( 'customSubmit' , function(UserRequests)
+.directive( 'customSubmit' , function(FootprintRequests)
 {
     return {
         restrict: 'A',
@@ -110,7 +107,7 @@ angular.module('waddle.feed', [])
                   text: scope.comment
                 }
 
-                UserRequests.addComment(commentData)
+                FootprintRequests.addComment(commentData)
                 .then(function (data){
                   scope.data.currentComment = ''
                   //$element[0][0].value = ''
