@@ -8,14 +8,11 @@ var instagramUtils = require('../../utils/instagramUtils.js');
 var checkinController = {};
 
 checkinController.instagramHubChallenge = function (req, res) {
-  var body = req.body;
-  console.log(body);
-  var challenge = body.hub.challenge;
-  res.send(challenge);
+  console.dir(req.query)
+  res.status(200).send(req.query['hub.challenge']);
 };
 
 checkinController.handleIGPost = function (req, res) {
-  res.status(200).end()
 
   var updateArr = req.body;
 
@@ -31,6 +28,7 @@ checkinController.handleIGPost = function (req, res) {
   .catch(function (e) {
     console.log(e);
   })
+  res.status(200).end();
 };
 
 checkinController.realtimeFoursquareData = function (req, res) {
