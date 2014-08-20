@@ -1,7 +1,7 @@
 <div class='footprints'>
 	<div masonry>
-    <div class="masonry-brick">
-    	<div class="footprintitem" ng-repeat="footprint in inBounds | orderBy:'-checkin.checkinTime' | limitTo:20">
+    <div class="masonry-brick" ng-repeat="footprint in inBounds | orderBy:'-checkin.checkinTime' | limitTo:20">
+    	<div class="footprintitem">
         <h3>{{footprint.place.name}}</h3>
         <h4>{{footprint.checkin.checkinTime}}</h4>
         <img ng-if="footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
