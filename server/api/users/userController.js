@@ -141,14 +141,14 @@ userController.addFoursquareData = function (req, res) {
   var userData = req.body;
   var user;
 
+  console.log('add 4s data');
+
   User.find(userData)
   .then(function (userNode) { 
-    // console.log("userNode: " + userNode);
     user = userNode;
     return foursquareUtils.exchangeFoursquareUserCodeForToken(userData.foursquareCode);
   })
   .then(function (foursquareAccessToken) {
-    // console.log("the foursquare user access token is " + foursquareAccessToken.access_token);
     return user.setProperty('fsqToken', foursquareAccessToken.access_token);
   })
   .then(function (userNode) {
@@ -156,7 +156,6 @@ userController.addFoursquareData = function (req, res) {
     return foursquareUtils.getUserFoursquareIDFromToken(user);
   })
   .then(function (userFoursquareData) {
-    console.log(userFoursquareData.response.user.id);
     return user.setProperty('foursquareID', userFoursquareData.response.user.id);
   })
   .then(function (userNode) {
@@ -166,6 +165,7 @@ userController.addFoursquareData = function (req, res) {
   .then(function (foursquareHistoryBucket) {
     var allFoursquareCheckins = foursquareUtils.convertFoursquareHistoryToSingleArrayOfCheckins(foursquareHistoryBucket);
     var allParsedFoursquareCheckins = foursquareUtils.parseFoursquareCheckins(allFoursquareCheckins);
+    console.log("4s checkin len:", allParsedFoursquareCheckins.length);
     return user.addCheckins(allParsedFoursquareCheckins);
   })
   .then(function (data) {

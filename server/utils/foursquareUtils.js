@@ -64,7 +64,6 @@ utils.getUserFoursquareIDFromToken = function (user) {
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
-
   var fsqAccessToken = user.getProperty('fsqToken');
 
   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
@@ -79,6 +78,8 @@ utils.tabThroughFoursquareCheckinHistory = function (user) {
       historyBucketContainer.push(utils.getFoursquareCheckinHistory(fsqAccessToken, offset));
       offset += 250;  
     }
+
+    console.log("hist bucket cont", historyBucketContainer.length)
 
     deferred.resolve(Q.all(historyBucketContainer));
   });
