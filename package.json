@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "gogogo",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/gowaddle/waddle",
+  "engines": {
+    "node": "0.10.x"
+  },
   "license": "Proprietary",
   "scripts": {
     "start": "node server/server.js",
