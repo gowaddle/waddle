@@ -1,7 +1,7 @@
 <div ui-view></div>
 <div ng-if="inBounds.length" class='waddlefeed'>
   <div class='waddlefeeditem' ng-repeat="footprint in inBounds | orderBy:'-checkin.checkinTime' | limitTo:20 ">
-    <h4 ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+    <h4 class='feeditemname'ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
       {{footprint.place.name}}
     </h4>
     <img class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)"/>
