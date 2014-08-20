@@ -112,8 +112,14 @@ h8{
   }
 p{
   display:inline;
-  font-size:12px
+  font-size:12px;
   font-family:'Open Sans', san-serif;
+}
+
+li{
+  color: #888888;
+  font-family:'Open Sans', san-serif;
+  font-size:14px;
 }
 
 #signin {
@@ -184,8 +190,7 @@ p{
   width: 100%;
   height: 30px;
   top: 0;
-  background-color: #FFFFFF;
-  opacity: 0.8
+  background-color:rgba(255, 255, 255, 0.9);
 }
 
 .navigation ul {
@@ -218,7 +223,7 @@ p{
 .waddlefeed {
    margin-top: 40px;
    height: 700px;
-   width: 250px;
+   width: 275px;
    float: right;
    border-radius:5px;
    background-color:rgba(255,255,255,0.9);
@@ -231,6 +236,14 @@ p{
   background-color: #fff;
   margin: 5px;
   overflow: hidden;
+}
+
+.feeditemname {
+  display: inline-block;
+  white-space: nowrap;
+  width: 77%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .feedphoto {
@@ -264,9 +277,9 @@ p{
 
 
 .footprintitem {
+  top: 50px;
   margin: 10px;
   padding: 5px;
-  width: 800px;
   height: 700px;
   overflow-y: scroll;
   position: absolute;
