@@ -1,5 +1,5 @@
 var _ = require('lodash');
-
+var Q = require('q');
 var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
