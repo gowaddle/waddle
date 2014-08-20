@@ -1,23 +1,16 @@
 angular.module('waddle.feed', [])
 
-  .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state) {
+  .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state, $timeout, $stateParams) {
 
     $scope.allUserCheckinsFootprints = UserRequests.allData.data.allCheckins;
     $scope.selectedFootprint = null;
 
-    console.log('InBounds: ', $scope.inBounds);
     console.log('AllUserCheckins: ', $scope.allUserCheckinsFootprints);
-
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
       console.log($scope.inBounds)
-      // $scope.inBounds = {
-      //   get: function(index, count, success) {
-      //       success(markers);
-      //   }
-      // };
     };
 
     // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed

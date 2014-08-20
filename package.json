@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "gogogo",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/gowaddle/waddle",
+  "engines": {
+    "node": "0.10.x"
+  },
   "license": "Proprietary",
   "scripts": {
     "start": "node server/server.js",
@@ -27,7 +30,7 @@
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-test": "^0.10.0",
-    "grunt-nodemon": "~0.2.1",
+    "grunt-nodemon": "^0.3.0",
     "grunt-protractor-runner": "^1.1.0",
     "grunt-shell": "^0.6.4",
     "karma-jasmine": "^0.1.5",

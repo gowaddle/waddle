@@ -26,7 +26,6 @@ utils.exchangeFoursquareUserCodeForToken = function (fsqCode) {
       data += chunk;
     });
     res.on('end', function() {
-      console.log(data);
       deferred.resolve(JSON.parse(data));
     })
   }).on('error', function(err) {
@@ -65,21 +64,23 @@ utils.getUserFoursquareIDFromToken = function (user) {
 utils.tabThroughFoursquareCheckinHistory = function (user) {
   var deferred = Q.defer();
 
-
   var fsqAccessToken = user.getProperty('fsqToken');
+
+  var offset = 0;
 
   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
   .then(function(checkinHistory) {
 
     var checkinCount = checkinHistory.response.checkins.count;
-    var historyBucketContainer = [];
-    
-    var offset = 0;
+    var historyBucketContainer = [Q(checkinHistory)];
+    offset += 250;
 
     while(offset < checkinCount) {
       historyBucketContainer.push(utils.getFoursquareCheckinHistory(fsqAccessToken, offset));
       offset += 250;  
     }
+
+    console.log("hist bucket cont", historyBucketContainer.length)
 
     deferred.resolve(Q.all(historyBucketContainer));
   });

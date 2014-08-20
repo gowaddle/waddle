@@ -25,12 +25,10 @@ User.prototype.setProperty = function(property, value) {
 
 User.prototype.setProperties = function(properties) {
   for (var key in properties){
-    console.log(key)
     if (properties.hasOwnProperty(key)){
       this.node.data[key] = properties[key]
     }
   }
-  console.log(this.node.data)
   return this.save();
 };
 
@@ -94,14 +92,11 @@ User.prototype.addFriends = function(friendsList){
   request.post(options, function(err, response, body) {
     if (err) { deferred.reject(err) }
     else {
-      console.log(body);
       deferred.resolve(body);
     }
   });
 
   return deferred.promise;
-
-
 }
 
 User.prototype.addCheckins = function(combinedCheckins){
@@ -132,6 +127,7 @@ User.prototype.addCheckins = function(combinedCheckins){
   ].join('\n');
 
   var batchRequest = _.map(combinedCheckins, function (checkin, index) {
+
     var singleRequest = {
       'method': "POST",
       'to': "/cypher",
@@ -283,7 +279,12 @@ User.findByFoursquareID = function (foursquareID) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      deferred.resolve(new User(results[0]['user']));
+      if (results && results[0] && results[0]['user']) {
+        deferred.resolve(new User(results[0]['user']));
+      }
+      else {
+        deferred.reject(new Error('user does not exist'));
+      }
     }
   });
 
