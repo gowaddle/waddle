@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 			dev: {
 				script: 'server/server.js',
 				options: {
-					ignore: ['client/bower_components/**'],
+					ignore: ['node_modules/**', 'client/bower_components/**'],
 				}
 			}
 		},
@@ -72,8 +72,7 @@ module.exports = function (grunt) {
 	  	install: {
 	  		options: {
 		  		targetDir: './client/bower_components',
-		  		cleanBowerDir: true,
-		  		verbose: true
+		  		cleanBowerDir: true
 	  		}
 	  	}
 	  }

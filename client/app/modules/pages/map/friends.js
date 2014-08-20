@@ -1,4 +1,7 @@
-FriendsController = function ($scope, $state, UserRequests){
+FriendsController = function ($scope, $state, UserRequests) {
+
+  $scope.allUserFriends = UserRequests.allData.data.friends;
+
   $scope.clickFriend = function (friend){
     UserRequests.getUserData(friend)
     .then(function(data){
@@ -8,7 +11,6 @@ FriendsController = function ($scope, $state, UserRequests){
     });
   };
   
-  $scope.allUserFriends = UserRequests.allData.data.friends;
 };
 
 FriendsController.$inject = ['$scope', '$state', 'UserRequests'];
