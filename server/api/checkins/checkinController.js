@@ -1,5 +1,5 @@
 var _ = require('lodash');
-
+var Q = require('q');
 var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
@@ -8,14 +8,11 @@ var instagramUtils = require('../../utils/instagramUtils.js');
 var checkinController = {};
 
 checkinController.instagramHubChallenge = function (req, res) {
-  var body = req.body;
-  console.log(body);
-  var challenge = body.hub.challenge;
-  res.send(challenge);
+  console.dir(req.query)
+  res.status(200).send(req.query['hub.challenge']);
 };
 
 checkinController.handleIGPost = function (req, res) {
-  res.status(200).end()
 
   var updateArr = req.body;
 
@@ -26,11 +23,22 @@ checkinController.handleIGPost = function (req, res) {
   Q.all(posts)
   .then(function (postArr) {
     //do stuff
+    //postArr[i].data.location.latitude
+    //.data.location.longitude
+    //.data.location.name
+    //.data.caption.text
+    //.data.createdAt
+    //.data.[picturessmalllarge]
+    //.data.images.thumbnail
+    //.data.images.standard_resolution
+
+    //.pagination.next_url
     console.log(postArr);
   })
   .catch(function (e) {
     console.log(e);
   })
+  res.status(200).end();
 };
 
 checkinController.realtimeFoursquareData = function (req, res) {

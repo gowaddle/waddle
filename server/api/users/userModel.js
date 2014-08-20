@@ -301,7 +301,7 @@ User.findByInstagramID = function (instagramID) {
   ].join('\n');
 
   var params = {
-    instagramiD: InstagramID
+    instagramID: instagramID
   };
 
   db.query(query, params, function (err, results) {

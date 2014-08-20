@@ -1,5 +1,6 @@
 var https = require('https');
 var qs = require('querystring');
+var User = require('../api/users/userModel.js');
 
 var Q = require('q');
 
@@ -62,7 +63,7 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
     client_id: process.env.WADDLE_INSTAGRAM_CLIENT_ID,
     client_secret: process.env.WADDLE_INSTAGRAM_CLIENT_SECRET,
     grant_type: 'authorization_code',
-    redirect_uri: 'http://localhost:8080/instagramredirect',
+    redirect_uri: 'http://waddle.herokuapp.com/instagramredirect',
     code: igCode
   };
 
@@ -93,5 +94,67 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
 
   return deferred.promise;
 };
+
+/*utils.parseIGData = function (user, data) {
+  var deferred = Q.defer();
+
+  var parsedData = [];
+  var foursquareVenueQueries = [];
+
+  _.each(data, function (datum) {
+    if (datum.place) {
+      var place = {
+        'checkinID': datum.id,
+        'name': datum.place.name,
+        'lat': datum.place.location.latitude,
+        'lng': datum.place.location.longitude,
+        'checkinTime': new Date(datum.created_time),
+        'likes': 'null',
+        'photoSmall': 'null',
+        'photoLarge': 'null',
+        'caption': 'null',
+        'foursquareID': 'null',
+        'country': 'null',
+        'category': 'null',
+        'source': 'facebook'
+      }
+
+      if (datum.likes) {
+        place.likes = datum.likes.data.length;
+      }
+
+      if(datum.message) {
+        place.caption = datum.message;
+      }
+
+      if (datum.picture) {
+        place.photoSmall = datum.picture;
+      }
+
+      if (datum.source) {
+        place.photoLarge = datum.source;
+      }
+
+      var latlng = place.lat.toString() + ',' + place.lng.toString();
+      
+      parsedData.push(place);
+      console.log(place)
+      foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
+    }
+  });
+
+  Q.all(foursquareVenueQueries)
+  .then(function (foursquareVenueIDs) {
+    _.each(parsedData, function (datum, index) {
+      datum.foursquareID = foursquareVenueIDs[index];
+    });
+    deferred.resolve(parsedData);
+  })
+  .catch(function (err) {
+    deferred.reject(err);
+  });
+
+  return deferred.promise;
+};*/
 
 module.exports = utils;
