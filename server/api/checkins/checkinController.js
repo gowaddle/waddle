@@ -38,7 +38,7 @@ checkinController.realtimeFoursquareData = function (req, res) {
   var userFoursquareID = checkin.user.id;
   var user;
 
-  console.log(userFoursquareID);
+  console.log(checkin);
 
   User.findByFoursquareID(userFoursquareID)
   .then(function (userNode) {
