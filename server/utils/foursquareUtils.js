@@ -66,13 +66,14 @@ utils.tabThroughFoursquareCheckinHistory = function (user) {
 
   var fsqAccessToken = user.getProperty('fsqToken');
 
+  var offset = 0;
+
   utils.getFoursquareCheckinHistory(fsqAccessToken, offset)
   .then(function(checkinHistory) {
 
     var checkinCount = checkinHistory.response.checkins.count;
-    var historyBucketContainer = [];
-    
-    var offset = 0;
+    var historyBucketContainer = [Q(checkinHistory)];
+    offset += 250;
 
     while(offset < checkinCount) {
       historyBucketContainer.push(utils.getFoursquareCheckinHistory(fsqAccessToken, offset));
