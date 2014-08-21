@@ -1,4 +1,6 @@
-var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $timeout, $stateParams){
+(function(){
+
+var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
   Auth.checkLogin()
   .then( function (){
 
@@ -51,7 +53,7 @@ var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth
   });
 }
 
-FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$timeout', '$stateParams'];
+FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
 
 
 //Start creating Angular module
@@ -123,3 +125,5 @@ angular.module('waddle.feed', [])
       }
     };
   });
+
+})();

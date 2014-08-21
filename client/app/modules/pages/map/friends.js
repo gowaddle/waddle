@@ -1,3 +1,5 @@
+(function(){
+
 var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
 
   if(UserRequests.allData) {
@@ -21,3 +23,5 @@ FriendsController.$inject = ['$scope', '$state', 'UserRequests', 'MapFactory'];
 
 angular.module('waddle.friends', [])
   .controller('FriendsController', FriendsController);
+
+})();

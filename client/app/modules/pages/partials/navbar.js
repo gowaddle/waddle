@@ -1,3 +1,5 @@
+(function(){
+
 var NavbarController = function (Auth, $scope, UserRequests){
   $scope.logout = Auth.logout;
   $scope.photo = UserRequests.allData.fbProfilePicture;
@@ -6,4 +8,8 @@ var NavbarController = function (Auth, $scope, UserRequests){
 }
 
 angular.module('waddle.navbar', [])
+
+
 .controller('NavbarController', NavbarController);
+
+})();
