@@ -8,7 +8,7 @@ var Q = require('q');
 
 var utils = {};
 
-utils.handleUpdate = function (update) {
+utils.handleUpdateObject = function (update) {
   var deferred = Q.defer();
 
   var timestamp = update.time - 1;
@@ -23,17 +23,20 @@ utils.handleUpdate = function (update) {
   })
   .then(function (mediaResp) {
     var media = mediaResp.data;
+
     var postsWithLocation = [];
+
     _.each(media, function (photo) {
       if (photo.location && photo.location.name) {
         postsWithLocation.push(utils.parseIGPost(photo, user));
       }
     });
+
     return Q.all(postsWithLocation);
   })
-  .then(function (data) {
-    deferred.resolve(data);
-  })
+  .then(function (postArr) {
+    deferred.resolve(postArr);
+  });
   .catch(function (e) {
     deferred.reject(e);
   })
@@ -127,7 +130,7 @@ utils.parseIGPost = function (post, user) {
   //.data.id
   var deferred = Q.defer();;
 
-  var place = {
+  var checkin = {
     'checkinID': post.id,
     'name': post.location.name,
     'lat': post.location.latitude,
@@ -144,29 +147,29 @@ utils.parseIGPost = function (post, user) {
   };
 
   if (post.likes) {
-    place.likes = post.likes.count;
+    checkin.likes = post.likes.count;
   }
 
   if(post.caption) {
-    place.caption = post.caption.text;
+    checkin.caption = post.caption.text;
   }
 
   if (post.images) {
     if (post.images.thumbnail){
-      place.photoSmall = post.images.thumbnail.url;
+      checkin.photoSmall = post.images.thumbnail.url;
     }
     if (post.images.standard_resolution){
-      place.photoLarge = post.images.standard_resolution.url;
+      checkin.photoLarge = post.images.standard_resolution.url;
     }
   }
 
-  var latlng = place.lat.toString() + ',' + place.lng.toString();
+  var latlng = checkin.lat.toString() + ',' + checkin.lng.toString();
     
-  foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng)
+  foursquareUtils.generateFoursquarePlaceID(user, checkin.name, latlng)
   .then(function (foursquareVenueID) {
-    place.foursquareID = foursquareVenueID;
+    checkin.foursquareID = foursquareVenueID;
     deferred.resolve({
-      place: place,
+      checkin: checkin,
       user: user
     });
   })

@@ -15,17 +15,24 @@ checkinController.handleIGPost = function (req, res) {
   var updateArr = req.body;
 
   var posts = _.map(updateArr, function (update) {
-    return instagramUtils.handleUpdate(update);
+    return instagramUtils.handleUpdateObject(update);
   })
 
   Q.all(posts)
   .then(function (postArr) {
     // write to db using batch query
-    console.log(postArr);
-    return postArr;
+    console.log(JSON.stringify(postArr));
+
+    var flatPostArr = _.flatten(postArr);
+
+    var queries = _.map(flatPostArr, function (post) {
+      return post.user.addCheckins([post.checkin]);
+    });
+
+    return Q.all(queries);
   })
   .then(function (data) {
-    // console.log(data)
+    console.log(JSON.stringify(data));
   })
   .catch(function (e) {
     console.log(e);
