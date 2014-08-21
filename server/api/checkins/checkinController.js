@@ -52,7 +52,7 @@ checkinController.facebookHubChallenge = function (req, res) {
 
 checkinController.handleFBPost = function (req, res) {
   var updateArr = req.body;
-  console.log("ma bodayy: " + req.body);
+  console.log("ma bodayy: " + JSON.stringify(req.body));
 
   var posts = _.map(updateArr, function(update) {
     return facebookUtils.handleUpdate(update);
