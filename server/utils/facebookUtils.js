@@ -231,12 +231,11 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
 };
 
 utils.handleUpdate = function (update) {
-  console.log("update: " + update);
+  console.log("update: " + JSON.stringify(update));
   var deferred = Q.defer();
-
-  var timestamp = update.time - 1;
   
-  var fbUserID = update.object_id;
+  var fbUserID = update.entry[0].uid;
+  var fbPostID = update.entry[0].id;
   var user;
 
   User.find(fbUserID)
@@ -251,18 +250,16 @@ utils.handleUpdate = function (update) {
   return deferred.promise;
 };
 
-utils.makeRequestForFeedItem = function (user, timestamp) {
+utils.makeRequestForFeedItem = function (user, postID) {
   var deferred = Q.defer();
 
-  var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
 
   var query = {
-    access_token: fbToken,
-    min_timestamp: timestamp
+    access_token: fbToken
   };
 
-  var queryPath = 'https://graph.facebook.com/'+ fbID + '/feed?with=location' + qs.stringify(query);
+  var queryPath = 'https://graph.facebook.com/' + postID + qs.stringify(query);
 
   https.get(queryPath, function (res) {
     var data = '';
