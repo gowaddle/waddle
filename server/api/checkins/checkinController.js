@@ -57,10 +57,30 @@ checkinController.handleFBPost = function (req, res) {
     return facebookUtils.handleUpdate(update);
   });
 
-  Q.all(posts)
-  .then(function (postArr) {
+  console.log(posts);
 
-  })
+  // Q.all(posts)
+  // .then(function (postArr) {
+  //   //data[i].location.latitude
+  //   //.data.location.longitude
+  //   //.data.location.name
+  //   //.data.caption.text
+  //   //.data.createdAt
+  //   //.data.[picturessmalllarge]
+  //   //.data.images.thumbnail
+  //   //.data.images.standard_resolution
+  //   //.data.id
+
+  //   if (postArr.pagination && postArr.pagination.next_url){
+  //     console.log("MORE DATA!!")
+  //   }
+  //   console.log(postArr);
+  //   console.log(facebookUtils.parseFBData(postArr.data));
+  // })
+  // .catch(function (e) {
+  //   console.log(e);
+  // })
+  res.status(200).end();
 }
 
 
