@@ -7,6 +7,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+
     };
 
     if (MapFactory.markerQuadTree) {
@@ -54,7 +55,6 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
 }
 
 FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope'];
-
 
 //Start creating Angular module
 angular.module('waddle.feed', [])
