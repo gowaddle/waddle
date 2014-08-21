@@ -241,7 +241,7 @@ utils.handleUpdate = function (update) {
   User.find(fbUserID)
   .then(function (userNode) {
     user = userNode;
-    deferred.resolve(utils.makeRequestForFeedItem(user, timestamp));
+    deferred.resolve(utils.makeRequestForFeedItem(user, fbPostID));
   })
   .catch(function (e) {
     deferred.reject(e);
