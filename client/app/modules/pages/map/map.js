@@ -2,14 +2,16 @@
 
 var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $stateParams, $rootScope){
       
-  //an alternative to reloading the entire view
-  /*    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
-        if (toState.name === 'map' && fromState.name !=='map'){
-          var current = $state.current;
-          var params = angular.copy($stateParams)
-          $state.transitionTo(current, params, { reload: true, inherit: true, notify: true });
-        }
-      });*/
+  // On transition from a friends map to original user map,
+  // only the data should change (and reload feed)
+  $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+    if (toState.name === 'map' && fromState.name !== 'map'){
+      MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.allCheckins);
+      $state.go('map.feed');
+    }
+  });
+
+  console.log(UserRequests.allData)
 
   $scope.data = {};
     
@@ -64,6 +66,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
       var footprintQuadtree;
       var markers = [];
 
+      // Change active checkins
       $scope.data.currentCheckins = allFootprints;
 
       _.each(allFootprints, function (footprint) {

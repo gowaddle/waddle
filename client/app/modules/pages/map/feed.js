@@ -1,12 +1,14 @@
 (function(){
 
-var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
+var FeedController = function (MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
+
   Auth.checkLogin()
   .then( function (){
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+
     };
 
     if (MapFactory.markerQuadTree) {
@@ -53,7 +55,7 @@ var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth
   });
 }
 
-FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
 
 
 //Start creating Angular module
