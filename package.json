@@ -47,14 +47,15 @@
     "grunt-bower-task": "~0.4.0"
   },
   "devDependencies": {
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-uglify": "^0.4.1",
+    "grunt-nodemon": "~0.2.1",
     "karma": "~0.12.19",
     "karma-chrome-launcher": "^0.1.4",
+    "karma-coverage": "~0.2.5",
     "karma-mocha": "^0.1.4",
     "karma-nested-reporter": "^0.1.1",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-nodemon": "~0.2.1",
-    "protractor": "~1.0.0",
     "karma-phantomjs-launcher": "~0.1.4",
-    "karma-coverage": "~0.2.5"
+    "protractor": "~1.0.0"
   }
 }

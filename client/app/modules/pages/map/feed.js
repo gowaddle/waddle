@@ -39,18 +39,17 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
 
     //Send request to database for user props and comments data
     $scope.getFootprint = function (footprint) {
-      
       $scope.footprint = footprint;
-
-      var checkinID = footprint.checkin.checkinID;
       $scope.selectedFootprintInteractions = null;
 
+      var checkinID = footprint.checkin.checkinID;
+
       FootprintRequests.getFootprintInteractions(checkinID)
-      .then(function (data){
+      .then(function (data) {
         FootprintRequests.currentFootprint = data.data;
         $scope.selectedFootprintInteractions = FootprintRequests.currentFootprint;
-      })
-    }
+      });
+    };
   });
 }
 
