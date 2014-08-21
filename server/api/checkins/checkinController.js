@@ -48,36 +48,35 @@ checkinController.facebookHubChallenge = function (req, res) {
 };
 
 checkinController.handleFBPost = function (req, res) {
-  var updateArr = req.body;
+  var updateArr = req.body.entry;
   console.log("dis be ma bodayy: " + JSON.stringify(req.body));
+  console.log("dis be ma boday's entray: " + JSON.stringify(updateArr));
 
   var posts = _.map(updateArr, function(update) {
-    return facebookUtils.handleUpdate(update);
+    return facebookUtils.handleUpdateObject(update);
   });
 
   console.log("these r ma postises: " + JSON.stringify(posts));
 
-  // Q.all(posts)
-  // .then(function (postArr) {
-  //   //data[i].location.latitude
-  //   //.data.location.longitude
-  //   //.data.location.name
-  //   //.data.caption.text
-  //   //.data.createdAt
-  //   //.data.[picturessmalllarge]
-  //   //.data.images.thumbnail
-  //   //.data.images.standard_resolution
-  //   //.data.id
+  Q.all(posts)
+    .then(function (postArr) {
+      // write to db using batch query?
+      console.log("ARR, dis be da postarr: " + JSON.stringify(postArr));
 
-  //   if (postArr.pagination && postArr.pagination.next_url){
-  //     console.log("MORE DATA!!")
-  //   }
-  //   console.log(postArr);
-  //   console.log(facebookUtils.parseFBData(postArr.data));
-  // })
-  // .catch(function (e) {
-  //   console.log(e);
-  // })
+      var flatPostArr = _.flatten(postArr);
+
+      var queries = _.map(flatPostArr, function (post) {
+        return post.user.addCheckins([post.checkin]);
+      });
+
+      return Q.all(queries);
+    })
+    .then(function (data) {
+      console.log(JSON.stringify(data));
+    })
+    .catch(function (e) {
+      console.log(e);
+    });
   res.status(200).end();
 }
 
