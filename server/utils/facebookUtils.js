@@ -242,7 +242,7 @@ utils.handleUpdate = function (update) {
   User.find(fbUserID)
   .then(function (userNode) {
     user = userNode;
-    deferred.resolve(utils.makeRequestForMedia(user, timestamp));
+    deferred.resolve(utils.makeRequestForFeedItem(user, timestamp));
   })
   .catch(function (e) {
     deferred.reject(e);
