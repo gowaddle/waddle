@@ -6,6 +6,7 @@ module.exports = function (app) {
   app.get('/realtimeinstagram', checkinController.instagramHubChallenge);
   app.post('/realtimeinstagram', checkinController.handleIGPost);
   app.get('/realtimefacebook', checkinController.facebookHubChallenge);
+  app.post('/realtimefacebook', checkinController.handleFBPost);
 
   //Routes for user actions
   app.post('/bucketlist', checkinController.addToBucketList);
@@ -13,3 +14,10 @@ module.exports = function (app) {
   app.post('/props', checkinController.giveProps);
   app.get('/interactions/:checkinid', checkinController.getPropsAndComments);
 };
+
+curl -F 'object=user' \
+ -F 'callback_url=http://waddle.herokuapp.com/api/checkins/realtimefacebook' \
+ -F 'fields=feed' \
+ -F 'verify_token=hellopi' \
+ "https://graph.facebook.com/898529293496515/subscriptions?access_token=898529293496515|ahC1Q8C646f1Ow6LAqD-xNXhzCY"
+
