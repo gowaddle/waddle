@@ -1,4 +1,6 @@
-var FrontpageController = function (UserRequests, $scope, $state, $rootScope){
+(function(){
+
+var FrontpageController = function (UserRequests, $scope, $state) {
   var enterSiteWhenConnected = function (fbToken) {
     openFB.api({
       path: '/me',
@@ -48,10 +50,12 @@ var FrontpageController = function (UserRequests, $scope, $state, $rootScope){
       scope: 'user_friends, user_tagged_places, user_photos, read_stream'
     });
   };
-}
+};
 
-FrontpageController.$inject = ['UserRequests', '$scope', '$state', '$rootScope']
+FrontpageController.$inject = ['UserRequests', '$scope', '$state']
 
 //Start creating Angular module
 angular.module('waddle.frontpage', [])
   .controller('FrontpageController', FrontpageController);
+
+})();

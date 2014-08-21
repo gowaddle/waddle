@@ -1,6 +1,6 @@
 (function(){
 
-var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
   Auth.checkLogin()
   .then( function (){
 
@@ -53,7 +53,7 @@ var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth
   });
 }
 
-FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope'];
 
 
 //Start creating Angular module
