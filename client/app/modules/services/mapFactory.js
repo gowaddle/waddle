@@ -1,7 +1,4 @@
-angular.module('waddle.services.mapFactory', [])
-
-.factory('MapFactory', function($q){
-
+var MapFactory = function ($q){
   var QuadTree = function (latlng, footprint) {
     this.lat = latlng[0];
     this.lng = latlng[1];
@@ -70,8 +67,13 @@ angular.module('waddle.services.mapFactory', [])
 
   var markerQuadTree = null;
   
-	return {
+  return {
     QuadTree: QuadTree,
-		markerQuadTree: markerQuadTree
-	};
-});
+    markerQuadTree: markerQuadTree
+  };
+};
+
+MapFactory.$inject = ['$q'];
+
+angular.module('waddle.services.mapFactory', [])
+  .factory('MapFactory', MapFactory);
