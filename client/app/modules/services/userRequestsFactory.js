@@ -1,6 +1,4 @@
-angular.module('waddle.services.userRequestsFactory', [])  
-
-.factory('UserRequests', function ($http) {
+var UserRequests = function ($http){
   var userData;
 
   return {
@@ -24,5 +22,11 @@ angular.module('waddle.services.userRequestsFactory', [])
         });
       }
     }
-  };
-});
+  }; 
+};
+
+UserRequests.$inject = ['$http'];
+
+//Start creating Angular module
+angular.module('waddle.services.userRequestsFactory', [])  
+  .factory('UserRequests', UserRequests);
