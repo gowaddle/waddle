@@ -1,4 +1,4 @@
 (function() {
-  angular.module('waddle.directives', []);
+angular.module('waddle.directives', []);
 })();
 
