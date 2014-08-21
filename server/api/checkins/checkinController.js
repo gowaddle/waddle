@@ -49,6 +49,20 @@ checkinController.facebookHubChallenge = function (req, res) {
   res.status(200).send(req.query['hub.challenge']);
 };
 
+checkinController.handleFBPost = function (req, res) {
+  var updateArr = req.body;
+  console.log("ma bodayy: " + req.body);
+
+  var posts = _.map(updateArr, function(update) {
+    return facebookUtils.handleUpdate(update);
+  });
+
+  Q.all(posts)
+  .then(function (postArr) {
+
+  })
+}
+
 
 checkinController.realtimeFoursquareData = function (req, res) {
   var checkin = JSON.parse(req.body.checkin);

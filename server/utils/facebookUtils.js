@@ -229,6 +229,26 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
   return deferred.promise;
 };
 
+utils.handleUpdate = function (update) {
+  var deferred = Q.defer();
+
+  var timestamp = update.time - 1;
+  
+  var fbUserID = update.object_id;
+  var user;
+
+  User.findByFacebookID(fbUserID)
+  .then(function (userNode) {
+    user = userNode;
+    deferred.resolve(utils.makeRequestForMedia(user, timestamp));
+  })
+  .catch(function (e) {
+    deferred.reject(e);
+  })
+
+  return deferred.promise;
+};
+
 utils.parseFBData = function (user, data) {
   var deferred = Q.defer();
 
