@@ -1,13 +1,14 @@
 var https = require('https');
 var qs = require('querystring');
 var User = require('../api/users/userModel.js');
+var foursquareUtils = require('./foursquareUtils.js');
 var _ = require('lodash');
 
 var Q = require('q');
 
 var utils = {};
 
-utils.handleUpdate = function (update) {
+utils.handleUpdateObject = function (update) {
   var deferred = Q.defer();
 
   var timestamp = update.time - 1;
@@ -18,7 +19,23 @@ utils.handleUpdate = function (update) {
   User.findByInstagramID(igUserID)
   .then(function (userNode) {
     user = userNode;
-    deferred.resolve(utils.makeRequestForMedia(user, timestamp));
+    return utils.makeRequestForMedia(user, timestamp);
+  })
+  .then(function (mediaResp) {
+    var media = mediaResp.data;
+
+    var postsWithLocation = [];
+
+    _.each(media, function (photo) {
+      if (photo.location && photo.location.name) {
+        postsWithLocation.push(utils.parseIGPost(photo, user));
+      }
+    });
+
+    return Q.all(postsWithLocation);
+  })
+  .then(function (postArr) {
+    deferred.resolve(postArr);
   })
   .catch(function (e) {
     deferred.reject(e);
@@ -55,6 +72,11 @@ utils.makeRequestForMedia = function (user, timestamp) {
   });
 
   return deferred.promise;
+
+  // HANDLE PAGINATION
+  // if (postArr.pagination && postArr.pagination.next_url){
+  //     console.log("MORE DATA!!")
+  //   }
 };
 
 utils.exchangeIGUserCodeForToken = function (igCode) {
@@ -96,68 +118,66 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
   return deferred.promise;
 };
 
-utils.parseIGData = function (data) {
-  //var deferred = Q.defer();
+utils.parseIGPost = function (post, user) {
+  //data[i].location.latitude
+  //.data.location.longitude
+  //.data.location.name
+  //.data.caption.text
+  //.data.createdAt
+  //.data.[picturessmalllarge]
+  //.data.images.thumbnail
+  //.data.images.standard_resolution
+  //.data.id
+  var deferred = Q.defer();;
 
-  var parsedData = [];
-  var foursquareVenueQueries = [];
+  var checkin = {
+    'checkinID': post.id,
+    'name': post.location.name,
+    'lat': post.location.latitude,
+    'lng': post.location.longitude,
+    'checkinTime': new Date(parseInt(post.created_time)),
+    'likes': 'null',
+    'photoSmall': 'null',
+    'photoLarge': 'null',
+    'caption': 'null',
+    'foursquareID': 'null',
+    'country': 'null',
+    'category': 'null',
+    'source': 'facebook'
+  };
 
-  _.each(data, function (datum) {
-    if (datum.location) {
-      var place = {
-        'checkinID': datum.id,
-        'name': datum.location.name,
-        'lat': datum.location.latitude,
-        'lng': datum.location.longitude,
-        'checkinTime': new Date(parseInt(datum.created_time)),
-        'likes': 'null',
-        'photoSmall': 'null',
-        'photoLarge': 'null',
-        'caption': 'null',
-        'foursquareID': 'null',
-        'country': 'null',
-        'category': 'null',
-        'source': 'facebook'
-      }
+  if (post.likes) {
+    checkin.likes = post.likes.count;
+  }
 
-      if (datum.likes) {
-        place.likes = datum.likes.count;
-      }
+  if(post.caption) {
+    checkin.caption = post.caption.text;
+  }
 
-      if(datum.caption) {
-        place.caption = datum.caption.text;
-      }
-
-      if (datum.images) {
-        if (datum.images.thumbnail){
-          place.photoSmall = datum.images.thumbnail.url;
-        }
-        if (datum.images.standard_resolution){
-          place.photoLarge = datum.images.standard_resolution.url;
-        }
-
-      }
-
-      var latlng = place.lat.toString() + ',' + place.lng.toString();
-      
-      parsedData.push(place);
-      //foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
+  if (post.images) {
+    if (post.images.thumbnail){
+      checkin.photoSmall = post.images.thumbnail.url;
     }
-  });
+    if (post.images.standard_resolution){
+      checkin.photoLarge = post.images.standard_resolution.url;
+    }
+  }
 
-  /*Q.all(foursquareVenueQueries)
-  .then(function (foursquareVenueIDs) {
-    _.each(parsedData, function (datum, index) {
-      datum.foursquareID = foursquareVenueIDs[index];
+  var latlng = checkin.lat.toString() + ',' + checkin.lng.toString();
+    
+  foursquareUtils.generateFoursquarePlaceID(user, checkin.name, latlng)
+  .then(function (foursquareVenueID) {
+    checkin.foursquareID = foursquareVenueID;
+    deferred.resolve({
+      checkin: checkin,
+      user: user
     });
-    deferred.resolve(parsedData);
   })
   .catch(function (err) {
     deferred.reject(err);
-  });*/
+  });
 
-  //return deferred.promise;
-  return parsedData;
+  return deferred.promise;
 };
 
 module.exports = utils;

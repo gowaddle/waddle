@@ -8,39 +8,36 @@ var instagramUtils = require('../../utils/instagramUtils.js');
 var checkinController = {};
 
 checkinController.instagramHubChallenge = function (req, res) {
-  console.dir(req.query)
   res.status(200).send(req.query['hub.challenge']);
 };
 
 checkinController.handleIGPost = function (req, res) {
-
   var updateArr = req.body;
 
   var posts = _.map(updateArr, function (update) {
-    return instagramUtils.handleUpdate(update);
+    return instagramUtils.handleUpdateObject(update);
   })
 
   Q.all(posts)
   .then(function (postArr) {
-    //data[i].location.latitude
-    //.data.location.longitude
-    //.data.location.name
-    //.data.caption.text
-    //.data.createdAt
-    //.data.[picturessmalllarge]
-    //.data.images.thumbnail
-    //.data.images.standard_resolution
-    //.data.id
+    // write to db using batch query
+    console.log(JSON.stringify(postArr));
 
-    if (postArr.pagination && postArr.pagination.next_url){
-      console.log("MORE DATA!!")
-    }
-    console.log(postArr);
-    console.log(instagramUtils.parseIGData(postArr.data));
+    var flatPostArr = _.flatten(postArr);
+
+    var queries = _.map(flatPostArr, function (post) {
+      return post.user.addCheckins([post.checkin]);
+    });
+
+    return Q.all(queries);
+  })
+  .then(function (data) {
+    console.log(JSON.stringify(data));
   })
   .catch(function (e) {
     console.log(e);
-  })
+  });
+
   res.status(200).end();//test
 };
 

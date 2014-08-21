@@ -1,19 +1,22 @@
-FriendsController = function ($scope, $state, UserRequests) {
+FriendsController = function ($scope, $state, UserRequests, MapFactory) {
 
-  $scope.allUserFriends = UserRequests.allData.friends;
+  if(UserRequests.allData) {
+    $scope.allUserFriends = UserRequests.allData.friends;
+  }
 
-  $scope.clickFriend = function (friend){
+  $scope.clickFriend = function (friend) {
     UserRequests.getUserData(friend)
     .then(function(data){
       console.log(data)
-      $scope.handleUserCheckinData(data.data)
+      console.log(MapFactory)
+      MapFactory.markerQuadTree = $scope.handleUserCheckinData(data.data);
       $state.go('map.feed')
     });
   };
 
 };
 
-FriendsController.$inject = ['$scope', '$state', 'UserRequests'];
+FriendsController.$inject = ['$scope', '$state', 'UserRequests', 'MapFactory'];
 
 angular.module('waddle.friends', [])
   .controller('FriendsController', FriendsController);
