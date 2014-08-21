@@ -34,19 +34,23 @@ describe('createUniqueUser function', function() {
   }); 
 })
 
-describe('parseIGData function', function() {
+describe('parseIGPost function', function() {
 
   it('is', function () {
     expect(1).to.equal(1)
   });
 
   it('Parses some IG data', function () {
-    var parsedData = instagramUtils.parseIGData(fixtures.IGdata.data)
-    expect(parsedData[0].checkinID).to.equal('22987123')
-    expect(parsedData[0].lat).to.equal(37.77956816727314)
-    expect(parsedData[0].likes).to.equal(190)
-    expect(parsedData[0].photoSmall).to.equal('http://distillery.s3.amazonaws.com/media/2011/02/03/efc502667a554329b52d9a6bab35b24a_5.jpg')
-    expect(parsedData[0].photoLarge).to.equal('http://distillery.s3.amazonaws.com/media/2011/02/03/efc502667a554329b52d9a6bab35b24a_7.jpg')
+    // Need to change to stub
+    instagramUtils.parseIGPost(fixtures.IGdata.data[0])
+    .then (function (parsedData){
+      console.log(parsedData)
+      expect(parsedData[0].checkinID).to.equal('22987123')
+      expect(parsedData[0].lat).to.equal(37.77956816727314)
+      expect(parsedData[0].likes).to.equal(190)
+      expect(parsedData[0].photoSmall).to.equal('http://distillery.s3.amazonaws.com/media/2011/02/03/efc502667a554329b52d9a6bab35b24a_5.jpg')
+      expect(parsedData[0].photoLarge).to.equal('http://distillery.s3.amazonaws.com/media/2011/02/03/efc502667a554329b52d9a6bab35b24a_7.jpg') 
+    })
   });
 });
 
