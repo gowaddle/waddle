@@ -1,4 +1,4 @@
-FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $timeout, $stateParams){
+var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $timeout, $stateParams){
   Auth.checkLogin()
   .then( function (){
 

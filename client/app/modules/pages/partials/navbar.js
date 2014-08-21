@@ -1,5 +1,7 @@
+var NavbarController = function (Auth, $scope){
+  $scope.logout = Auth.logout;
+}
+
 angular.module('waddle.navbar', [])
 
-.controller('NavbarController', function ($scope, Auth) {
-	  $scope.logout = Auth.logout;
-});
+.controller('NavbarController', NavbarController);
