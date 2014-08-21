@@ -239,7 +239,7 @@ utils.handleUpdate = function (update) {
   var fbUserID = update.object_id;
   var user;
 
-  User.findByFacebookID(fbUserID)
+  User.find(fbUserID)
   .then(function (userNode) {
     user = userNode;
     deferred.resolve(utils.makeRequestForMedia(user, timestamp));

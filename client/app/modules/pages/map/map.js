@@ -16,6 +16,8 @@ angular.module('waddle.map', [])
   Auth.checkLogin()
   .then(function(){
 
+    console.log(UserRequests.allData);
+
     L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
     $scope.configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
