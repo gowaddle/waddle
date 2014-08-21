@@ -22,7 +22,17 @@ utils.handleUpdate = function (update) {
     return utils.makeRequestForMedia(user, timestamp);
   })
   .then(function (mediaResp) {
-    deferred.resolve(mediaResp);
+    var media = mediaResp.data;
+    var postsWithLocation = [];
+    _.each(media, function (photo) {
+      if (photo.location && photo.location.name) {
+        postsWithLocation.push(utils.parseIGPost(photo, user));
+      }
+    });
+    return Q.all(postsWithLocation);
+  })
+  .then(function (data) {
+    deferred.resolve(data);
   })
   .catch(function (e) {
     deferred.reject(e);
@@ -105,7 +115,7 @@ utils.exchangeIGUserCodeForToken = function (igCode) {
   return deferred.promise;
 };
 
-utils.parseIGData = function (data, user) {
+utils.parseIGPost = function (post, user) {
   //data[i].location.latitude
   //.data.location.longitude
   //.data.location.name
@@ -115,61 +125,50 @@ utils.parseIGData = function (data, user) {
   //.data.images.thumbnail
   //.data.images.standard_resolution
   //.data.id
+  var deferred = Q.defer();;
 
-  var deferred = Q.defer();
+  var place = {
+    'checkinID': post.id,
+    'name': post.location.name,
+    'lat': post.location.latitude,
+    'lng': post.location.longitude,
+    'checkinTime': new Date(parseInt(post.created_time)),
+    'likes': 'null',
+    'photoSmall': 'null',
+    'photoLarge': 'null',
+    'caption': 'null',
+    'foursquareID': 'null',
+    'country': 'null',
+    'category': 'null',
+    'source': 'facebook'
+  };
 
-  var parsedData = [];
-  var foursquareVenueQueries = [];
+  if (post.likes) {
+    place.likes = post.likes.count;
+  }
 
-  _.each(data, function (datum) {
-    if (datum.location.name) {
-      var place = {
-        'checkinID': datum.id,
-        'name': datum.location.name,
-        'lat': datum.location.latitude,
-        'lng': datum.location.longitude,
-        'checkinTime': new Date(parseInt(datum.created_time)),
-        'likes': 'null',
-        'photoSmall': 'null',
-        'photoLarge': 'null',
-        'caption': 'null',
-        'foursquareID': 'null',
-        'country': 'null',
-        'category': 'null',
-        'source': 'facebook'
-      }
+  if(post.caption) {
+    place.caption = post.caption.text;
+  }
 
-      if (datum.likes) {
-        place.likes = datum.likes.count;
-      }
-
-      if(datum.caption) {
-        place.caption = datum.caption.text;
-      }
-
-      if (datum.images) {
-        if (datum.images.thumbnail){
-          place.photoSmall = datum.images.thumbnail.url;
-        }
-        if (datum.images.standard_resolution){
-          place.photoLarge = datum.images.standard_resolution.url;
-        }
-
-      }
-
-      var latlng = place.lat.toString() + ',' + place.lng.toString();
-      
-      parsedData.push(place);
-      foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
+  if (post.images) {
+    if (post.images.thumbnail){
+      place.photoSmall = post.images.thumbnail.url;
     }
-  });
+    if (post.images.standard_resolution){
+      place.photoLarge = post.images.standard_resolution.url;
+    }
+  }
 
-  Q.all(foursquareVenueQueries)
-  .then(function (foursquareVenueIDs) {
-    _.each(parsedData, function (datum, index) {
-      datum.foursquareID = foursquareVenueIDs[index];
+  var latlng = place.lat.toString() + ',' + place.lng.toString();
+    
+  foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng)
+  .then(function (foursquareVenueID) {
+    place.foursquareID = foursquareVenueID;
+    deferred.resolve({
+      place: place,
+      user: user
     });
-    deferred.resolve(parsedData);
   })
   .catch(function (err) {
     deferred.reject(err);
