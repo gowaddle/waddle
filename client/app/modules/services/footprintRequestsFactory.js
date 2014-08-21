@@ -1,3 +1,5 @@
+(function(){
+
 var FootprintRequests = function ($http){
   var footprintData;
 
@@ -49,3 +51,5 @@ FootprintRequests.$inject = ['$http'];
 
 angular.module('waddle.services.footprintRequestsFactory', []) 
   .factory('FootprintRequests', FootprintRequests);
+
+})();

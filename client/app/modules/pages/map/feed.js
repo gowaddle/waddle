@@ -1,3 +1,5 @@
+(function(){
+
 var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
   Auth.checkLogin()
   .then( function (){
@@ -123,3 +125,5 @@ angular.module('waddle.feed', [])
       }
     };
   });
+
+})();

@@ -1,3 +1,5 @@
+(function(){
+
 var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $stateParams, $rootScope){
       
   //an alternative to reloading the entire view
@@ -134,3 +136,5 @@ MapController.$inject = ['Auth', 'UserRequests', 'MapFactory', '$scope', '$state
 //Start creating Angular module
 angular.module('waddle.map', [])
   .controller('MapController', MapController);
+
+})();

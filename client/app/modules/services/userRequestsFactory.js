@@ -1,3 +1,5 @@
+(function(){
+
 // Requests to server sending and retrieving data for specific users
 var UserRequests = function ($http){
   var userData;
@@ -34,3 +36,5 @@ UserRequests.$inject = ['$http'];
 //Start creating Angular module
 angular.module('waddle.services.userRequestsFactory', [])  
   .factory('UserRequests', UserRequests);
+
+})();

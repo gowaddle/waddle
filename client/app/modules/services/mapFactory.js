@@ -1,3 +1,5 @@
+(function(){
+
 var MapFactory = function (){
   // Stores all of a user's checkins based on latitude and longitude.
   // Allows quicker lookup times for which markers are in bounds,
@@ -83,3 +85,5 @@ MapFactory.$inject = [];
 
 angular.module('waddle.services.mapFactory', [])
   .factory('MapFactory', MapFactory);
+
+})();

@@ -1,3 +1,5 @@
+(function(){
+
 var Auth = function ($q, $state){
   var checkLogin = function () {
     var deferred = $q.defer();
@@ -35,3 +37,5 @@ Auth.$inject = ['$q', '$state'];
 
 angular.module('waddle.services.auth', [])
   .factory('Auth', Auth);
+
+})();
