@@ -1,4 +1,6 @@
-var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $timeout, $stateParams){
+(function(){
+
+var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
   Auth.checkLogin()
   .then( function (){
 
@@ -51,73 +53,77 @@ var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth
   });
 }
 
-FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$timeout', '$stateParams'];
+FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
 
 
 //Start creating Angular module
 angular.module('waddle.feed', [])
   .controller('FeedController', FeedController)
+  // Custom Submit will avoid binding data to multiple fields in ng-repeat
+  // And allow custom on submit processing
   .directive( 'customSubmit' , function(FootprintRequests){
     return {
-        restrict: 'A',
-        link: function( scope , element , attributes ){
-          var $element = angular.element(element);
+      restrict: 'A',
+      link: function( scope , element , attributes ){
+        var $element = angular.element(element);
+        
+        // Add novalidate to the form element.
+        attributes.$set( 'novalidate' , 'novalidate' );
+        
+        $element.bind( 'submit' , function( e ) {
+          e.preventDefault();
           
-          // Add novalidate to the form element.
-          attributes.$set( 'novalidate' , 'novalidate' );
+          // Remove the class pristine from all form elements.
+          $element.find( '.ng-pristine' ).removeClass( 'ng-pristine' );
           
-          $element.bind( 'submit' , function( e ) {
-            e.preventDefault();
+          // Get the form object.
+          var form = scope[ attributes.name ];
+          
+          // Set all the fields to dirty and apply the changes on the scope so that
+          // validation errors are shown on submit only.
+          angular.forEach( form , function( formElement , fieldName ) {
+            // If the fieldname starts with a '$' sign, it means it's an Angular
+            // property or function. Skip those items.
+            if ( fieldName[0] === '$' ) return;
             
-            // Remove the class pristine from all form elements.
-            $element.find( '.ng-pristine' ).removeClass( 'ng-pristine' );
+            formElement.$pristine = false;
+            formElement.$dirty = true;
+          });
+          
+          // Do not continue if the form is invalid.
+          if ( form.$invalid ) {
+            // Focus on the first field that is invalid.
+            $element.find( '.ng-invalid' ).first().focus();
             
-            // Get the form object.
-            var form = scope[ attributes.name ];
-            
-            // Set all the fields to dirty and apply the changes on the scope so that
-            // validation errors are shown on submit only.
-            angular.forEach( form , function( formElement , fieldName ) {
-                // If the fieldname starts with a '$' sign, it means it's an Angular
-                // property or function. Skip those items.
-                if ( fieldName[0] === '$' ) return;
-                
-                formElement.$pristine = false;
-                formElement.$dirty = true;
-            });
-            
-            // Do not continue if the form is invalid.
-            if ( form.$invalid ) {
-                // Focus on the first field that is invalid.
-                $element.find( '.ng-invalid' ).first().focus();
-                
-                return false;
-            }
-            
-            console.log("element")
-            console.log($element)               
-            console.log("scope")
-            console.log(scope)
-            // From this point and below, we can assume that the form is valid.
-            scope.$eval( attributes.customSubmit );
+            return false;
+          }
+          
+          console.log("element")
+          console.log($element)               
+          console.log("scope")
+          console.log(scope)
+          // From this point and below, we can assume that the form is valid.
+          scope.$eval( attributes.customSubmit );
 
-            //Text can be found with $element[0][0].value or scope.data.currentComment
-            //ID can be found with $element.context.dataset['customSubmit']
-            var commentData = {
-              clickerID: window.sessionStorage.userFbID,
-              checkinID: scope.footprint.checkin.checkinID,
-              text: scope.comment
-            }
+          //Text can be found with $element[0][0].value or scope.data.currentComment
+          //ID can be found with $element.context.dataset['customSubmit']
+          var commentData = {
+            clickerID: window.sessionStorage.userFbID,
+            checkinID: scope.footprint.checkin.checkinID,
+            text: scope.comment
+          }
 
-            FootprintRequests.addComment(commentData)
-            .then(function (data){
-              scope.data.currentComment = ''
-              //$element[0][0].value = ''
-            })
-            console.log(commentData)
-            scope.comment = ""
-            scope.$apply();
+          FootprintRequests.addComment(commentData)
+          .then(function (data){
+            scope.data.currentComment = ''
+            //$element[0][0].value = ''
+          })
+          console.log(commentData)
+          scope.comment = ""
+          scope.$apply();
         });
       }
     };
   });
+
+})();

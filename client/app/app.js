@@ -1,3 +1,5 @@
+(function(){
+
 'use strict';
 
 angular.module('waddle', [
@@ -59,3 +61,5 @@ angular.module('waddle', [
   $urlRouterProvider.otherwise('/');
 
 });
+
+})();
