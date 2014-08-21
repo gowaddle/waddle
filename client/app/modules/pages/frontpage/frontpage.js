@@ -12,27 +12,22 @@ angular.module('waddle.frontpage', [])
     });
   };
   
-  var sendUserDataToServer = function(fbToken, data){
-    
-    window.sessionStorage.userFbID = data.id;
+  var sendUserDataToServer = function(fbToken, fbData){
+    window.sessionStorage.userFbID = fbData.id;
 
     var userData = {
-      facebookID: data.id,
-      name: data.name,
+      facebookID: fbData.id,
+      name: fbData.name,
       fbToken: fbToken
     };
 
-    console.log("userDataPassedToServer: ", userData)
-
     $state.go('loading');
+
     UserRequests.sendUserData(userData)
-    .then(function(data){
-      UserRequests.allData = data
-      console.log(UserRequests.allData)
+    .then(function(storedUserData){
+      UserRequests.allData = storedUserData.data
       $state.go('map');
     });
-
-
   };
 
   openFB.getLoginStatus(function (response){
@@ -42,7 +37,7 @@ angular.module('waddle.frontpage', [])
     } else {
       console.log('not connected')
   	}
-  })
+  });
 
   $scope.login = function(){
     openFB.login(function (response) {

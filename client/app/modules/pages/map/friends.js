@@ -1,6 +1,6 @@
 FriendsController = function ($scope, $state, UserRequests) {
 
-  $scope.allUserFriends = UserRequests.allData.data.friends;
+  $scope.allUserFriends = UserRequests.allData.friends;
 
   $scope.clickFriend = function (friend){
     UserRequests.getUserData(friend)
@@ -10,7 +10,7 @@ FriendsController = function ($scope, $state, UserRequests) {
       $state.go('map.feed')
     });
   };
-  
+
 };
 
 FriendsController.$inject = ['$scope', '$state', 'UserRequests'];
