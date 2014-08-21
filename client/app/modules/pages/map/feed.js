@@ -1,56 +1,61 @@
 angular.module('waddle.feed', [])
 
-  .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state, $timeout, $stateParams, FootprintRequests) {
+  .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state, $timeout, $stateParams, FootprintRequests, Auth) {
 
-    $scope.selectedFootprint = null;
+    Auth.checkLogin()
+    .then( function (){
 
-    var filterFeedByBounds = function () {
-      var bounds = $scope.configuredMap.getBounds();
-      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      console.log($scope.inBounds)
-    };
+      $scope.selectedFootprint = null;
+      $scope.selectedFootprintInteractions = null;
 
-    // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
-    $scope.configuredMap.on('move', function() {
-      $scope.$apply(filterFeedByBounds); 
-    });
+      var filterFeedByBounds = function () {
+        var bounds = $scope.configuredMap.getBounds();
+        $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+        console.log($scope.inBounds)
+      };
 
-    filterFeedByBounds();
-
-    $scope.addPropsToCheckin = function (checkinID){
-      console.log(checkinID);
-
-      var propsData = {
-        clickerID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+      if (MapFactory.markerQuadTree) {
+        filterFeedByBounds();
       }
 
-      FootprintRequests.giveProps(propsData)
-      .then(function (data){
-        console.log(data);
+      // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
+      $scope.configuredMap.on('move', function() {
+        $scope.$apply(filterFeedByBounds); 
       });
-    }
 
-    $scope.addCheckinToBucketlist = function (checkinID){
-      var data = {
-        facebookID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+      $scope.addPropsToCheckin = function (checkinID){
+        var propsData = {
+          clickerID: window.sessionStorage.userFbID,
+          checkinID: checkinID
+        }
+
+        FootprintRequests.giveProps(propsData);
+      };
+
+      $scope.addCheckinToBucketlist = function (checkinID){
+        var bucketListData = {
+          facebookID: window.sessionStorage.userFbID,
+          checkinID: checkinID
+        }
+
+        FootprintRequests.addToBucketList(bucketListData);
+      };
+
+      //Send request to database for user props and comments data
+      $scope.getFootprint = function (footprint) {
+        
+        $scope.footprint = footprint;
+
+        var checkinID = footprint.checkin.checkinID;
+        $scope.selectedFootprintInteractions = null;
+
+        FootprintRequests.getFootprintInteractions(checkinID)
+        .then(function (data){
+          FootprintRequests.currentFootprint = data.data;
+          $scope.selectedFootprintInteractions = FootprintRequests.currentFootprint;
+        })
       }
-       FootprintRequests.addToBucketList(data)
-    }
-
-    //Send request to database for user props and comments data
-    $scope.getFootprint = function (footprint) {
-      $scope.selectedFootprint = footprint;
-      FootprintRequests.getFootprintInteractions(footprint.checkin.checkinID)
-      .then(function (data){
-        FootprintRequests.currentFootprint = data.data
-        console.log(FootprintRequests.currentFootprint)
-        $scope.data.footprint.propNumber = data.data.props;
-        $scope.data.footprint.propGivers = data.data.propGivers;
-        $scope.data.footprint.comments = data.data.comments;
-      })
-    }
+    });
   })
 
 .directive( 'customSubmit' , function(FootprintRequests)
