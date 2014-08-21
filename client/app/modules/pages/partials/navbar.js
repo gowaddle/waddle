@@ -4,8 +4,9 @@ var NavbarController = function (Auth, $scope){
   $scope.logout = Auth.logout;
 }
 
-angular.module('waddle.navbar', [])
+NavbarController.$inject = ['Auth', '$scope'];
 
-.controller('NavbarController', NavbarController);
+angular.module('waddle.navbar', [])
+  .controller('NavbarController', NavbarController);
 
 })();

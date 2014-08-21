@@ -1,7 +1,6 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
-
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
   Auth.checkLogin()
   .then( function (){
 
@@ -55,8 +54,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $rootScope, 
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
-
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope'];
 
 //Start creating Angular module
 angular.module('waddle.feed', [])
