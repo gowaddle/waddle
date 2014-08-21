@@ -56,7 +56,8 @@ userController.userLogin = function (req, res) {
           allCheckins: checkinsAlreadyStored,
           friends: neoUserData,
           fbProfilePicture: user.getProperty('fbProfilePicture'),
-          name: user.getProperty('name')
+          name: user.getProperty('name'),
+          footprintsCount: checkinsAlreadyStored.length
         }
         res.json(allData);
         res.status(200).end();

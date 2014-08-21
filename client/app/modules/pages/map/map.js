@@ -13,6 +13,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
       
     Auth.checkLogin()
     .then(function(){
+      console.log(UserRequests.allData);
 
       L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
 
@@ -43,7 +44,6 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
 
         if(img && caption) {
           marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4><img src="' + img + '"/>');
->>>>>>> e4de6966f418b333f4eeb55f52001c8788289050
         }
         else if(img) {
           marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
