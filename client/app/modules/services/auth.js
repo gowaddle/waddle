@@ -34,5 +34,4 @@ var Auth = function ($q, $state){
 Auth.$inject = ['$q', '$state'];
 
 angular.module('waddle.services.auth', [])
-
-.factory('Auth', Auth);
+  .factory('Auth', Auth);
