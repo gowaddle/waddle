@@ -52,5 +52,6 @@ var FrontpageController = function (UserRequests, $scope, $state, $rootScope){
 
 FrontpageController.$inject = ['UserRequests', '$scope', '$state', '$rootScope']
 
+//Start creating Angular module
 angular.module('waddle.frontpage', [])
   .controller('FrontpageController', FrontpageController);
