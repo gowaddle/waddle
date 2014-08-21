@@ -40,7 +40,7 @@ angular.module('waddle.services.footprintRequestsFactory', [])
       if (checkinID) {
         return $http({
           method: 'GET',
-          url: '/api/checkins/interactions/' + data
+          url: '/api/checkins/interactions/' + checkinID
         });
       }
     }

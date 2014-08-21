@@ -43,7 +43,7 @@ angular.module('waddle.feed', [])
     //Send request to database for user props and comments data
     $scope.getFootprint = function (footprint) {
 
-      $scope.selectedFootprint = footprint;
+      $scope.footprint = footprint;
       $scope.selectedFootprintInteractions = null;
 
       FootprintRequests.getFootprintInteractions(footprint.checkin.checkinID)
