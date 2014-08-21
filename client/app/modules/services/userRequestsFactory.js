@@ -6,7 +6,7 @@ var UserRequests = function ($http){
     allData: userData,
 
     // Sends request to server with relevant user data 
-    // For creation of new user or retrieval of existing user' checkins/data
+    // for creation of new user or retrieval of existing user' checkins/data
     sendUserData: function (data) {
       if(data) {
         return $http({
