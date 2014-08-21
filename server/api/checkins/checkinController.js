@@ -58,7 +58,7 @@ checkinController.handleFBPost = function (req, res) {
     return facebookUtils.handleUpdate(update);
   });
 
-  console.log(posts);
+  console.log("posts: " + posts);
 
   // Q.all(posts)
   // .then(function (postArr) {
