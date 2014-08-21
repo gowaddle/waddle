@@ -253,15 +253,15 @@ utils.handleUpdate = function (update) {
 utils.makeRequestForFeedItem = function (user, timestamp) {
   var deferred = Q.defer();
 
-  var fbUserID = user.getProperty('facebookID');
-  var accessToken = user.getProperty('fbToken');
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
 
   var query = {
-    access_token: accessToken,
+    access_token: fbToken,
     min_timestamp: timestamp
   };
 
-  var queryPath = 'https://api.instagram.com/v1/users/'+ igUserID + '/media/recent?' + qs.stringify(query);
+  var queryPath = 'https://graph.facebook.com/'+ fbID + '/feed?with=location' + qs.stringify(query);
 
   https.get(queryPath, function (res) {
     var data = '';
