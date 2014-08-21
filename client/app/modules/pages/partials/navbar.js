@@ -7,9 +7,9 @@ var NavbarController = function (Auth, $scope, UserRequests){
 
 }
 
+NavbarController.$inject = ['Auth', '$scope'];
+
 angular.module('waddle.navbar', [])
-
-
-.controller('NavbarController', NavbarController);
+  .controller('NavbarController', NavbarController);
 
 })();

@@ -233,9 +233,10 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
 utils.handleUpdate = function (update) {
   console.log("update: " + JSON.stringify(update));
   var deferred = Q.defer();
-  
-  var fbUserID = update.entry[0].uid;
-  var fbPostID = update.entry[0].id;
+
+  var update = JSON.parse(update);
+  var fbUserID = update[entry][0][uid];
+  var fbPostID = update[entry][0][id];
   var user;
 
   User.find(fbUserID)

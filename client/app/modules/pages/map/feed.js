@@ -1,12 +1,13 @@
 (function(){
 
-var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth, $rootScope, $scope, $state, $stateParams){
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
   Auth.checkLogin()
   .then( function (){
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+
     };
 
     if (MapFactory.markerQuadTree) {
@@ -53,8 +54,7 @@ var FeedController = function (UserRequests, MapFactory, FootprintRequests, Auth
   });
 }
 
-FeedController.$inject = ['UserRequests', 'MapFactory', 'FootprintRequests', 'Auth', '$rootScope', '$scope', '$state', '$stateParams'];
-
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope'];
 
 //Start creating Angular module
 angular.module('waddle.feed', [])

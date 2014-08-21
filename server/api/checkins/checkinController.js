@@ -21,7 +21,7 @@ checkinController.handleIGPost = function (req, res) {
 
   Q.all(posts)
   .then(function (postArr) {
-    // write to db using batch query
+    // write to db using batch query?
     console.log(JSON.stringify(postArr));
 
     var flatPostArr = _.flatten(postArr);
