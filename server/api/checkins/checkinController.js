@@ -4,6 +4,7 @@ var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
 var instagramUtils = require('../../utils/instagramUtils.js');
+var facebookUtils = require('../../utils/facebookUtils.js');
 
 var checkinController = {};
 
@@ -40,6 +41,46 @@ checkinController.handleIGPost = function (req, res) {
 
   res.status(200).end();//test
 };
+
+checkinController.facebookHubChallenge = function (req, res) {
+  console.dir(req.query)
+  res.status(200).send(req.query['hub.challenge']);
+};
+
+checkinController.handleFBPost = function (req, res) {
+  var updateArr = req.body;
+  console.log("dis be ma bodayy: " + JSON.stringify(req.body));
+
+  var posts = _.map(updateArr, function(update) {
+    return facebookUtils.handleUpdate(update);
+  });
+
+  console.log("these r ma postises: " + JSON.stringify(posts));
+
+  // Q.all(posts)
+  // .then(function (postArr) {
+  //   //data[i].location.latitude
+  //   //.data.location.longitude
+  //   //.data.location.name
+  //   //.data.caption.text
+  //   //.data.createdAt
+  //   //.data.[picturessmalllarge]
+  //   //.data.images.thumbnail
+  //   //.data.images.standard_resolution
+  //   //.data.id
+
+  //   if (postArr.pagination && postArr.pagination.next_url){
+  //     console.log("MORE DATA!!")
+  //   }
+  //   console.log(postArr);
+  //   console.log(facebookUtils.parseFBData(postArr.data));
+  // })
+  // .catch(function (e) {
+  //   console.log(e);
+  // })
+  res.status(200).end();
+}
+
 
 checkinController.realtimeFoursquareData = function (req, res) {
   var checkin = JSON.parse(req.body.checkin);

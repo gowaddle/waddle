@@ -3,6 +3,7 @@ var qs = require('querystring');
 var Q = require('q');
 var _ = require('lodash');
 var foursquareUtils = require('./foursquareUtils');
+var User = require('../api/users/userModel.js');
 
 var utils = {};
 
@@ -229,6 +230,55 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
   return deferred.promise;
 };
 
+utils.handleUpdate = function (update) {
+  console.log("update: " + JSON.stringify(update));
+  var deferred = Q.defer();
+
+  var update = JSON.parse(update);
+  var fbUserID = update[entry][0][uid];
+  var fbPostID = update[entry][0][id];
+  var user;
+
+  User.find(fbUserID)
+  .then(function (userNode) {
+    user = userNode;
+    deferred.resolve(utils.makeRequestForFeedItem(user, fbPostID));
+  })
+  .catch(function (e) {
+    deferred.reject(e);
+  })
+
+  return deferred.promise;
+};
+
+utils.makeRequestForFeedItem = function (user, postID) {
+  var deferred = Q.defer();
+
+  var fbToken = user.getProperty('fbToken');
+
+  var query = {
+    access_token: fbToken
+  };
+
+  var queryPath = 'https://graph.facebook.com/' + postID + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      deferred.resolve(JSON.parse(data));
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
+
+  return deferred.promise;
+};
+
 utils.parseFBData = function (user, data) {
   var deferred = Q.defer();
 
@@ -255,6 +305,10 @@ utils.parseFBData = function (user, data) {
 
       if (datum.likes) {
         place.likes = datum.likes.data.length;
+      }
+
+       if (datum.updated_time) {
+        place.checkinTime = new Date(datum.updated_time);
       }
 
       if(datum.message) {
