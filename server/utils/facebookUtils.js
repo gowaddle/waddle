@@ -230,6 +230,7 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
 };
 
 utils.handleUpdate = function (update) {
+  console.log("update: " + update);
   var deferred = Q.defer();
 
   var timestamp = update.time - 1;
@@ -245,6 +246,36 @@ utils.handleUpdate = function (update) {
   .catch(function (e) {
     deferred.reject(e);
   })
+
+  return deferred.promise;
+};
+
+utils.makeRequestForFeedItem = function (user, timestamp) {
+  var deferred = Q.defer();
+
+  var fbUserID = user.getProperty('facebookID');
+  var accessToken = user.getProperty('fbToken');
+
+  var query = {
+    access_token: accessToken,
+    min_timestamp: timestamp
+  };
+
+  var queryPath = 'https://api.instagram.com/v1/users/'+ igUserID + '/media/recent?' + qs.stringify(query);
+
+  https.get(queryPath, function (res) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      deferred.resolve(JSON.parse(data));
+    })
+
+  }).on('error', function (e) {
+    deferred.reject(e);
+  });
 
   return deferred.promise;
 };

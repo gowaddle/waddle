@@ -4,6 +4,7 @@ var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
 var foursquareUtils = require('../../utils/foursquareUtils.js');
 var instagramUtils = require('../../utils/instagramUtils.js');
+var facebookUtils = require('../../utils/facebookUtils.js');
 
 var checkinController = {};
 
