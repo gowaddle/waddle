@@ -36,8 +36,8 @@ angular.module('waddle.services.footprintRequestsFactory', [])
       }
     },
 
-    getFootprintInteractions: function (data) {
-      if (data) {
+    getFootprintInteractions: function (checkinID) {
+      if (checkinID) {
         return $http({
           method: 'GET',
           url: '/api/checkins/interactions/' + data

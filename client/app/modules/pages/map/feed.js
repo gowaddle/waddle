@@ -3,6 +3,7 @@ angular.module('waddle.feed', [])
   .controller('FeedController', function ($rootScope, $scope, UserRequests, MapFactory, $state, $timeout, $stateParams, FootprintRequests) {
 
     $scope.selectedFootprint = null;
+    $scope.selectedFootprintInteractions = null;
 
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
@@ -41,14 +42,14 @@ angular.module('waddle.feed', [])
 
     //Send request to database for user props and comments data
     $scope.getFootprint = function (footprint) {
+
       $scope.selectedFootprint = footprint;
+      $scope.selectedFootprintInteractions = null;
+
       FootprintRequests.getFootprintInteractions(footprint.checkin.checkinID)
       .then(function (data){
-        FootprintRequests.currentFootprint = data.data
-        console.log(FootprintRequests.currentFootprint)
-        $scope.data.footprint.propNumber = data.data.props;
-        $scope.data.footprint.propGivers = data.data.propGivers;
-        $scope.data.footprint.comments = data.data.comments;
+        FootprintRequests.currentFootprint = data.data;
+        $scope.selectedFootprintInteractions = FootprintRequests.currentFootprint;
       })
     }
   })
