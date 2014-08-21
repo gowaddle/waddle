@@ -15,6 +15,15 @@ module.exports = function (grunt) {
 				dest: 'client/dist/app.js',
 				src: ['client/utils/*.js', 'client/app/app.js', 'client/app/modules/**/*.js']
 			},
+			bower: {
+				dest: 'client/dist/bower.js',
+				src: ['client/bower_components/lodash/lodash.compat.js', 'client/bower_components/jquery/jquery.js', 'client/bower_components/jquery-bridget/jquery.bridget.js',
+					'client/bower_components/get-style-property/get-style-property.js', 'client/bower_components/get-size/get-size.js',
+					'client/bower_components/eventEmitter/EventEmitter.js', 'client/bower_components/eventie/eventie.js',
+					'client/bower_components/doc-ready/doc-ready.js', 'client/bower_components/matches-selector/matches-selector.js',
+					'client/bower_components/outlayer/item.js', 'client/bower_components/outlayer/outlayer.js',
+					'client/bower_components/masonry/masonry.js', 'bower_components/imagesloaded/imagesloaded.js']
+			}
 		},
 		
 		jshint: {
@@ -100,10 +109,10 @@ module.exports = function (grunt) {
 		nodemon.stderr.pipe(process.stderr);
 
 		//linting removed
-		grunt.task.run(['clean', 'concat:client', 'stylus', 'watch']);
+		grunt.task.run(['clean', 'concat:bower', 'concat:client', 'stylus', 'watch']);
 	});
 
-	grunt.registerTask('build', ['clean', 'bower', 'concat:client', 'stylus']);
+	grunt.registerTask('build', ['clean', 'bower', 'concat:bower', 'concat:client', 'stylus']);
 
 	grunt.registerTask('test', ['mochaTest']);
 
