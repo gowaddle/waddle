@@ -5,6 +5,8 @@ module.exports = function (app) {
 
   app.get('/realtimeinstagram', checkinController.instagramHubChallenge);
   app.post('/realtimeinstagram', checkinController.handleIGPost);
+  app.get('/realtimefacebook', checkinController.facebookHubChallenge);
+  app.post('/realtimefacebook', checkinController.handleFBPost);
 
   //Routes for user actions
   app.post('/bucketlist', checkinController.addToBucketList);

@@ -4,6 +4,7 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
 
   if(UserRequests.allData) {
     $scope.allUserFriends = UserRequests.allData.friends;
+    console.log($scope.allUserFriends);
   }
 
   $scope.clickFriend = function (friend) {

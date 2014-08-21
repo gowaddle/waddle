@@ -2,6 +2,7 @@ var https = require('https');
 var qs = require('querystring');
 var Q = require('q');
 var _ = require('lodash');
+var User = require('../api/users/userModel.js');
 
 var utils = {};
 
