@@ -1,4 +1,4 @@
-FriendsController = function ($scope, $state, UserRequests, MapFactory) {
+var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
 
   if(UserRequests.allData) {
     $scope.allUserFriends = UserRequests.allData.friends;
