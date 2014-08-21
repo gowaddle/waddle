@@ -272,7 +272,6 @@ utils.parseFBData = function (user, data) {
       var latlng = place.lat.toString() + ',' + place.lng.toString();
       
       parsedData.push(place);
-      console.log(place)
       foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
     }
   });

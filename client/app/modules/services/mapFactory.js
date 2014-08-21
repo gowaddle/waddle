@@ -69,7 +69,6 @@ angular.module('waddle.services.mapFactory', [])
   };
 
   var markerQuadTree = null;
-  var myQuadTree = null;
   
 	return {
     QuadTree: QuadTree,
