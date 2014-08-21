@@ -1,4 +1,7 @@
-var MapFactory = function ($q){
+var MapFactory = function (){
+  // Stores all of a user's checkins based on latitude and longitude.
+  // Allows quicker lookup times for which markers are in bounds,
+  // which is called every time the map moves
   var QuadTree = function (latlng, footprint) {
     this.lat = latlng[0];
     this.lng = latlng[1];
@@ -24,6 +27,8 @@ var MapFactory = function ($q){
     }
   };
 
+  // Given the top right and bottom left corners of a user's current view,
+  // return an array of all checkins within that view
   QuadTree.prototype.markersInBounds = function (SW, NE) {
     var upperLat = NE.lat;
     var upperLng = NE.lng;
@@ -65,6 +70,7 @@ var MapFactory = function ($q){
     return res;
   };
 
+  // Markers in bounds are stored on factory to be accessible from any state
   var markerQuadTree = null;
   
   return {
@@ -73,7 +79,7 @@ var MapFactory = function ($q){
   };
 };
 
-MapFactory.$inject = ['$q'];
+MapFactory.$inject = [];
 
 angular.module('waddle.services.mapFactory', [])
   .factory('MapFactory', MapFactory);

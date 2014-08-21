@@ -1,4 +1,4 @@
-var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $stateParams, $q, $rootScope){
+var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $stateParams, $rootScope){
       
   //an alternative to reloading the entire view
   /*    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
@@ -129,7 +129,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
   });
 }
 
-MapController.$inject = ['Auth', 'UserRequests', 'MapFactory', '$scope', '$state', '$stateParams', '$q', '$rootScope'];
+MapController.$inject = ['Auth', 'UserRequests', 'MapFactory', '$scope', '$state', '$stateParams', '$rootScope'];
 
 //Start creating Angular module
 angular.module('waddle.map', [])

@@ -1,9 +1,12 @@
+// Requests to server sending and retrieving data for specific users
 var UserRequests = function ($http){
   var userData;
 
   return {
     allData: userData,
 
+    // Sends request to server with relevant user data 
+    // for creation of new user or retrieval of existing user' checkins/data
     sendUserData: function (data) {
       if(data) {
         return $http({
@@ -14,6 +17,7 @@ var UserRequests = function ($http){
       }
     },
 
+    // Grab existing user's checkins/data
     getUserData: function (userFbID) {
       if (userFbID) {
         return $http({
