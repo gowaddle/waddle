@@ -36,7 +36,7 @@ utils.handleUpdateObject = function (update) {
   })
   .then(function (postArr) {
     deferred.resolve(postArr);
-  });
+  })
   .catch(function (e) {
     deferred.reject(e);
   })
