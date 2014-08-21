@@ -5,13 +5,9 @@ angular.module('waddle.feed', [])
     Auth.checkLogin()
     .then( function (){
 
-      $scope.selectedFootprint = null;
-      $scope.selectedFootprintInteractions = null;
-
       var filterFeedByBounds = function () {
         var bounds = $scope.configuredMap.getBounds();
         $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-        console.log($scope.inBounds)
       };
 
       if (MapFactory.markerQuadTree) {
