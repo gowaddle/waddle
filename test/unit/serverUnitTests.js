@@ -1,13 +1,19 @@
+//run mocha
+
 var chai = require('chai');
 var expect = chai.expect;
 var User = require('../../server/api/users/userModel.js');
-var neo4j = require('neo4j')
+var instagramUtils = require('../../server/utils/instagramUtils.js');
+var neo4j = require('neo4j');
 var request = require('supertest');
 var app = require('../../server/server.js').app;
+var server = require('../../server/server.js');
+var request = require('supertest');
+var fixtures = require('../test.fixtures.js');
+
 var neo4jurl = 'http://localhost:7474'
 var db = new neo4j.GraphDatabase(neo4jurl);
-var fixtures = '../test.fixtures.js'
-var server = require('../../server/server.js');
+
 
 describe('Get request', function() {
   it('should return something', function (done) {
@@ -38,14 +44,28 @@ describe('createUniqueUser function', function() {
     it('Returns the facebookID passed in', function () {
     expect(responseData.node._data.data.name).to.equal("Testy McTest");
   }); 
+})
 
 describe('parseIGData function', function() {
-  var responseData;
-  beforeEach(function(){
-  });
-  
-  it('parses some test data IGdata', function (done) {
 
-    expect(responseData.node._data).to.not.be.undefined;
+  it('Sends a 200 status for IG', function (done) {
+    request(app)
+    .post('/api/checkins/realtimeinstagram')
+    .send(fixtures.IGdata)
+    .expect(200)
+    .end(function(err, res){
+      if (err) throw err;
+      done();
+    })
+  });
+
+  it('is', function () {
+    expect(1).to.equal(1)
+  });
+
+  it('Parses some IG data', function () {
+    console.log(instagramUtils.parseIGData(fixtures.IGdata.data))
+    expect(1).to.equal(1)
   });
 });
+

@@ -41,7 +41,7 @@ checkinController.handleIGPost = function (req, res) {
   .catch(function (e) {
     console.log(e);
   })
-  res.status(200).end();
+  res.status(200).end();//test
 };
 
 checkinController.realtimeFoursquareData = function (req, res) {

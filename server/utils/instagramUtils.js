@@ -103,13 +103,13 @@ utils.parseIGData = function (data) {
   var foursquareVenueQueries = [];
 
   _.each(data, function (datum) {
-    if (datum.place) {
+    if (datum.location) {
       var place = {
         'checkinID': datum.id,
         'name': datum.location.name,
         'lat': datum.location.latitude,
         'lng': datum.location.longitude,
-        'checkinTime': new Date(datum.created_time),
+        'checkinTime': new Date(parseInt(datum.created_time)),
         'likes': 'null',
         'photoSmall': 'null',
         'photoLarge': 'null',
@@ -141,8 +141,7 @@ utils.parseIGData = function (data) {
       var latlng = place.lat.toString() + ',' + place.lng.toString();
       
       parsedData.push(place);
-      console.log(place)
-      foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
+      //foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
     }
   });
 
