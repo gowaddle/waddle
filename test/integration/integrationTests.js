@@ -14,7 +14,18 @@ describe('Get request', function() {
   })
 });
 
-describe('Handle Requests', function() {
+describe('Answer Challenges', function() {
+
+  it('Sends a 200 status to make Facebook happy', function (done) {
+    request(app)
+    .post('/api/checkins/realtimefacebook')
+    .send(fixtures.IGdata)
+    .expect(200)
+    .end(function(err, res){
+      if (err) throw err;
+      done();
+    })
+  });
 
   it('Sends a 200 status to make Instagram happy', function (done) {
     request(app)
@@ -26,9 +37,4 @@ describe('Handle Requests', function() {
       done();
     })
   });
-
-  it('is', function () {
-    expect(1).to.equal(1)
-  });
-
 });
