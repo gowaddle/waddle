@@ -5,7 +5,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
   .then( function (){
 
     var filterFeedByBounds = function () {
-      var bounds = $scope.configuredMap.getBounds();
+      var bounds = $scope.currentMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
       console.log($scope.inBounds[0]);
     };
@@ -15,7 +15,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
     }
 
     // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
-    $scope.configuredMap.on('move', function() {
+    $scope.currentMap.on('move', function() {
       $scope.$apply(filterFeedByBounds); 
     });
 
