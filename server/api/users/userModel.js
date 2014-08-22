@@ -232,8 +232,9 @@ User.prototype.findAllCheckins = function () {
   var deferred = Q.defer();
 
   var query = [
-    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(c:Checkin)-[:hasPlace]->(p:Place)',
-    'RETURN c, p',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
+    'OPTIONAL MATCH (user)-[connection:givesProps]->(checkin)',
+    'RETURN checkin, p, connection',
   ].join('\n');
 
   var params = {
@@ -244,10 +245,14 @@ User.prototype.findAllCheckins = function () {
     if (err) { deferred.reject(err); }
     else {
       var parsedResults = _.map(results, function (item) {
-        return {
-          checkin: item.c.data,
-          place: item.p.data
+        singleResult = {
+          "checkin": item.checkin.data,
+          "place": item.p.data
         }
+        if (item.connection){
+          singleResult.checkin.liked = true
+        }
+        return singleResult
       });
 
       deferred.resolve(parsedResults);
