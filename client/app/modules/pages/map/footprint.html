@@ -1,7 +1,7 @@
 <!-- <h4>{{selectedFootprint}}<h4>
 <h3>{{data.footprint}}</h3> -->
 <div class="footprintitem">
-	<span ui-sref='map.feed' class="closefootprint">X</span>
+	<span ng-click="closeFootprintWindow()" class="closefootprint">X</span>
 	<h2>{{footprint.place.name}}</h2>
 	<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
 	<img ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
@@ -12,7 +12,7 @@
 	</span>
 	<div>
 	  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
-	  <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
+	  <form name="customSubmit" data-custom-submit class='comment_form' novalidate>
       <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
       <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
     </form>
