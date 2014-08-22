@@ -30,12 +30,26 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
     }).setView([20.00, 0.00], 2);
 
     var shadedCountries = L.mapbox.featureLayer().addTo($scope.configuredMap);
+
     var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
     
-    var makeMarker = function (placeName, latLng) {
-      var args = Array.prototype.slice.call(arguments, 2);
-      var img = args[0];
-      var caption = args[1];
+    var makeMarker = function (footprint) {
+      var place = footprint.place;
+      var checkin = footprint.checkin;
+
+      var placeName = place.name;
+      var latLng = [place.lat, place.lng];
+      var img;
+      var caption;
+
+      if (checkin.photoSmall !== 'null') {
+        img = checkin.photoSmall;
+      }
+
+      if (checkin.caption !== 'null') {
+        caption = checkin.caption;
+      }
+
       var marker = L.marker(latLng, {
         icon: L.mapbox.marker.icon({
           'marker-color': '1087bf',
@@ -43,48 +57,33 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
           'marker-symbol': 'circle-stroked'
         }),
         title: placeName
-      })
+      });
 
-      if(img && caption) {
+      if (img && caption) {
         marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4><img src="' + img + '"/>');
-      }
-      else if(img) {
+      } else if (img) {
         marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
-      }
-      else if(caption) {
+      } else if (caption) {
         marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4>');
-      }
-      else {
+      } else {
         marker.bindPopup('<h3>' + placeName + '</h3>');
       }
+
       aggregatedMarkers.addLayer(marker);
     };
 
     $rootScope.handleUserCheckinData = function (allFootprints) {
+      
       aggregatedMarkers.clearLayers();
 
       var footprintQuadtree;
-      var markers = [];
 
       _.each(allFootprints, function (footprint) {
-        var place = footprint.place;
-        var checkin = footprint.checkin;
-        var latLng = [place.lat, place.lng];
+        var latLng = [footprint.place.lat, footprint.place.lng];
 
-        footprintQuadtree ? footprintQuadtree.insert(latLng, footprint) : footprintQuadtree = new MapFactory.QuadTree(latLng, footprint);
+        footprintQuadtree ? footprintQuadtree.insert(footprint) : footprintQuadtree = new MapFactory.QuadTree(footprint);
 
-        if(checkin.photoSmall !=='null' && checkin.caption !== 'null') {
-          makeMarker(place.name, latLng, checkin.photoSmall, checkin.caption);
-        }
-        else if(checkin.photoSmall !== 'null') {
-          makeMarker(place.name, latLng, checkin.photoSmall);
-        }
-        else if(checkin.caption !== 'null') {
-          makeMarker(place.name, latLng, null, checkin.caption);
-        }
-        else {
-          makeMarker(place.name, latLng);
-        }
+        makeMarker(footprint);
       });
 
       return footprintQuadtree;

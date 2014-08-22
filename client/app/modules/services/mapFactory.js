@@ -4,9 +4,9 @@ var MapFactory = function (){
   // Stores all of a user's checkins based on latitude and longitude.
   // Allows quicker lookup times for which markers are in bounds,
   // which is called every time the map moves
-  var QuadTree = function (latlng, footprint) {
-    this.lat = latlng[0];
-    this.lng = latlng[1];
+  var QuadTree = function (footprint) {
+    this.lat = footprint.place.lat;
+    this.lng = footprint.place.lng;
     this.footprint = footprint;
     this.NE = null;
     this.SE = null;
@@ -14,18 +14,18 @@ var MapFactory = function (){
     this.SW = null;
   };
 
-  QuadTree.prototype.insert = function (latlng, footprint) {
-    var myLat = latlng[0];
-    var myLng = latlng[1];
+  QuadTree.prototype.insert = function (footprint) {
+    var myLat = footprint.place.lat;
+    var myLng = footprint.place.lng;
 
     if (myLat >= this.lat && myLng >= this.lng) {
-      this.NE ? this.NE.insert(latlng, footprint) : this.NE = new QuadTree(latlng, footprint);
+      this.NE ? this.NE.insert(footprint) : this.NE = new QuadTree(footprint);
     } else if (myLat < this.lat && myLng >= this.lng) {
-      this.SE ? this.SE.insert(latlng, footprint) : this.SE = new QuadTree(latlng, footprint);
+      this.SE ? this.SE.insert(footprint) : this.SE = new QuadTree(footprint);
     } else if (myLat >= this.lat && myLng < this.lng) {
-      this.NW ? this.NW.insert(latlng, footprint) : this.NW = new QuadTree(latlng, footprint);
+      this.NW ? this.NW.insert(footprint) : this.NW = new QuadTree(footprint);
     } else if (myLat < this.lat && myLng < this.lng) {
-      this.SW ? this.SW.insert(latlng, footprint) : this.SW = new QuadTree(latlng, footprint);
+      this.SW ? this.SW.insert(footprint) : this.SW = new QuadTree(footprint);
     }
   };
 
