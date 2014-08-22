@@ -72,6 +72,26 @@ var MapFactory = function (){
     return res;
   };
 
+  QuadTree.prototype.addPropertyToCheckin = function (footprint, key, value) {
+    var myLat = footprint.place.lat;
+    var myLng = footprint.place.lng;
+
+    if (this.footprint.checkin.facebookID === footprint.checkin.facebookID) {
+      this.footprint.checkin.liked = true;
+      return;
+    }
+
+    if (myLat >= this.lat && myLng >= this.lng) {
+      this.NE ? this.NE.addPropertyToCheckin(footprint, key, value) : null;
+    } else if (myLat < this.lat && myLng >= this.lng) {
+      this.SE ? this.SE.addPropertyToCheckin(footprint, key, value) : null;
+    } else if (myLat >= this.lat && myLng < this.lng) {
+      this.NW ? this.NW.addPropertyToCheckin(footprint, key, value) : null;
+    } else if (myLat < this.lat && myLng < this.lng) {
+      this.SW ? this.SW.addPropertyToCheckin(footprint, key, value) : null;
+    } 
+  }
+
   // Markers in bounds are stored on factory to be accessible from any state
   var markerQuadTree = null;
 
