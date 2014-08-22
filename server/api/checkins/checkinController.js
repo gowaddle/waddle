@@ -71,7 +71,7 @@ checkinController.handleFBPost = function (req, res) {
         var myCheckins = userObj.checkins;
 
         _.each(myCheckins, function (checkin) {
-          queries.push(myUser.addCheckins([checkin]);
+          queries.push(myUser.addCheckins([checkin]));
         });
 
       });
