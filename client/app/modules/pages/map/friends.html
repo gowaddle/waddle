@@ -1,6 +1,6 @@
 <div class='waddlefeed'>
 	<div class='waddlefeedfriend' ng-repeat="friend in allUserFriends">
-    <img class='friendphoto' ng-src="{{friend.fbProfilePicture}}">
+    <img class='friendphoto' ng-src="{{friend.fbProfilePicture}}" ng-click="clickFriend(friend.facebookID)">
     <h4 class='friendname' ng-click="clickFriend(friend.facebookID)">
   		{{friend.name}}
     </h4>
