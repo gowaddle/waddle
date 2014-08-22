@@ -111,6 +111,7 @@ Checkin.giveProps = function (clickerID, checkinID){
   return deferred.promise;
 };
 
+// Resolves to a list of props with the user node and the connection
 Checkin.getProps = function (checkinID) {
   var deferred = Q.defer();
 
@@ -134,6 +135,7 @@ Checkin.getProps = function (checkinID) {
   return deferred.promise;
 };
 
+// Resolves to a list of users and comments
 Checkin.getComments = function (checkinID){
   var deferred = Q.defer();
 

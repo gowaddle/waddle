@@ -216,24 +216,41 @@ userController.addInstagramData = function (req, res) {
 
 };
 
-userController.getUserData = function(req, res){
+//
+userController.getUserData = function (req, res){
   var userData = {
     facebookID: req.params.friend
   };
 
   User.find(userData)
-  .then(function(friend){
+  .then(function (friend) {
     return friend.findAllCheckins();
   })
-  .then(function(checkins){
+  .then(function (checkins) {
     // console.log("checkins: ", checkins.length)
     res.json(checkins);
     res.status(200).end();
   })
-  .catch(function(err){
+  .catch(function (err) {
     console.log(err);
     res.status(500).end();
   });
 };
+
+// Takes a facebookID and returns a footprint object with
+// checkin and place keys, containing checkin and place data
+userController.getBucketList = function (req, res){
+  var facebookID = req.params.user;
+
+  User.getBucketList(facebookID)
+  .then(function (footprints) {
+    res.json(footprints);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  })
+}
 
 module.exports = userController;
