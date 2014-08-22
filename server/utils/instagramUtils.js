@@ -128,7 +128,7 @@ utils.parseIGPost = function (post, user) {
   //.data.images.thumbnail
   //.data.images.standard_resolution
   //.data.id
-  var deferred = Q.defer();;
+  var deferred = Q.defer();
 
   var checkin = {
     'checkinID': post.id,

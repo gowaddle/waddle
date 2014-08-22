@@ -230,19 +230,30 @@ utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
   return deferred.promise;
 };
 
-utils.handleUpdate = function (update) {
+utils.handleUpdateObject = function (update) {
   console.log("update: " + JSON.stringify(update));
   var deferred = Q.defer();
 
-  var update = JSON.parse(update);
-  var fbUserID = update[entry][0][uid];
-  var fbPostID = update[entry][0][id];
+  var fbUserID = {facebookID: update.uid};
+  var fbPostCreatedTime = update.time - 1;
   var user;
 
   User.find(fbUserID)
   .then(function (userNode) {
     user = userNode;
-    deferred.resolve(utils.makeRequestForFeedItem(user, fbPostID));
+    return utils.makeRequestForFeedItem(user, fbPostCreatedTime);
+  })
+  .then(function (fbResponse) {
+    var feedItems = fbResponse.data;
+    console.log("dis be ma response data: " + JSON.stringify(feedItems));
+
+    var processedFeedItems = [];
+
+    _.each(feedItems, function (feedItem) {
+        processedFeedItems.push(utils.parseFBPost(user, feedItem));
+    });
+
+  return Q.all(processedFeedItems);
   })
   .catch(function (e) {
     deferred.reject(e);
@@ -251,16 +262,20 @@ utils.handleUpdate = function (update) {
   return deferred.promise;
 };
 
-utils.makeRequestForFeedItem = function (user, postID) {
+utils.makeRequestForFeedItem = function (user, postCreatedTime) {
   var deferred = Q.defer();
 
+  var fbID = user.getProperty('facebookID');
   var fbToken = user.getProperty('fbToken');
 
   var query = {
-    access_token: fbToken
+    access_token: fbToken,
+    since: postCreatedTime,
+    'with': 'location'
   };
 
-  var queryPath = 'https://graph.facebook.com/' + postID + qs.stringify(query);
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/feed?' + qs.stringify(query);
+
 
   https.get(queryPath, function (res) {
     var data = '';
@@ -278,6 +293,64 @@ utils.makeRequestForFeedItem = function (user, postID) {
 
   return deferred.promise;
 };
+
+utils.parseFBPost = function (user, data) {
+  var deferred = Q.defer();
+
+  console.log("im hurr and dis is ma data: " + JSON.stringify(data));
+
+  var place = {
+      'checkinID': data.id,
+      'name': data.place.name,
+      'lat': data.place.location.latitude,
+      'lng': data.place.location.longitude,
+      'checkinTime': new Date(data.created_time),
+      'likes': 'null',
+      'photoSmall': 'null',
+      'photoLarge': 'null',
+      'caption': 'null',
+      'foursquareID': 'null',
+      'country': 'null',
+      'category': 'null',
+      'source': 'facebook'
+  }
+
+  if (data.likes) {
+    place.likes = data.likes.data.length;
+  }
+
+   if (data.updated_time) {
+    place.checkinTime = new Date(data.updated_time);
+  }
+
+  if(data.message) {
+    place.caption = data.message;
+  }
+
+  if (data.picture) {
+    place.photoSmall = data.picture;
+  }
+
+  if (data.source) {
+    place.photoLarge = data.source;
+  }
+
+  var latlng = place.lat.toString() + ',' + place.lng.toString();
+    
+  foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng)
+  .then(function (foursquareVenueID) {
+    place.foursquareID = foursquareVenueID;
+    deferred.resolve({
+      checkin: place,
+      user: user
+    });
+  })
+  .catch(function (err) {
+    deferred.reject(err);
+  });
+
+  return deferred.promise;
+}
 
 utils.parseFBData = function (user, data) {
   var deferred = Q.defer();
