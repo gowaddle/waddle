@@ -47,7 +47,7 @@ userController.userLogin = function (req, res) {
   })
   .then(function (userNode) { 
     user = userNode;
-    return user.findAllCheckins()
+    return user.findAllCheckins(userData.facebookID)
   })
   //Path forks here for existing vs new users
   .then(function (checkinsAlreadyStored) {
@@ -125,7 +125,7 @@ userController.userLogin = function (req, res) {
       return user.addCheckins(combinedFBCheckins);
     })
     .then(function (data) {
-      return user.findAllCheckins();
+      return user.findAllCheckins(userData.facebookID);
     })
     .then(function (checkinsStored) {
       // console.log('fb checkins: ', checkinsStored.length);
@@ -224,10 +224,11 @@ userController.getUserData = function (req, res){
   var userData = {
     facebookID: req.params.friend
   };
+  var viewer = req.params.viewer;
 
   User.find(userData)
   .then(function (friend) {
-    return friend.findAllCheckins();
+    return friend.findAllCheckins(viewer);
   })
   .then(function (checkins) {
     // console.log("checkins: ", checkins.length)

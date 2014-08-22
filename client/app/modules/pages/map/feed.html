@@ -4,6 +4,7 @@
     <h4 class='feeditemname'ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
       {{footprint.place.name}}
     </h4>
+    <h4 ng-if="footprint.checkin.liked">liked</h4>
     <img class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)"/>
     <img class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint.checkin.checkinID)"/>
     <br/>

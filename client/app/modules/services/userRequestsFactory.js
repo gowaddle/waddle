@@ -20,11 +20,13 @@ var UserRequests = function ($http){
     },
 
     // Grab existing user's checkins/data
-    getUserData: function (userFbID) {
+    // Pass in the viewerID so that there is a context to the data returned
+    // this allows the viewer to see whether they have liked another user's checkin
+    getUserData: function (userFbID, viewerID) {
       if (userFbID) {
         return $http({
           method: 'GET',
-          url: '/api/users/' + userFbID
+          url: '/api/users/' + userFbID + "/" + viewerID
         });
       }
     }

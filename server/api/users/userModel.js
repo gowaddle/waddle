@@ -228,18 +228,22 @@ User.prototype.findAllFriends = function () {
 
 // Basic query to find all user's checkins
 // Uses this.getProperty to grab instantiated user's facebookID as query parameter
-User.prototype.findAllCheckins = function () {
+User.prototype.findAllCheckins = function (viewer) {
   var deferred = Q.defer();
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
-    'OPTIONAL MATCH (user)-[connection:givesProps]->(checkin)',
-    'RETURN checkin, p, connection',
+    (viewer ? 'OPTIONAL MATCH (viewer:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' : ""),
+    'RETURN checkin, p' + (viewer ? ', viewer' : "")
   ].join('\n');
 
   var params = {
     facebookID: this.getProperty('facebookID')
   };
+  if (viewer){
+    params['viewerID'] = viewer
+  }
+
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
@@ -249,8 +253,8 @@ User.prototype.findAllCheckins = function () {
           "checkin": item.checkin.data,
           "place": item.p.data
         }
-        if (item.connection){
-          singleResult.checkin.liked = true
+        if (item.viewer && item.viewer.data){
+          singleResult.checkin.liked = true;
         }
         return singleResult
       });
