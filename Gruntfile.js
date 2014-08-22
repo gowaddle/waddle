@@ -57,7 +57,7 @@ module.exports = function (grunt) {
 		watch: {
 			build: {
 			  files: ['client/app/**/*.js', 'client/styles/*.styl'],
-			  tasks: ['concat:client', 'stylus']
+			  tasks: ['concat:client', 'stylus', 'uglify:dev']
 			},
 
 			/*linting: {
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
 		nodemon.stdout.pipe(process.stdout);
 		nodemon.stderr.pipe(process.stderr);
 
-		grunt.task.run(['clean', 'bower', 'concat:bower', 'concat:client', 'stylus', 'uglify:build', 'watch']);
+		grunt.task.run(['clean', 'bower', 'concat:bower', 'concat:client', 'stylus', 'uglify:dev', 'watch']);
 	});
 
 	grunt.registerTask('build', ['clean', 'bower', 'concat:bower', 'concat:client', 'stylus', 'uglify:build']);
