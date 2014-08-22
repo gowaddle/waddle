@@ -70,7 +70,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       .then(function (data) {
         $scope.selectedFootprintInteractions.comments = data.data.comments;
       });  
-    }
+    };
   });
 }
 
