@@ -1,9 +1,12 @@
 var https = require('https');
 var qs = require('querystring');
+
 var Q = require('q');
 var _ = require('lodash');
-var User = require('../api/users/userModel.js');
+
 var helpers = require('./helpers.js');
+
+var User = require('../api/users/userModel.js');
 
 var utils = {};
 
@@ -44,17 +47,13 @@ utils.getUserFoursquareIDFromToken = function (user) {
   }
   var queryPath = 'https://api.foursquare.com/v2/users/self?' + qs.stringify(query);
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-    res.on('end', function(){
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       deferred.resolve(JSON.parse(data));
     })
-  }).on('error', function(err) {
-    deferred.reject(err);
-  });
+    .catch(function (e) {
+      deferred.reject(e);
+    });
 
   return deferred.promise;
 };
@@ -78,7 +77,7 @@ utils.tabThroughFoursquareCheckinHistory = function (user) {
       offset += 250;  
     }
 
-    console.log("hist bucket cont", historyBucketContainer.length)
+    console.log("hist bucket container", historyBucketContainer.length)
 
     deferred.resolve(Q.all(historyBucketContainer));
   });
@@ -98,17 +97,13 @@ utils.getFoursquareCheckinHistory = function (userAccessToken, offset) {
 
   var queryPath = 'https://api.foursquare.com/v2/users/self/checkins?' + qs.stringify(query);
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-    res.on('end', function(){
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       deferred.resolve(JSON.parse(data));
     })
-  }).on('error', function(err) {
-    deferred.reject(err);
-  });
+    .catch(function (e) {
+      deferred.reject(e);
+    });
 
   return deferred.promise;
 };
@@ -180,12 +175,8 @@ utils.generateFoursquarePlaceID = function (user, name, latlng) {
 
   var queryPath = 'https://api.foursquare.com/v2/venues/search?' + qs.stringify(query);
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-    res.on('end', function(){
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       var venue = JSON.parse(data).response.venues[0];
       if (venue) {
         deferred.resolve(venue.id);
@@ -193,9 +184,10 @@ utils.generateFoursquarePlaceID = function (user, name, latlng) {
         deferred.resolve(name);
       }
     })
-  }).on('error', function(err) {
-    deferred.reject(err);
-  });
+    .catch(function (e) {
+      deferred.reject(e);
+    });
+
 
   return deferred.promise;
 };

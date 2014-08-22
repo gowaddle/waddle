@@ -1,10 +1,13 @@
 var https = require('https');
 var qs = require('querystring');
+
 var Q = require('q');
 var _ = require('lodash');
-var foursquareUtils = require('./foursquareUtils');
-var User = require('../api/users/userModel.js');
+
 var helpers = require('./helpers.js');
+var foursquareUtils = require('./foursquareUtils');
+
+var User = require('../api/users/userModel.js');
 
 var utils = {};
 

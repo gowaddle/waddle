@@ -1,10 +1,13 @@
 var https = require('https');
 var qs = require('querystring');
-var User = require('../api/users/userModel.js');
-var foursquareUtils = require('./foursquareUtils.js');
-var _ = require('lodash');
 
 var Q = require('q');
+var _ = require('lodash');
+
+var helpers = require('./helpers.js');
+var foursquareUtils = require('./foursquareUtils.js');
+
+var User = require('../api/users/userModel.js');
 
 var utils = {};
 
@@ -57,19 +60,13 @@ utils.makeRequestForMedia = function (user, timestamp) {
 
   var queryPath = 'https://api.instagram.com/v1/users/'+ igUserID + '/media/recent?' + qs.stringify(query);
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       deferred.resolve(JSON.parse(data));
     })
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
+    .catch(function (e) {
+      deferred.reject(e);
+    });
 
   return deferred.promise;
 
