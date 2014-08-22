@@ -147,27 +147,44 @@ li{
   opacity: 0.2;
 }
 
-#foursquare_connect {
+#account_connect {
   z-index: -1;
 }
 
 #fsqsignin {
   position: absolute;
+  border-radius: 3px;
   display: inline-block;
-  left: 200px;
-  top: 293px;
+  left: 30px;
+  top: 301px;
   background-color: #505050;
   opacity: 0;
-  width: 285px;
-  height: 110px;
+  width: 312px;
+  height: 120px;
+  border-radius: 5px;
+}
+
+#igsignin {
+  position: absolute;
+  display: inline-block;
+  left: 367px;
+  top: 301px;
+  background-color: #505050;
+  opacity: 0;
+  width: 312px;
+  height: 120px;
   border-radius: 5px;
 }
 
 #fsqsignin:hover {
-  opacity: 0.9;
+  opacity: 0.2;
 }
 
-#divhack{
+#igsignin:hover {
+  opacity: 0.2;
+}
+
+.divhack{
   position:absolute; 
   width:100%;
   height:100%;
@@ -226,15 +243,16 @@ li{
 }
 
 .navbarprofile img {
+  border-radius: 3px;
   margin-top: 3px;
   overflow: hidden;
-  width: 30px;
-  max-height: 30px; 
+  max-width: 25px;
+  height: 25px; 
 }
 
 .waddlefeed {
    margin-top: 40px;
-   height: 700px;
+   height: 40em;
    width: 275px;
    float: right;
    border-radius:5px;
@@ -265,6 +283,11 @@ li{
 }
 .feedphoto img:hover {
   opacity: 0.2;
+}
+
+.footprintbrick {
+  border: 1px solid #a6a6a6;
+  margin: 3 px;
 }
 
 .waddlefeedfriend {
@@ -340,11 +363,17 @@ li{
 
 .giveprops {
   content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png');
+}
+
+.feedactions {
   float:right;
 }
 
 .giveprops:hover {
   content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Active_01.png');
+}
+
+.footprintactions {
 }
 
 .addbucket {
