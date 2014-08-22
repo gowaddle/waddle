@@ -1,11 +1,17 @@
+(function(){
+
+var NavbarController = function (Auth, $scope, UserRequests){
+  $scope.logout = Auth.logout;
+  
+  if (UserRequests.allData) {
+    $scope.photo = UserRequests.allData.fbProfilePicture;
+    $scope.name = UserRequests.allData.name;
+  }
+}
+
+NavbarController.$inject = ['Auth', '$scope', 'UserRequests'];
+
 angular.module('waddle.navbar', [])
+  .controller('NavbarController', NavbarController);
 
-.controller('NavbarController', function ($scope, $state, Auth) {
-
-	  $scope.logout = Auth.logout;
-
-    $scope.goToProvidersPage = function () {
-      $state.go('providers');
-    };
-
-});
+})();

@@ -1,15 +1,17 @@
-var neo4j = require('neo4j');
-var Q = require('q');
 var qs = require('querystring');
 var request = require('request');
+
+var Q = require('q');
 var _ = require('lodash');
 
+var neo4j = require('neo4j');
 var neo4jUrl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474';
 var db = new neo4j.GraphDatabase(neo4jUrl);
 
 var Checkin = require('../checkins/checkinModel.js');
 var Place = require('../places/placeModel.js');
 
+// Class to instantiate different users which will inherit prototype functions
 var User = function (node){
 	this.node = node;
 };
@@ -18,11 +20,13 @@ User.prototype.id = function(){
 	return this.node.id;
 };
 
+// Set a single property on a user and automatically save
 User.prototype.setProperty = function(property, value) {
   this.node.data[property] = value;
   return this.save();
 };
 
+// Set a batch of properties on a user and automatically save
 User.prototype.setProperties = function(properties) {
   for (var key in properties){
     if (properties.hasOwnProperty(key)){
@@ -32,23 +36,52 @@ User.prototype.setProperties = function(properties) {
   return this.save();
 };
 
+// Find a specific property on an instantiated user
 User.prototype.getProperty = function(property) {
   return this.node.data[property];
 };
 
+// S
 User.prototype.save = function (){
   var deferred = Q.defer();
 
-	this.node.save(function (err, node){
-		if (err) { deferred.reject(err); }
+  this.node.save(function (err, node){
+    if (err) { deferred.reject(err); }
     else {
       deferred.resolve(new User(node));
     }
-	});
+  });
 
   return deferred.promise;
 };
 
+//Primary function to instantiate new users based on facebookID and name
+User.createUniqueUser = function (data) {
+  var deferred = Q.defer();
+  if (!data.facebookID || !data.name){
+    deferred.reject(new Error('Requires facebookID and name parameters'))
+  }
+
+  var query = [
+    'MERGE (user:User {facebookID: {facebookID}})',
+    'SET user.name = {name}',
+    'RETURN user',
+  ].join('\n');
+
+  var params = data;
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+
+  return deferred.promise;
+};
+
+// Add friends to a user
+// Requires a list of friends that are mapped over and placed into batch request body
 User.prototype.addFriends = function(friendsList){
   var deferred = Q.defer();
 
@@ -59,11 +92,11 @@ User.prototype.addFriends = function(friendsList){
     'MERGE (friend:User {facebookID: {friendFacebookID}, name: {friendName}})',
     'MERGE (user)-[:hasFriend]->(friend)',
     'MERGE (friend)-[:hasFriend]->(user)',
-    //change to merge on foursquareID only
     'RETURN friend',
   ].join('\n');
 
-  //?includeStats=true
+  // Map over the friends and return a list of objects
+  // ?includeStats=true will give back data added to the db
   var batchRequest = _.map(friendsList, function (friend, index) {
     var singleRequest = {
       'method': "POST",
@@ -82,6 +115,7 @@ User.prototype.addFriends = function(friendsList){
     return singleRequest;
   });
 
+  // Batch requests with request library
   var options = {
     'url': neo4jUrl + '/db/data/batch',
     'method': 'POST',
@@ -99,6 +133,8 @@ User.prototype.addFriends = function(friendsList){
   return deferred.promise;
 }
 
+// Add checkins to a user
+// Requires a list of checkins that are mapped over and placed into batch request body
 User.prototype.addCheckins = function(combinedCheckins){
   var deferred = Q.defer();
   //need to check for params!
@@ -126,6 +162,8 @@ User.prototype.addCheckins = function(combinedCheckins){
     'RETURN user, checkin, place',
   ].join('\n');
 
+  // Map over the friends and return a list of objects
+  // 'to' can be modified with ?includeStats=true to give back data added to the db
   var batchRequest = _.map(combinedCheckins, function (checkin, index) {
 
     var singleRequest = {
@@ -160,6 +198,8 @@ User.prototype.addCheckins = function(combinedCheckins){
   return deferred.promise;
 };
 
+// Find all of a user's friends
+// Uses this.getProperty to grab instantiated user's facebookID as query parameter
 User.prototype.findAllFriends = function () {
   var deferred = Q.defer();
 
@@ -186,6 +226,8 @@ User.prototype.findAllFriends = function () {
   return deferred.promise;
 };
 
+// Basic query to find all user's checkins
+// Uses this.getProperty to grab instantiated user's facebookID as query parameter
 User.prototype.findAllCheckins = function () {
   var deferred = Q.defer();
 
@@ -206,7 +248,7 @@ User.prototype.findAllCheckins = function () {
           checkin: item.c.data,
           place: item.p.data
         }
-      })
+      });
 
       deferred.resolve(parsedResults);
     }
@@ -215,28 +257,8 @@ User.prototype.findAllCheckins = function () {
   return deferred.promise;
 };
 
-User.createUniqueUser = function (data) {
-  var deferred = Q.defer();
-
-  var query = [
-    'MERGE (user:User {facebookID: {facebookID}})',
-    'SET user.name = {name}',
-    'RETURN user',
-  ].join('\n');
-
-  var params = data;
-  //data has a user's facebook ID and name
-
-  db.query(query, params, function (err, results) {
-    if (err) { deferred.reject(err); }
-    else {
-      deferred.resolve(new User(results[0]['user']));
-    }
-  });
-
-  return deferred.promise;
-};
-
+// Find a single user in the database, requires facebookID as input
+// If user is not in database, promise will resolve to error 'user does not exist'
 User.find = function (data) {
 
   var deferred = Q.defer();
@@ -263,6 +285,9 @@ User.find = function (data) {
   return deferred.promise;
 };
 
+// Find a single user based on foursquareID and return a node 
+// to add new foursquare information after resolve
+// If user does not have a foursquareID, the promise will resolve to error
 User.findByFoursquareID = function (foursquareID) {
 
   var deferred = Q.defer();
@@ -291,6 +316,9 @@ User.findByFoursquareID = function (foursquareID) {
   return deferred.promise;
 };
 
+// Find a single user based on foursquareID and return a node 
+// to add new foursquare information after resolve
+// If user does not have a foursquareID, the promise will resolve to error
 User.findByInstagramID = function (instagramID) {
 
   var deferred = Q.defer();
@@ -301,35 +329,13 @@ User.findByInstagramID = function (instagramID) {
   ].join('\n');
 
   var params = {
-    instagramiD: InstagramID
+    instagramID: instagramID
   };
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
       deferred.resolve(new User(results[0]['user']));
-    }
-  });
-
-  return deferred.promise;
-};
-
-User.getAll = function () {
-
-  var query = [
-    'MATCH (user:User)',
-    'RETURN user',
-  ].join('\n');
-
-  var deferred = Q.defer();
-
-  db.query(query, null, function (err, results) {
-    if (err) { deferred.reject(err); }
-    else {
-      var users = results.map(function (result) {
-        return new User(result['user']);
-      });
-      deferred.resolve(users);
     }
   });
 

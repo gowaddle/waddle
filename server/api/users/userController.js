@@ -1,10 +1,12 @@
+var _ = require('lodash');
+
 var foursquareUtils = require('../../utils/foursquareUtils.js');
 var facebookUtils = require('../../utils/facebookUtils.js');
 var instagramUtils = require('../../utils/instagramUtils.js');
+
 var User = require('./userModel.js');
 var Place = require('../places/placeModel.js');
 var Checkin = require('../checkins/checkinModel.js');
-var _ = require('lodash');
 
 var userController = {};
 
@@ -55,7 +57,9 @@ userController.userLogin = function (req, res) {
         var allData = {
           allCheckins: checkinsAlreadyStored,
           friends: neoUserData,
-          fbProfilePicture: user.getProperty('fbProfilePicture')
+          fbProfilePicture: user.getProperty('fbProfilePicture'),
+          name: user.getProperty('name'),
+          footprintsCount: checkinsAlreadyStored.length
         }
         res.json(allData);
         res.status(200).end();

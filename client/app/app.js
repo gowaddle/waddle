@@ -1,14 +1,7 @@
+(function(){
 'use strict';
 
-angular.module('waddle', [
-  'waddle.controllers',
-	'waddle.directives',
-  'waddle.services',
-	'ui.router',
-  'wu.masonry'
-])
-
-.config(function ($stateProvider, $urlRouterProvider) {
+var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('frontpage', {
       url: '/',
@@ -57,5 +50,14 @@ angular.module('waddle', [
     })
 
   $urlRouterProvider.otherwise('/');
+};
 
-});
+angular.module('waddle', [
+  'waddle.controllers',
+  'waddle.directives',
+  'waddle.services',
+  'ui.router',
+  'wu.masonry'
+]).config(['$stateProvider', '$urlRouterProvider', WaddleConfig]);
+
+})();

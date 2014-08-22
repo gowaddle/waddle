@@ -92,7 +92,7 @@ h5{
   }
 h6{
   font-family:'Open Sans', san-serif;
-  color:#FFF;
+  color:#555555;
   display:inline;
   font-size:12px;
   font-style:none;
@@ -112,8 +112,14 @@ h8{
   }
 p{
   display:inline;
-  font-size:12px
+  font-size:12px;
   font-family:'Open Sans', san-serif;
+}
+
+li{
+  color: #888888;
+  font-family:'Open Sans', san-serif;
+  font-size:14px;
 }
 
 #signin {
@@ -141,7 +147,7 @@ p{
   opacity: 0.2;
 }
 
-  #foursquare_connect {
+#foursquare_connect {
   z-index: -1;
 }
 
@@ -158,7 +164,7 @@ p{
 }
 
 #fsqsignin:hover {
-  opacity: 0.2;
+  opacity: 0.9;
 }
 
 #divhack{
@@ -184,8 +190,7 @@ p{
   width: 100%;
   height: 30px;
   top: 0;
-  background-color: #FFFFFF;
-  opacity: 0.8
+  background-color:rgba(255, 255, 255, 0.9);
 }
 
 .navigation ul {
@@ -215,10 +220,22 @@ p{
   background-color: #ccc;
 }
 
+.navbarprofile {
+  float: right;
+  margin-right: 20px;
+}
+
+.navbarprofile img {
+  margin-top: 3px;
+  overflow: hidden;
+  width: 30px;
+  max-height: 30px; 
+}
+
 .waddlefeed {
    margin-top: 40px;
    height: 700px;
-   width: 250px;
+   width: 275px;
    float: right;
    border-radius:5px;
    background-color:rgba(255,255,255,0.9);
@@ -233,11 +250,23 @@ p{
   overflow: hidden;
 }
 
+.feeditemname {
+  display: inline-block;
+  white-space: nowrap;
+  width: 77%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .feedphoto {
   max-width: 100px;
   max-height: 100px;
   overflow:hidden;
 }
+.feedphoto img:hover {
+  opacity: 0.2;
+}
+
 .waddlefeedfriend {
   height: 15%;
   background-color: #fff;
@@ -245,12 +274,20 @@ p{
 }
 
 .friendname {
-  margin: 5px;
   cursor:pointer;
 }
 
 .friendname:hover {
   color: Teal;
+}
+
+.friendphoto {
+  display: inline;
+  margin: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  width: 95px;
+  max-height: 95px; 
 }
 
 .footprints {
@@ -264,9 +301,9 @@ p{
 
 
 .footprintitem {
+  top: 50px;
   margin: 10px;
   padding: 5px;
-  width: 800px;
   height: 700px;
   overflow-y: scroll;
   position: absolute;

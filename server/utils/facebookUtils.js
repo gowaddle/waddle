@@ -1,8 +1,13 @@
 var https = require('https');
 var qs = require('querystring');
+
 var Q = require('q');
 var _ = require('lodash');
+
+var helpers = require('./helpers.js');
 var foursquareUtils = require('./foursquareUtils');
+
+var User = require('../api/users/userModel.js');
 
 var utils = {};
 
@@ -20,21 +25,13 @@ utils.exchangeFBAccessToken = function (fbToken) {
 
   var queryPath = 'https://graph.facebook.com/oauth/access_token?' + qs.stringify(query);
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
-      deferred.resolve(qs.parse(data));
-      console.log(data);
-    });
-
-  }).on('error', function (e) {
+  helpers.httpsGet(queryPath)
+  .then(function (data) {
+    deferred.resolve(qs.parse(data));
+  })
+  .catch(function (e) {
     deferred.reject(e);
   });
-
   return deferred.promise;
 };
 
@@ -43,18 +40,13 @@ utils.getFBProfilePicture = function (userID) {
 
   var queryPath = 'https://graph.facebook.com/' + userID + '/picture?redirect=false&type=large';
 
-  https.get(queryPath, function(res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-    res.on('end', function() {
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       deferred.resolve(JSON.parse(data));
+    })
+    .catch(function (e) {
+      deferred.reject(e);
     });
-
-  }).on('error', function(e) {
-    deferred.reject(e);
-  });
 
   return deferred.promise;
 }
@@ -71,19 +63,13 @@ utils.getFBFriends = function (user) {
 
   var queryPath = 'https://graph.facebook.com/'+fbID+'/friends?' + qs.stringify(query);
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       deferred.resolve(JSON.parse(data));
+    })
+    .catch(function (e) {
+      deferred.reject(e);
     });
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
 
   return deferred.promise;
 };
@@ -102,35 +88,29 @@ utils.getFBTaggedPosts = function (user) {
 
   var taggedPostsContainer = [];
 
-  deferred.resolve(utils.makeFBTaggedPostsRequest(queryPath, taggedPostsContainer));
+  deferred.resolve(utils.makeFBPaginatedRequest(queryPath, taggedPostsContainer));
 
   return deferred.promise;
 };
 
-utils.makeFBTaggedPostsRequest = function (queryPath, taggedPostsContainer) {
+utils.makeFBPaginatedRequest = function (queryPath, container) {
   var deferred = Q.defer();
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
       var dataObj = JSON.parse(data);
 
-      taggedPostsContainer.push(dataObj.data)
+      container.push(dataObj.data)
 
       if (! dataObj.paging) {
-        deferred.resolve(_.flatten(taggedPostsContainer, true));
+        deferred.resolve(_.flatten(container, true));
       } else {
-        deferred.resolve(utils.makeFBTaggedPostsRequest(dataObj.paging.next, taggedPostsContainer));
+        deferred.resolve(utils.makeFBPaginatedRequest(dataObj.paging.next, container));
       }
+    })
+    .catch(function (e) {
+      deferred.reject(e);
     });
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
 
   return deferred.promise;
 }
@@ -149,35 +129,7 @@ utils.getFBPhotos = function (user) {
 
   var photoContainer = [];
 
-  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
-
-  return deferred.promise;
-};
-
-utils.makeFBPhotosRequest = function (queryPath, photoContainer) {
-  var deferred = Q.defer();
-
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
-      var dataObj = JSON.parse(data);
-
-      photoContainer.push(dataObj.data)
-
-      if (! dataObj.paging) {
-        deferred.resolve(_.flatten(photoContainer, true));
-      } else {
-        deferred.resolve(utils.makeFBPhotosRequest(dataObj.paging.next, photoContainer));
-      }
-    });
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
+  deferred.resolve(utils.makeFBPaginatedRequest(queryPath, photoContainer));
 
   return deferred.promise;
 };
@@ -194,37 +146,67 @@ utils.getFBStatuses = function (user) {
 
   var queryPath = 'https://graph.facebook.com/'+fbID+'/statuses?' + qs.stringify(query);
 
-  var photoContainer = [];
+  var statusContainer = [];
 
-  deferred.resolve(utils.makeFBPhotosRequest(queryPath, photoContainer));
+  deferred.resolve(utils.makeFBPaginatedRequest(queryPath, statusContainer));
 
   return deferred.promise;
 };
 
-utils.makeFBStatusesRequest = function (queryPath, statusContainer) {
+utils.handleUpdateObject = function (update) {
+  console.log("update: " + JSON.stringify(update));
   var deferred = Q.defer();
 
-  https.get(queryPath, function (res) {
-    var data = '';
-    res.on('data', function(chunk) {
-      data += chunk;
+  var fbUserID = {facebookID: update.uid};
+  var fbPostCreatedTime = update.time - 1;
+  var user;
+
+  User.find(fbUserID)
+    .then(function (userNode) {
+      user = userNode;
+      return utils.makeRequestForFeedItem(user, fbPostCreatedTime);
+    })
+    .then(function (fbResponse) {
+      var feedItems = fbResponse.data;
+      console.log("dis be ma response data: " + JSON.stringify(feedItems));
+
+      return utils.parseFBData(user, feedItems);
+    })
+    .then(function (parsedCheckins) {
+      deferred.resolve({
+        user: user,
+        checkins: parsedCheckins
+      });
+    })
+    .catch(function (e) {
+      deferred.reject(e);
     });
 
-    res.on('end', function () {
-      var dataObj = JSON.parse(data);
+  return deferred.promise;
+};
 
-      statusContainer.push(dataObj.data)
+utils.makeRequestForFeedItem = function (user, postCreatedTime) {
+  var deferred = Q.defer();
 
-      if (! dataObj.paging) {
-        deferred.resolve(_.flatten(statusContainer, true));
-      } else {
-        deferred.resolve(utils.makeFBStatusesRequest(dataObj.paging.next, statusContainer));
-      }
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
+
+  var query = {
+    access_token: fbToken,
+    since: postCreatedTime,
+    'with': 'location'
+  };
+
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/feed?' + qs.stringify(query);
+
+  helpers.httpsGet(queryPath)
+    .then(function (data) {
+      console.log("feed data: ", data);
+      deferred.resolve(JSON.parse(data));
+    })
+    .catch(function (e) {
+      deferred.reject(e);
     });
-
-  }).on('error', function (e) {
-    deferred.reject(e);
-  });
 
   return deferred.promise;
 };
@@ -257,6 +239,10 @@ utils.parseFBData = function (user, data) {
         place.likes = datum.likes.data.length;
       }
 
+       if (datum.updated_time) {
+        place.checkinTime = new Date(datum.updated_time);
+      }
+
       if(datum.message) {
         place.caption = datum.message;
       }
@@ -272,21 +258,24 @@ utils.parseFBData = function (user, data) {
       var latlng = place.lat.toString() + ',' + place.lng.toString();
       
       parsedData.push(place);
-      console.log(place)
+      console.log(user, place.name, latlng);
       foursquareVenueQueries.push(foursquareUtils.generateFoursquarePlaceID(user, place.name, latlng));
     }
   });
+  console.log("parsedData before: ", parsedData)
+  
 
   Q.all(foursquareVenueQueries)
-  .then(function (foursquareVenueIDs) {
-    _.each(parsedData, function (datum, index) {
-      datum.foursquareID = foursquareVenueIDs[index];
+    .then(function (foursquareVenueIDs) {
+      _.each(parsedData, function (datum, index) {
+        datum.foursquareID = foursquareVenueIDs[index];
+      });
+      console.log("parsedData: ", parsedData)
+      deferred.resolve(parsedData);
+    })
+    .catch(function (err) {
+      deferred.reject(err);
     });
-    deferred.resolve(parsedData);
-  })
-  .catch(function (err) {
-    deferred.reject(err);
-  });
 
   return deferred.promise;
 };
