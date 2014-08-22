@@ -57,6 +57,9 @@ User.prototype.save = function (){
 //Primary function to instantiate new users based on facebookID and name
 User.createUniqueUser = function (data) {
   var deferred = Q.defer();
+  if (!data.facebookID || !data.name){
+    deferred.reject(new Error('Requires facebookID and name parameters'))
+  }
 
   var query = [
     'MERGE (user:User {facebookID: {facebookID}})',
