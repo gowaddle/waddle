@@ -77,7 +77,7 @@ var MapFactory = function (){
     var myLng = footprint.place.lng;
 
     if (this.footprint.checkin.facebookID === footprint.checkin.facebookID) {
-      this.footprint.checkin.liked = true;
+      this.footprint.checkin[key] = value;
       return;
     }
 
