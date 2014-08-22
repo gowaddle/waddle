@@ -297,6 +297,8 @@ utils.makeRequestForFeedItem = function (user, postCreatedTime) {
 utils.parseFBPost = function (user, data) {
   var deferred = Q.defer();
 
+  console.log("im hurr and dis is ma data: " + JSON.stringify(data));
+
   var place = {
       'checkinID': data.id,
       'name': data.place.name,
