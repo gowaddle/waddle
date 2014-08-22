@@ -8,7 +8,7 @@
     <img class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint.checkin.checkinID)"/>
     <br/>
     <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
-    <div class = 'feedphoto'>
+    <div class = 'feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
       <img ng-if="footprint.checkin.photoSmall != 'null'" ng-src="{{footprint.checkin.photoSmall}}">
     </div>
     <h8 ng-if="footprint.checkin.caption != 'null'">{{footprint.checkin.caption}}</h8>
