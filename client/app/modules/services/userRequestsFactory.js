@@ -27,6 +27,15 @@ var UserRequests = function ($http){
           url: '/api/users/' + userFbID
         });
       }
+    },
+
+    getBucketList: function (userFbID) {
+      if (userFbID) {
+        return $http({
+          method: 'GET',
+          url: '/api/users/bucketlist/' + userFbID
+        });
+      }
     }
   }; 
 };
