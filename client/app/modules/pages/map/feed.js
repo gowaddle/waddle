@@ -123,10 +123,6 @@ var CustomSubmitDirective = function(FootprintRequests) {
 
         FootprintRequests.addComment(commentData)
         .then(function (data){
-          console.log("element")
-          console.log($element)               
-          console.log("scope")
-          console.log(scope)
 
           if (FootprintRequests.openFootprint){
             scope.updateFootprint(FootprintRequests.openFootprint)
