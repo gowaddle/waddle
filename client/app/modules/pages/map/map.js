@@ -60,14 +60,11 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
       aggregatedMarkers.addLayer(marker);
     };
 
-    $scope.handleUserCheckinData = function (allFootprints) {
+    $rootScope.handleUserCheckinData = function (allFootprints) {
       aggregatedMarkers.clearLayers();
 
       var footprintQuadtree;
       var markers = [];
-
-      // Change active checkins
-      $scope.data.currentCheckins = allFootprints;
 
       _.each(allFootprints, function (footprint) {
         var place = footprint.place;
@@ -126,7 +123,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
     // addToShadedCountries();
 
     if(UserRequests.allData) {
-      MapFactory.markerQuadTree = $scope.handleUserCheckinData(UserRequests.allData.allCheckins);
+      MapFactory.markerQuadTree = $rootScope.handleUserCheckinData(UserRequests.allData.allCheckins);
       $state.go('map.feed');
     } else {
       $state.go('frontpage');

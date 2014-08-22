@@ -7,7 +7,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-
+      console.log($scope.inBounds[0]);
     };
 
     if (MapFactory.markerQuadTree) {
@@ -19,13 +19,17 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       $scope.$apply(filterFeedByBounds); 
     });
 
-    $scope.addPropsToCheckin = function (checkinID){
+    $scope.addPropsToCheckin = function (footprint){
+      
       var propsData = {
         clickerID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+        checkinID: footprint.checkin.checkinID
       }
 
-      FootprintRequests.giveProps(propsData);
+      FootprintRequests.giveProps(propsData)
+      .then(function (data) {
+        $scope.getFootprint(footprint);
+      });
     };
 
     $scope.addCheckinToBucketlist = function (checkinID){
@@ -37,11 +41,12 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       FootprintRequests.addToBucketList(bucketListData);
     };
 
+    $scope.selectedFootprintInteractions = null;
+    
     // Send request to database for user props and comments data
     // Format of returned object is {data: {props: String(Int), propGivers: [], comments:[]}}
     $scope.getFootprint = function (footprint) {
       $scope.footprint = footprint;
-      $scope.selectedFootprintInteractions = null;
 
       var checkinID = footprint.checkin.checkinID;
       FootprintRequests.openFootprint = footprint;
@@ -65,7 +70,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       .then(function (data) {
         $scope.selectedFootprintInteractions.comments = data.data.comments;
       });  
-    }
+    };
   });
 }
 
@@ -123,10 +128,6 @@ var CustomSubmitDirective = function(FootprintRequests) {
 
         FootprintRequests.addComment(commentData)
         .then(function (data){
-          console.log("element")
-          console.log($element)               
-          console.log("scope")
-          console.log(scope)
 
           if (FootprintRequests.openFootprint){
             scope.updateFootprint(FootprintRequests.openFootprint)

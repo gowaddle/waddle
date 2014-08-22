@@ -6,10 +6,11 @@
 	<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
 	<img ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
 	<img ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
-	<span>
-		<img src="https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png">
+	<div>
+		<img class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)">
+		<img class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint)">
 		<h4>{{selectedFootprintInteractions.props}}</h4>
-	</span>
+	</div>
 	<div>
 	  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
 	  <form name="customSubmit" data-custom-submit class='comment_form' novalidate>

@@ -22,7 +22,7 @@ userController.userLogin = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
-  //Start creation of new user or update and retrieval of existing user
+  // Start creation of new user or update and retrieval of existing user
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     //note: this has the user node
@@ -30,7 +30,7 @@ userController.userLogin = function (req, res) {
     user = userNode;
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
-  //Store acces token on scope, Get profile pictures from Facebook
+  // Store acces token on scope, Get profile pictures from Facebook
   .then(function (fbReqData) {
     FBAccessToken = fbReqData.access_token
     return facebookUtils.getFBProfilePicture(userData.facebookID);
@@ -39,6 +39,7 @@ userController.userLogin = function (req, res) {
     var properties = {
       'fbToken': FBAccessToken,
     };
+    // Asks if facebook profile picture is a default silhouette
     if(fbPicData.data.is_silhouette === false) {
       properties['fbProfilePicture'] = fbPicData.data.url;
     }
@@ -46,11 +47,12 @@ userController.userLogin = function (req, res) {
   })
   .then(function (userNode) { 
     user = userNode;
-    return user.findAllCheckins()
+    return user.findAllCheckins(userData.facebookID)
   })
   //Path forks here for existing vs new users
   .then(function (checkinsAlreadyStored) {
     // console.log('fb checkins: ', checkinsAlreadyStored.length);
+    // For existing users
     if (checkinsAlreadyStored.length) {
       user.findAllFriends()
       .then(function (neoUserData){
@@ -65,6 +67,7 @@ userController.userLogin = function (req, res) {
         res.status(200).end();
       })
     } else {
+      // For new users, start chain of facebook requests.
       getAndParseFBData();
     }
   })
@@ -73,8 +76,8 @@ userController.userLogin = function (req, res) {
     res.status(500).end();
   });
 
+  // Start getting data for checkins and photos
   var getAndParseFBData = function () {
-    // start getting data for checkins and photos
 
     facebookUtils.getFBFriends(user)
     .then(function (fbRawUserData) {
@@ -122,7 +125,7 @@ userController.userLogin = function (req, res) {
       return user.addCheckins(combinedFBCheckins);
     })
     .then(function (data) {
-      return user.findAllCheckins();
+      return user.findAllCheckins(userData.facebookID);
     })
     .then(function (checkinsStored) {
       // console.log('fb checkins: ', checkinsStored.length);
@@ -216,24 +219,42 @@ userController.addInstagramData = function (req, res) {
 
 };
 
-userController.getUserData = function(req, res){
+//
+userController.getUserData = function (req, res){
   var userData = {
     facebookID: req.params.friend
   };
+  var viewer = req.params.viewer;
 
   User.find(userData)
-  .then(function(friend){
-    return friend.findAllCheckins();
+  .then(function (friend) {
+    return friend.findAllCheckins(viewer);
   })
-  .then(function(checkins){
+  .then(function (checkins) {
     // console.log("checkins: ", checkins.length)
     res.json(checkins);
     res.status(200).end();
   })
-  .catch(function(err){
+  .catch(function (err) {
     console.log(err);
     res.status(500).end();
   });
 };
+
+// Takes a facebookID and returns a footprint object with
+// checkin and place keys, containing checkin and place data
+userController.getBucketList = function (req, res){
+  var facebookID = req.params.user;
+
+  User.getBucketList(facebookID)
+  .then(function (footprints) {
+    res.json(footprints);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  })
+}
 
 module.exports = userController;
