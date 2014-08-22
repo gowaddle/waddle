@@ -8,7 +8,8 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
   }
 
   $scope.clickFriend = function (friend) {
-    UserRequests.getUserData(friend)
+    var viewer = window.sessionStorage.userFbID;
+    UserRequests.getUserData(friend, viewer)
       .then(function (data){
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(data.data);
         $state.go('map.feed')

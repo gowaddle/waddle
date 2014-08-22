@@ -8,10 +8,6 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
       templateUrl: '../app/modules/pages/frontpage/frontpage.html',
       controller: 'FrontpageController'
     })
-    .state('providers', {
-      url: '/providers',
-      templateUrl: '../app/modules/pages/providers/providers.html'
-    })
     .state('loading', {
       url: '/loading',
       templateUrl: '../app/modules/pages/providers/loading.html'
@@ -28,6 +24,10 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
           controller: 'MapController'
         }
       }
+    })
+    .state('map.providers', {
+      url: '/providers',
+      templateUrl: '../app/modules/pages/providers/providers.html'
     })
     .state('map.friends', {
       url: '/friends',
