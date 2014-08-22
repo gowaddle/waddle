@@ -1,7 +1,15 @@
 (function(){
 
-var NavbarController = function (Auth, $scope, UserRequests){
+var NavbarController = function (Auth, $scope, UserRequests, MapFactory, $state){
   $scope.logout = Auth.logout;
+
+  $scope.loadBucketlist = function () {
+    UserRequests.getBucketList(window.sessionStorage.userFbID)
+      .then(function (data) {
+        MapFactory.markerQuadTree = $scope.handleUserCheckinData(data.data);
+        $state.go('map.feed')
+      });
+  };
   
   if (UserRequests.allData) {
     $scope.photo = UserRequests.allData.fbProfilePicture;
@@ -9,7 +17,7 @@ var NavbarController = function (Auth, $scope, UserRequests){
   }
 }
 
-NavbarController.$inject = ['Auth', '$scope', 'UserRequests'];
+NavbarController.$inject = ['Auth', '$scope', 'UserRequests', 'MapFactory', '$state'];
 
 angular.module('waddle.navbar', [])
   .controller('NavbarController', NavbarController);
