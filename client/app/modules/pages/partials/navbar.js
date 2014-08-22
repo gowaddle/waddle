@@ -5,8 +5,8 @@ var NavbarController = function (Auth, $scope, UserRequests, MapFactory, $state)
 
   $scope.loadBucketlist = function () {
     UserRequests.getBucketList(window.sessionStorage.userFbID)
-      .then(function (data) {
-        MapFactory.markerQuadTree = $scope.handleUserCheckinData(data.data);
+      .then(function (BucketData) {
+        MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
         $state.go('map.feed')
       });
   };

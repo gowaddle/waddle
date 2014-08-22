@@ -10,7 +10,7 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
   $scope.clickFriend = function (friend) {
     UserRequests.getUserData(friend)
       .then(function (data){
-        MapFactory.markerQuadTree = $scope.handleUserCheckinData(data.data);
+        MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(data.data);
         $state.go('map.feed')
       });
   };
