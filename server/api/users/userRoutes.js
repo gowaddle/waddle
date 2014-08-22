@@ -5,4 +5,5 @@ module.exports = function(app){
   app.post('/userfoursquarecode', userController.addFoursquareData);
   app.post('/userinstagramcode', userController.addInstagramData);
 	app.get('/:friend', userController.getUserData);
+  app.get('/bucketlist/:user', userController.getBucketList)
 };

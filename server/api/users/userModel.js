@@ -256,6 +256,39 @@ User.prototype.findAllCheckins = function () {
   return deferred.promise;
 };
 
+// Find all bucketList items for a user
+// Takes a facebookID and returns a footprint object with
+// checkin and place keys, containing checkin and place data
+User.getBucketList = function (facebookID){
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasBucket]->(c:Checkin)-[:hasPlace]->(p:Place)',
+    'RETURN c, p',
+  ].join('\n');
+
+  var params = {
+    'facebookID': facebookID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      console.log(results)
+      var parsedResults = _.map(results, function (item) {
+        return {
+          checkin: item.c.data,
+          place: item.p.data
+        }
+      })
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+}
+
 // Find a single user in the database, requires facebookID as input
 // If user is not in database, promise will resolve to error 'user does not exist'
 User.find = function (data) {
