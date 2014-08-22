@@ -1,11 +1,5 @@
 'use strict';
 
-var allFiles = [
-  '*.js',
-  'client/**/*.js',
-  'server/**/*.js',
-];
-
 module.exports = function (grunt) {
 	grunt.initConfig({ 
 		pkg: grunt.file.readJSON('package.json'),
@@ -35,15 +29,6 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-		
-		jshint: {
-			all: allFiles,
-			options: {
-				jshintrc: '.jshintrc',
-				ignores: ['client/dist/*.js', 'client/utils/openfb.js'],
-				force: true
-			}
-		},
 
 		nodemon: {
 			dev: {
@@ -58,12 +43,7 @@ module.exports = function (grunt) {
 			build: {
 			  files: ['client/app/**/*.js', 'client/styles/*.styl'],
 			  tasks: ['concat:client', 'stylus', 'uglify:dev']
-			},
-
-			/*linting: {
-				files: allFiles,
-				tasks: ['jshint']
-			}*/
+			}
 		},
 
 		clean: {
@@ -112,10 +92,8 @@ module.exports = function (grunt) {
         }
       }
     }
-
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-nodemon');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
@@ -124,7 +102,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-bower-task');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-
 
 	grunt.registerTask('dev', function () {
 		var nodemon = grunt.util.spawn({
@@ -141,5 +118,4 @@ module.exports = function (grunt) {
 	grunt.registerTask('build', ['clean', 'bower', 'concat:bower', 'concat:client', 'stylus', 'uglify:build']);
 
 	grunt.registerTask('test', ['mochaTest']);
-
 };

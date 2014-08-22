@@ -1,9 +1,10 @@
-var neo4j = require('neo4j');
-var Q = require('q');
 var qs = require('querystring');
 var request = require('request');
+
+var Q = require('q');
 var _ = require('lodash');
 
+var neo4j = require('neo4j');
 var neo4jUrl = process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474';
 var db = new neo4j.GraphDatabase(neo4jUrl);
 
@@ -247,7 +248,7 @@ User.prototype.findAllCheckins = function () {
           checkin: item.c.data,
           place: item.p.data
         }
-      })
+      });
 
       deferred.resolve(parsedResults);
     }
