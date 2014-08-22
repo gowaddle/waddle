@@ -72,13 +72,14 @@ var MapFactory = function (){
     return res;
   };
 
+  // Search through the data for a particular footprint, matching by checkinID
+  // If found, will add or update the 'key' propery of checkin with 'value'
   QuadTree.prototype.addPropertyToCheckin = function (footprint, key, value) {
     var myLat = footprint.place.lat;
     var myLng = footprint.place.lng;
 
     if (this.footprint.checkin.checkinID === footprint.checkin.checkinID) {
       this.footprint.checkin[key] = value;
-      console.log(this.footprint)
       return;
     }
 
