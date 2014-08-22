@@ -7,7 +7,6 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
     var filterFeedByBounds = function () {
       var bounds = $scope.configuredMap.getBounds();
       $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-
     };
 
     if (MapFactory.markerQuadTree) {
