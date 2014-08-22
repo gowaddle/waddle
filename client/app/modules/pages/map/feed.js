@@ -1,6 +1,6 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $state) {
   Auth.checkLogin()
   .then( function (){
 
@@ -37,12 +37,14 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
       FootprintRequests.addToBucketList(bucketListData);
     };
 
-    //Send request to database for user props and comments data
+    // Send request to database for user props and comments data
+    // Format of returned object is {data: {props: String(Int), propGivers: [], comments:[]}}
     $scope.getFootprint = function (footprint) {
       $scope.footprint = footprint;
       $scope.selectedFootprintInteractions = null;
 
       var checkinID = footprint.checkin.checkinID;
+      FootprintRequests.openFootprint = footprint;
 
       FootprintRequests.getFootprintInteractions(checkinID)
       .then(function (data) {
@@ -50,10 +52,24 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope) {
         $scope.selectedFootprintInteractions = FootprintRequests.currentFootprint;
       });
     };
+
+    $scope.closeFootprintWindow = function (){
+      FootprintRequests.openFootprint = undefined;
+      $state.go('map.feed')
+    }
+
+    // Ensure that a user comment is posted in the database before displaying
+    $scope.updateFootprint = function (footprint){
+      var checkinID = footprint.checkin.checkinID;
+      FootprintRequests.getFootprintInteractions(checkinID)
+      .then(function (data) {
+        $scope.selectedFootprintInteractions.comments = data.data.comments;
+      });  
+    }
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$state'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 
@@ -94,10 +110,6 @@ var CustomSubmitDirective = function(FootprintRequests) {
           return false;
         }
         
-        console.log("element")
-        console.log($element)               
-        console.log("scope")
-        console.log(scope)
         // From this point and below, we can assume that the form is valid.
         scope.$eval( attributes.customSubmit );
 
@@ -111,6 +123,14 @@ var CustomSubmitDirective = function(FootprintRequests) {
 
         FootprintRequests.addComment(commentData)
         .then(function (data){
+          console.log("element")
+          console.log($element)               
+          console.log("scope")
+          console.log(scope)
+
+          if (FootprintRequests.openFootprint){
+            scope.updateFootprint(FootprintRequests.openFootprint)
+          }
           scope.data.currentComment = ''
           //$element[0][0].value = ''
         })

@@ -2,9 +2,13 @@
 
 var FootprintRequests = function ($http){
   var footprintData;
+  var openFootprint;
 
   return {
+    // Contains comments and props
     currentFootprint: footprintData,
+    // Contains all open footprint data
+    openFootprint: openFootprint,
 
     addToBucketList: function (data) {
       if (data) {
