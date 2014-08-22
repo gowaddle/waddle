@@ -7,7 +7,7 @@ var NavbarController = function (Auth, $scope, UserRequests, MapFactory, $state)
     UserRequests.getBucketList(window.sessionStorage.userFbID)
       .then(function (BucketData) {
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
-        $state.go('map.feed')
+        $state.go('map.feed');
       });
   };
   

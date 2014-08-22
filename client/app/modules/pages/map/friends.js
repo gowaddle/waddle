@@ -14,7 +14,6 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
         $state.go('map.feed')
       });
   };
-
 };
 
 FriendsController.$inject = ['$scope', '$state', 'UserRequests', 'MapFactory'];

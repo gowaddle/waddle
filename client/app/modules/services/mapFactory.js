@@ -75,10 +75,8 @@ var MapFactory = function (){
   // Markers in bounds are stored on factory to be accessible from any state
   var markerQuadTree = null;
 
-  // Mapbox
-
+  // Mapbox Configuration
   L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
-
   var aggregatedMarkers = new L.MarkerClusterGroup({showCoverageOnHover: false, disableClusteringAtZoom: 12, maxClusterRadius: 60});
 
   var initializeMap = function () {
@@ -93,7 +91,7 @@ var MapFactory = function (){
 
     configuredMap.addLayer(aggregatedMarkers);
 
-    return configuredMap
+    return configuredMap;
   }
 
   var makeMarker = function (footprint) {
@@ -141,7 +139,6 @@ var MapFactory = function (){
     var footprintQuadtree;
 
     _.each(allFootprints, function (footprint) {
-      var latLng = [footprint.place.lat, footprint.place.lng];
 
       footprintQuadtree ? footprintQuadtree.insert(footprint) : footprintQuadtree = new QuadTree(footprint);
 
