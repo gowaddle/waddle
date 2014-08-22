@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 					'client/bower_components/doc-ready/doc-ready.js',
 					'client/bower_components/matches-selector/matches-selector.js',
 					'client/bower_components/outlayer/item.js', 'client/bower_components/outlayer/outlayer.js',
-					'client/bower_components/masonry/dist/masonry.js',
+					'client/bower_components/masonry/masonry.js',
 					'client/bower_components/imagesloaded/imagesloaded.js',
 					'client/bower_components/angular/angular.js',
 					'client/bower_components/angular-ui-router/angular-ui-router.js',
@@ -91,7 +91,7 @@ module.exports = function (grunt) {
 	  	install: {
 	  		options: {
 		  		targetDir: './client/bower_components',
-		  		cleanBowerDir: true
+		  		cleanup: true
 	  		}
 	  	}
 	  },
