@@ -29,6 +29,9 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       FootprintRequests.giveProps(propsData)
       .then(function (data) {
         $scope.getFootprint(footprint);
+        //Add liked property to checkin
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'liked', true)
+        $scope.$apply(filterFeedByBounds);
       });
     };
 

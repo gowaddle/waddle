@@ -76,8 +76,9 @@ var MapFactory = function (){
     var myLat = footprint.place.lat;
     var myLng = footprint.place.lng;
 
-    if (this.footprint.checkin.facebookID === footprint.checkin.facebookID) {
+    if (this.footprint.checkin.checkinID === footprint.checkin.checkinID) {
       this.footprint.checkin[key] = value;
+      console.log(this.footprint)
       return;
     }
 
