@@ -143,7 +143,7 @@ utils.parseIGPost = function (post, user) {
     'foursquareID': 'null',
     'country': 'null',
     'category': 'null',
-    'source': 'facebook'
+    'source': 'instagram'
   };
 
   if (post.likes) {

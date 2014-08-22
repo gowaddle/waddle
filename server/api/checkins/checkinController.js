@@ -56,8 +56,6 @@ checkinController.handleFBPost = function (req, res) {
     return facebookUtils.handleUpdateObject(update);
   });
 
-  console.log("these r ma postises: " + JSON.stringify(posts));
-
   Q.all(posts)
     .then(function (postArr) {
       // write to db using batch query?
@@ -65,8 +63,17 @@ checkinController.handleFBPost = function (req, res) {
 
       var flatPostArr = _.flatten(postArr);
 
-      var queries = _.map(flatPostArr, function (post) {
-        return post.user.addCheckins([post.checkin]);
+      var queries = [];
+
+      _.each(flatPostArr, function (userObj) {
+        console.log('user obj', JSON.stringify(userObj));
+        var myUser = userObj.user;
+        var myCheckins = userObj.checkins;
+
+        _.each(myCheckins, function (checkin) {
+          queries.push(myUser.addCheckins([checkin]);
+        });
+
       });
 
       return Q.all(queries);
