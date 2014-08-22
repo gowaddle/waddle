@@ -22,7 +22,7 @@ userController.userLogin = function (req, res) {
   var combinedFBCheckins;
   var alreadyExists = false;
 
-  //Start creation of new user or update and retrieval of existing user
+  // Start creation of new user or update and retrieval of existing user
   User.createUniqueUser(userData)
   .then(function (userNode) { 
     //note: this has the user node
@@ -30,7 +30,7 @@ userController.userLogin = function (req, res) {
     user = userNode;
     return facebookUtils.exchangeFBAccessToken(userData.fbToken);
   })
-  //Store acces token on scope, Get profile pictures from Facebook
+  // Store acces token on scope, Get profile pictures from Facebook
   .then(function (fbReqData) {
     FBAccessToken = fbReqData.access_token
     return facebookUtils.getFBProfilePicture(userData.facebookID);
@@ -39,6 +39,7 @@ userController.userLogin = function (req, res) {
     var properties = {
       'fbToken': FBAccessToken,
     };
+    // Asks if facebook profile picture is a default silhouette
     if(fbPicData.data.is_silhouette === false) {
       properties['fbProfilePicture'] = fbPicData.data.url;
     }
@@ -51,6 +52,7 @@ userController.userLogin = function (req, res) {
   //Path forks here for existing vs new users
   .then(function (checkinsAlreadyStored) {
     // console.log('fb checkins: ', checkinsAlreadyStored.length);
+    // For existing users
     if (checkinsAlreadyStored.length) {
       user.findAllFriends()
       .then(function (neoUserData){
@@ -65,6 +67,7 @@ userController.userLogin = function (req, res) {
         res.status(200).end();
       })
     } else {
+      // For new users, start chain of facebook requests.
       getAndParseFBData();
     }
   })
@@ -73,8 +76,8 @@ userController.userLogin = function (req, res) {
     res.status(500).end();
   });
 
+  // Start getting data for checkins and photos
   var getAndParseFBData = function () {
-    // start getting data for checkins and photos
 
     facebookUtils.getFBFriends(user)
     .then(function (fbRawUserData) {
