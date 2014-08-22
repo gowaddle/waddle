@@ -3,23 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <title>Waddle</title>
-    <link rel="stylesheet" type="text/css" href="dist/style.css"/>
     <link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.css' rel='stylesheet' />
-    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet' />
-    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet'/>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet'/>
+    <link rel="stylesheet" type="text/css" href="dist/style.min.css"/>
   </head>
   <body ng-app='waddle'>
     <div ui-view='navbar'></div>
     <div ui-view='map' class = 'mapuiview'></div>
     <div ui-view></div>
-
-    <script src="dist/bower.js"></script>
-
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
-    <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.js'></script>
-    <script src="bower_components/angular-masonry/angular-masonry.js"></script>
-    <script src="dist/app.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
+    <script src="dist/app.min.js"></script>
   </body>
 </html>
