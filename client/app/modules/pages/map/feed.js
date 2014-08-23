@@ -1,14 +1,14 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $state, $rootScope) {
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $rootScope, $state, $rootScope) {
   Auth.checkLogin()
   .then( function (){
 
 
     var filterFeedByBounds = function () {
       var bounds = $scope.currentMap.getBounds();
-      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      console.log($scope.inBounds[0]);
+      $rootScope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      console.log($rootScope.inBounds[0]);
     };
 
     if ($scope.currentMap && MapFactory.markerQuadTree) {
@@ -88,7 +88,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$state', '$rootScope'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$rootScope', '$state', '$rootScope'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 

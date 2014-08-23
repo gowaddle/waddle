@@ -1,13 +1,15 @@
 (function(){
 
-var NavbarController = function (Auth, $scope, UserRequests, MapFactory, $state){
+var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFactory, $state){
   $scope.logout = Auth.logout;
 
   $scope.loadBucketlist = function () {
     UserRequests.getBucketList(window.sessionStorage.userFbID)
       .then(function (BucketData) {
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
-        $state.go('map.feed');
+        $scope.currentMap = MapFactory.currentMap
+        var bounds = $scope.currentMap.getBounds();
+        $rootScope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
       });
   };
   
@@ -17,7 +19,7 @@ var NavbarController = function (Auth, $scope, UserRequests, MapFactory, $state)
   }
 }
 
-NavbarController.$inject = ['Auth', '$scope', 'UserRequests', 'MapFactory', '$state'];
+NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state'];
 
 angular.module('waddle.navbar', [])
   .controller('NavbarController', NavbarController);
