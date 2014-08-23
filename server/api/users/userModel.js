@@ -280,12 +280,10 @@ User.getBucketList = function (facebookID){
   var params = {
     'facebookID': facebookID
   };
-  console.log(facebookID);
   
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      console.log(results)
       var parsedResults = _.map(results, function (item) {
         return {
           checkin: item.c.data,
