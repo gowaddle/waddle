@@ -283,6 +283,19 @@ li{
    overflow-y: scroll;
 }
 
+.defaultpeng {
+  -webkit-filter: grayscale(50%);
+  -moz-filter: grayscale(80%);
+  -o-filter: grayscale(80%);
+  -ms-filter: grayscale(80%);
+  filter: grayscale(50%); 
+  height: 70px;
+  width: 65px;
+  left: 80px;
+  opacity: 0.8;
+  position: relative;
+}
+
 .waddlefeeditem {
   padding: 5px;
   height: 25%;
@@ -297,15 +310,16 @@ li{
   width: 77%;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .feedphoto {
+  position: relative;
   max-width: 100px;
   max-height: 100px;
   overflow:hidden;
-}
-.feedphoto img:hover {
-  opacity: 0.2;
+  left: 70px;
+  cursor: pointer;
 }
 
 .footprintbrick {
@@ -416,8 +430,8 @@ li{
 
 .comment_form input {
   height:12px; 
-  width:215px; 
-  padding:5px 8px;
+  width:235px; 
+  padding:5px;
   box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
   border-radius: 3px;
   border: none;
