@@ -38,14 +38,14 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       });
     };
 
-    $scope.addCheckinToBucketlist = function (checkinID){
+    $scope.addCheckinToBucketlist = function (footprint){
       var bucketListData = {
         facebookID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+        checkinID: footprint.checkin.checkinID
       }
-
       FootprintRequests.addToBucketList(bucketListData)
       .then(function (data){ 
+        $scope.getFootprint(footprint);
         // Add bucketed property to checkin, updating markerQuadTree and refreshing inBounds
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
         MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true)
