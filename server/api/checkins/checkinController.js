@@ -104,12 +104,12 @@ checkinController.realtimeFoursquareData = function (req, res) {
   })
   .then(function (data) {
     console.log(data);
-    res.status(202).end();
   })
   .catch(function (err) {
     console.log(err);
-    res.status(500).end();
   });
+
+  res.status(200).end();
 };
 
 checkinController.addToBucketList = function (req, res){
