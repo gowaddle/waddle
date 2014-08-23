@@ -10,6 +10,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
         $scope.currentMap = MapFactory.currentMap
         var bounds = $scope.currentMap.getBounds();
         $rootScope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+        $state.go('map.feed');
       });
   };
   
