@@ -111,7 +111,7 @@ checkinController.realtimeFoursquareData = function (req, res) {
   .catch(function (err) {
     console.log(err);
   });
-  
+
   res.status(200).end();
 };
 
