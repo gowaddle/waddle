@@ -233,8 +233,9 @@ User.prototype.findAllCheckins = function (viewer) {
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
-    (viewer ? 'OPTIONAL MATCH (viewer:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' : ""),
-    'RETURN checkin, p' + (viewer ? ', viewer' : "")
+    (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' +
+      'OPTIONAL MATCH (bucketer:User {facebookID: {viewerID}})-[:hasBucket]->(checkin)' : ""),
+    'RETURN checkin, p' + (viewer ? ', liker, bucketer' : "")
   ].join('\n');
 
   var params = {
@@ -253,8 +254,11 @@ User.prototype.findAllCheckins = function (viewer) {
           "checkin": item.checkin.data,
           "place": item.p.data
         }
-        if (item.viewer && item.viewer.data){
+        if (item.liker){
           singleResult.checkin.liked = true;
+        }
+        if (item.bucketer){
+          singleResult.checkin.bucketed = true;
         }
         return singleResult
       });
