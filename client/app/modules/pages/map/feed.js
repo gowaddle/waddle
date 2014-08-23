@@ -13,7 +13,6 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
     if ($scope.currentMap && MapFactory.markerQuadTree) {
       
       filterFeedByBounds();
-
       // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
       $scope.currentMap.on('move', function() {
         $scope.$apply(filterFeedByBounds); 
@@ -31,11 +30,11 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       FootprintRequests.giveProps(propsData)
       .then(function (data) {
         //this function seems unnecessary - look into later
-        //$scope.getFootprint(footprint);
+        $scope.getFootprint(footprint);
 
         // Add liked property to checkin, updating markerQuadTree and refreshing inBounds
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
-        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'liked', true)
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'liked', true);
         filterFeedByBounds();
       });
     };
@@ -49,8 +48,8 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       .then(function (data){ 
         // Add bucketed property to checkin, updating markerQuadTree and refreshing inBounds
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
-        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true)
-        $scope.$apply(filterFeedByBounds);
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true);
+        filterFeedByBounds();
       });
     };
 
