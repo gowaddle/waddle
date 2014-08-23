@@ -90,7 +90,10 @@ checkinController.handleFBPost = function (req, res) {
 
 
 checkinController.realtimeFoursquareData = function (req, res) {
-  var checkin = JSON.parse(req.body.checkin);
+  var checkin = req.body.checkin;
+  console.log(req.body);
+  var checkin = JSON.parse(checkin);
+  console.log(checkin);
   var userFoursquareID = checkin.user.id;
   var user;
 
@@ -104,12 +107,12 @@ checkinController.realtimeFoursquareData = function (req, res) {
   })
   .then(function (data) {
     console.log(data);
-    res.status(202).end();
   })
   .catch(function (err) {
     console.log(err);
-    res.status(500).end();
   });
+  
+  res.status(200).end();
 };
 
 checkinController.addToBucketList = function (req, res){
