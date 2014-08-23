@@ -10,14 +10,16 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       console.log($scope.inBounds[0]);
     };
 
-    if (MapFactory.markerQuadTree) {
+    if ($scope.currentMap && MapFactory.markerQuadTree) {
+      
       filterFeedByBounds();
+
+      // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
+      $scope.currentMap.on('move', function() {
+        $scope.$apply(filterFeedByBounds); 
+      });
     }
 
-    // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
-    $scope.currentMap.on('move', function() {
-      $scope.$apply(filterFeedByBounds); 
-    });
 
     $scope.addPropsToCheckin = function (footprint){
       

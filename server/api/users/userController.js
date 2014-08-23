@@ -244,7 +244,10 @@ userController.getUserData = function (req, res){
 // Takes a facebookID and returns a footprint object with
 // checkin and place keys, containing checkin and place data
 userController.getBucketList = function (req, res){
+  console.log(req);
   var facebookID = req.params.user;
+
+  console.log(facebookID);
 
   User.getBucketList(facebookID)
   .then(function (footprints) {

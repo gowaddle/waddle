@@ -114,7 +114,7 @@ var MapFactory = function (){
     configuredMap.addLayer(aggregatedMarkers);
 
     return configuredMap;
-  }
+  };
 
   var makeMarker = function (footprint) {
     var place = footprint.place;

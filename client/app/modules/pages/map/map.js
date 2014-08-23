@@ -15,10 +15,10 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
     
   Auth.checkLogin()
   .then(function(){
-
-    $scope.currentMap = MapFactory.initializeMap();
-
+    
     if(UserRequests.allData) {
+      $scope.currentMap = MapFactory.initializeMap();
+
       MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(UserRequests.allData.allCheckins);
       $state.go('map.feed');
     } else {
