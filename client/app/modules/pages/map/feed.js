@@ -1,47 +1,66 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $state) {
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $state, $rootScope) {
   Auth.checkLogin()
   .then( function (){
 
-    var filterFeedByBounds = function () {
-      var bounds = $scope.configuredMap.getBounds();
-      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
 
+    var filterFeedByBounds = function () {
+      var bounds = $scope.currentMap.getBounds();
+      $scope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      console.log($scope.inBounds[0]);
     };
 
-    if (MapFactory.markerQuadTree) {
+    if ($scope.currentMap && MapFactory.markerQuadTree) {
+      
       filterFeedByBounds();
+
+      // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
+      $scope.currentMap.on('move', function() {
+        $scope.$apply(filterFeedByBounds); 
+      });
     }
 
-    // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
-    $scope.configuredMap.on('move', function() {
-      $scope.$apply(filterFeedByBounds); 
-    });
 
-    $scope.addPropsToCheckin = function (checkinID){
+    $scope.addPropsToCheckin = function (footprint){
+      
       var propsData = {
         clickerID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+        checkinID: footprint.checkin.checkinID
       }
 
-      FootprintRequests.giveProps(propsData);
+      FootprintRequests.giveProps(propsData)
+      .then(function (data) {
+        //this function seems unnecessary - look into later
+        $scope.getFootprint(footprint);
+
+        // Add liked property to checkin, updating markerQuadTree and refreshing inBounds
+        // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'liked', true);
+        filterFeedByBounds();
+      });
     };
 
-    $scope.addCheckinToBucketlist = function (checkinID){
+    $scope.addCheckinToBucketlist = function (footprint){
       var bucketListData = {
         facebookID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+        checkinID: footprint.checkin.checkinID
       }
-
-      FootprintRequests.addToBucketList(bucketListData);
+      FootprintRequests.addToBucketList(bucketListData)
+      .then(function (data){ 
+        // Add bucketed property to checkin, updating markerQuadTree and refreshing inBounds
+        // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true);
+        filterFeedByBounds();
+      });
     };
 
+    $scope.selectedFootprintInteractions = null;
+    
     // Send request to database for user props and comments data
     // Format of returned object is {data: {props: String(Int), propGivers: [], comments:[]}}
     $scope.getFootprint = function (footprint) {
       $scope.footprint = footprint;
-      $scope.selectedFootprintInteractions = null;
 
       var checkinID = footprint.checkin.checkinID;
       FootprintRequests.openFootprint = footprint;
@@ -56,7 +75,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
     $scope.closeFootprintWindow = function (){
       FootprintRequests.openFootprint = undefined;
       $state.go('map.feed')
-    }
+    };
 
     // Ensure that a user comment is posted in the database before displaying
     $scope.updateFootprint = function (footprint){
@@ -65,11 +84,11 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       .then(function (data) {
         $scope.selectedFootprintInteractions.comments = data.data.comments;
       });  
-    }
+    };
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$state'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$state', '$rootScope'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 
@@ -123,10 +142,6 @@ var CustomSubmitDirective = function(FootprintRequests) {
 
         FootprintRequests.addComment(commentData)
         .then(function (data){
-          console.log("element")
-          console.log($element)               
-          console.log("scope")
-          console.log(scope)
 
           if (FootprintRequests.openFootprint){
             scope.updateFootprint(FootprintRequests.openFootprint)

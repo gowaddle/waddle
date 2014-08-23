@@ -127,12 +127,18 @@ utils.parseIGPost = function (post, user) {
   //.data.id
   var deferred = Q.defer();
 
+  console.log(post.created_time);
+  console.log(parseInt(post.created_time));
+  console.log(parseInt(post.created_time)*1000);
+  console.log(new Date(parseInt(post.created_time)*1000));
+
+
   var checkin = {
     'checkinID': post.id,
     'name': post.location.name,
     'lat': post.location.latitude,
     'lng': post.location.longitude,
-    'checkinTime': new Date(parseInt(post.created_time)),
+    'checkinTime': new Date(parseInt(post.created_time)*1000),
     'likes': 'null',
     'photoSmall': 'null',
     'photoLarge': 'null',

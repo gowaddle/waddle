@@ -1,15 +1,16 @@
-<!-- <h4>{{selectedFootprint}}<h4>
-<h3>{{data.footprint}}</h3> -->
 <div class="footprintitem">
 	<span ng-click="closeFootprintWindow()" class="closefootprint">X</span>
 	<h2>{{footprint.place.name}}</h2>
 	<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
 	<img ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
 	<img ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
-	<span>
-		<img src="https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png">
+	<div>
+		<img ng-if="!footprint.checkin.bucketed" class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
+		<img ng-if="footprint.checkin.bucketed" class='addbucketactive' title="Add to Bucket List"/>
+		<img ng-if="!footprint.checkin.liked" class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint)">
+		<img ng-if="footprint.checkin.liked" class='givepropsactive' title="Give Props">
 		<h4>{{selectedFootprintInteractions.props}}</h4>
-	</span>
+	</div>
 	<div>
 	  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
 	  <form name="customSubmit" data-custom-submit class='comment_form' novalidate>

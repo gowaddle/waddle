@@ -8,13 +8,13 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
   }
 
   $scope.clickFriend = function (friend) {
-    UserRequests.getUserData(friend)
-    .then(function(data){
-      MapFactory.markerQuadTree = $scope.handleUserCheckinData(data.data);
-      $state.go('map.feed')
-    });
+    var viewer = window.sessionStorage.userFbID;
+    UserRequests.getUserData(friend, viewer)
+      .then(function (data){
+        MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(data.data);
+        $state.go('map.feed')
+      });
   };
-
 };
 
 FriendsController.$inject = ['$scope', '$state', 'UserRequests', 'MapFactory'];

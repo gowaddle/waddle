@@ -228,26 +228,39 @@ User.prototype.findAllFriends = function () {
 
 // Basic query to find all user's checkins
 // Uses this.getProperty to grab instantiated user's facebookID as query parameter
-User.prototype.findAllCheckins = function () {
+User.prototype.findAllCheckins = function (viewer) {
   var deferred = Q.defer();
 
   var query = [
-    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(c:Checkin)-[:hasPlace]->(p:Place)',
-    'RETURN c, p',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
+    (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' +
+      'OPTIONAL MATCH (bucketer:User {facebookID: {viewerID}})-[:hasBucket]->(checkin)' : ""),
+    'RETURN checkin, p' + (viewer ? ', liker, bucketer' : "")
   ].join('\n');
 
   var params = {
     facebookID: this.getProperty('facebookID')
   };
+  if (viewer){
+    params['viewerID'] = viewer
+  }
+
 
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
       var parsedResults = _.map(results, function (item) {
-        return {
-          checkin: item.c.data,
-          place: item.p.data
+        var singleResult = {
+          "checkin": item.checkin.data,
+          "place": item.p.data
         }
+        if (item.liker){
+          singleResult.checkin.liked = true;
+        }
+        if (item.bucketer){
+          singleResult.checkin.bucketed = true;
+        }
+        return singleResult
       });
 
       deferred.resolve(parsedResults);
@@ -256,6 +269,44 @@ User.prototype.findAllCheckins = function () {
 
   return deferred.promise;
 };
+
+// Find all bucketList items for a user
+// Takes a facebookID and returns a footprint object with
+// checkin and place keys, containing checkin and place data
+User.getBucketList = function (facebookID){
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasBucket]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
+    'RETURN checkin, p',
+  ].join('\n');
+
+  var params = {
+    'facebookID': facebookID
+  };
+  
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (item) {
+        var singleResult = {
+          checkin: item.checkin.data,
+          place: item.p.data
+        }
+        singleResult.checkin.bucketed = true;
+        if (singleResult.checkin.likes.length){
+          singleResult.checkin.liked = true;
+        }
+        console.log(item.checkin.data)
+        return singleResult;
+      })
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+}
 
 // Find a single user in the database, requires facebookID as input
 // If user is not in database, promise will resolve to error 'user does not exist'
