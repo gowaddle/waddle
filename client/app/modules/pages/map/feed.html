@@ -12,6 +12,7 @@
     <div class = 'feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
       <img ng-if="footprint.checkin.photoSmall != 'null'" ng-src="{{footprint.checkin.photoSmall}}">
     </div>
+    <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoSmall === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
     <h8 ng-if="footprint.checkin.caption != 'null'">{{footprint.checkin.caption}}</h8>
     <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
       <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
