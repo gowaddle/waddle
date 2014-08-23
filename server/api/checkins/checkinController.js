@@ -90,10 +90,7 @@ checkinController.handleFBPost = function (req, res) {
 
 
 checkinController.realtimeFoursquareData = function (req, res) {
-  var checkin = req.body.checkin;
-  console.log(req.body);
-  var checkin = JSON.parse(checkin);
-  console.log(checkin);
+  var checkin = JSON.parse(req.body.checkin);
   var userFoursquareID = checkin.user.id;
   var user;
 
