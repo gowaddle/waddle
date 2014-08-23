@@ -5,6 +5,7 @@
       {{footprint.place.name}}
     </h4>
     <img ng-if="!footprint.checkin.liked" class='giveprops feedactions' title="Give Props" ng-click="addPropsToCheckin(footprint)"/>
+    <img ng-if="footprint.checkin.liked" class='givepropsactive feedactions' title="Give Props"/>
     <img class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint.checkin.checkinID)"/>
     <br/>
     <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
