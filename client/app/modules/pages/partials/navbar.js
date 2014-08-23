@@ -6,9 +6,11 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   $scope.loadBucketlist = function () {
     UserRequests.getBucketList(window.sessionStorage.userFbID)
       .then(function (BucketData) {
+        // Because the navbar controller does not inherit the map or feed scope,
+        // current map has to be retrieved from MapFactory.  This is used to set the inbounds 
+        // immediately when 'my bucketlist' is clicked
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
-        $scope.currentMap = MapFactory.currentMap
-        var bounds = $scope.currentMap.getBounds();
+        var bounds MapFactory.currentMap.getBounds()
         $rootScope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
         $state.go('map.feed');
       });
