@@ -100,7 +100,6 @@ var MapFactory = function (){
   // Mapbox Configuration
   L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
   var aggregatedMarkers = new L.MarkerClusterGroup({
-    singleMarkerMode: true,
     showCoverageOnHover: false,
     disableClusteringAtZoom: 12,
     maxClusterRadius: 60
