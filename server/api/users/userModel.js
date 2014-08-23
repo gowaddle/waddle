@@ -250,7 +250,7 @@ User.prototype.findAllCheckins = function (viewer) {
     if (err) { deferred.reject(err); }
     else {
       var parsedResults = _.map(results, function (item) {
-        singleResult = {
+        var singleResult = {
           "checkin": item.checkin.data,
           "place": item.p.data
         }
@@ -277,8 +277,8 @@ User.getBucketList = function (facebookID){
   var deferred = Q.defer();
 
   var query = [
-    'MATCH (user:User {facebookID: {facebookID}})-[:hasBucket]->(c:Checkin)-[:hasPlace]->(p:Place)',
-    'RETURN c, p',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasBucket]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
+    'RETURN checkin, p',
   ].join('\n');
 
   var params = {
@@ -289,10 +289,16 @@ User.getBucketList = function (facebookID){
     if (err) { deferred.reject(err); }
     else {
       var parsedResults = _.map(results, function (item) {
-        return {
-          checkin: item.c.data,
+        var singleResult = {
+          checkin: item.checkin.data,
           place: item.p.data
         }
+        singleResult.checkin.bucketed = true;
+        if (singleResult.checkin.likes.length){
+          singleResult.checkin.liked = true;
+        }
+        console.log(item.checkin.data)
+        return singleResult;
       })
 
       deferred.resolve(parsedResults);
