@@ -30,7 +30,9 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
 
       FootprintRequests.giveProps(propsData)
       .then(function (data) {
-        $scope.getFootprint(footprint);
+        //this function seems unnecessary - look into later
+        //$scope.getFootprint(footprint);
+
         // Add liked property to checkin, updating markerQuadTree and refreshing inBounds
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
         MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'liked', true)
@@ -38,13 +40,18 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $sta
       });
     };
 
-    $scope.addCheckinToBucketlist = function (checkinID){
+    $scope.addCheckinToBucketlist = function (footprint){
       var bucketListData = {
         facebookID: window.sessionStorage.userFbID,
-        checkinID: checkinID
+        checkinID: footprint.checkin.checkinID
       }
-
-      FootprintRequests.addToBucketList(bucketListData);
+      FootprintRequests.addToBucketList(bucketListData)
+      .then(function (data){ 
+        // Add bucketed property to checkin, updating markerQuadTree and refreshing inBounds
+        // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true)
+        $scope.$apply(filterFeedByBounds);
+      });
     };
 
     $scope.selectedFootprintInteractions = null;
