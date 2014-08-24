@@ -174,8 +174,10 @@ var MapFactory = function (){
     return footprintQuadtree;
   };
 
-  
+  var currentMap;
+
   return {
+    currentMap: currentMap,
     QuadTree: QuadTree,
     markerQuadTree: markerQuadTree,
     leaflet: L,

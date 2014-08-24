@@ -18,7 +18,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
     
     if(UserRequests.allData) {
       $scope.currentMap = MapFactory.initializeMap();
-
+      MapFactory.currentMap = $scope.currentMap;
       MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(UserRequests.allData.allCheckins);
       $state.go('map.feed');
     } else {
