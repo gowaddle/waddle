@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Waddle</title>
+  </head>
+  <body>
+    <script>
+
+      var parseInstagramCode = function() {
+        var url = window.location.href;
+        var processedUrl = url.split('code=');
+        var userCode = processedUrl[1].split('#');
+        return userCode[0];
+      };
+
+      var sendInstagramCodeToServer = function(code) {
+        var request = new XMLHttpRequest();
+        request.open('POST', '/api/users/userinstagramcode', false);
+        request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        request.send(JSON.stringify({facebookID: window.sessionStorage.userFbID, instagramCode: code}));
+      };
+
+      window.location.assign('http://waddle.herokuapp.com/#/map');
+      sendInstagramCodeToServer(parseInstagramCode());
+
+    </script>
+  </body>
+</html>

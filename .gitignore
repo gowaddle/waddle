@@ -27,6 +27,12 @@ dist/
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules/
 bower_components/
+coverage/
+client/bower_components/
 
-#globals
+# globals
 globals.js
+
+# Geo data
+natural_earth.gso.json
+*.csv

@@ -1,49 +1,61 @@
-angular.module('waddle.frontpage', [])
+(function(){
 
-.controller('FrontpageController', function ($scope, $state, $window, UserRequests) {
-  openFB.getLoginStatus(function (response){
-  	if (response.status === 'connected'){
-  	  console.log('connected');
+var FrontpageController = function (UserRequests, $scope, $state) {
+  var enterSiteWhenConnected = function (fbToken) {
+    openFB.api({
+      path: '/me',
+      success: function (fbData) {
+        sendUserDataToServer(fbToken, fbData);
+      },
+      error: function(err) { console.log(err); }
+    });
+  };
+  
+  var sendUserDataToServer = function(fbToken, fbData){
+    window.sessionStorage.userFbID = fbData.id;
+
+    var userData = {
+      facebookID: fbData.id,
+      name: fbData.name,
+      fbToken: fbToken
+    };
+
+    $state.go('loading');
+
+    UserRequests.sendUserData(userData)
+    .then(function(storedUserData){
+      UserRequests.allData = storedUserData.data
       $state.go('map');
-  	} else {
-  	  console.log('not connected')
+    });
+  };
 
-      var handleUserData = function(data){
-        var userData = {
-          facebookID: data.id,
-          name: data.name
-        };
+  openFB.getLoginStatus(function (response){
+    if (response.status === 'connected'){
+      console.log('connected');
+      enterSiteWhenConnected(response.authResponse.token);
+    } else {
+      console.log('not connected')
+    }
+  });
 
-        console.log("fbData: ", data)
-        console.log("userDataPassedToServer: ", userData)
+  $scope.login = function(){
+    openFB.login(function (response) {
+      if(response.status === 'connected') {
+        console.log('connected');
+        enterSiteWhenConnected(response.authResponse.token);
+      } else {
+        alert('Facebook login failed: ' + response.error);
+      }
+    }, {
+      scope: 'user_friends, user_tagged_places, user_photos, read_stream'
+    });
+  };
+};
 
-        UserRequests.sendUserData(userData)
-        .then(function(){
-            //$state.go('map') should occur here when we end up getting data from the database (and show a waddling penguin meanwhile)
-        });
+FrontpageController.$inject = ['UserRequests', '$scope', '$state']
 
-        $state.go('map');
-      };
+//Start creating Angular module
+angular.module('waddle.frontpage', [])
+  .controller('FrontpageController', FrontpageController);
 
-      var handleOpenFBLoginResponse = function (response) {
-        if(response.status === 'connected') {
-          openFB.api({
-            path: '/me',
-            success: handleUserData,
-            error: function(err) { console.log(err); }
-          });
-        } else {
-          alert('Facebook login failed: ' + response.error);
-        }
-      };
-
-  	  $scope.login = function(){
-  	  	openFB.login(handleOpenFBLoginResponse, {
-          scope: 'user_friends, user_tagged_places'
-        });
-  	  };
-
-  	}
-  })
-
-});
+})();

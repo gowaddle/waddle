@@ -1,6 +1,8 @@
-# Project Name
+[![Build Status](https://travis-ci.org/gowaddle/waddle.svg?branch=dev)](https://travis-ci.org/gowaddle/waddle)
 
-> Pithy project description
+# Waddle
+
+> Your map, your footprints, your life
 
 ## Team
 
@@ -25,8 +27,6 @@
 ## Requirements
 
 - Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
 - etc
 - etc
 

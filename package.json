@@ -3,43 +3,59 @@
   "version": "0.0.1",
   "description": "gogogo",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/gowaddle/waddle",
+  "engines": {
+    "node": "0.10.x"
+  },
   "license": "Proprietary",
   "scripts": {
     "start": "node server/server.js",
-    "postinstall": "grunt build"
+    "postinstall": "grunt build",
+    "test": "karma start test/karma.conf.js"
   },
   "dependencies": {
     "angular": "~1.2.19",
     "angular-ui-router": "~0.2.10",
     "body-parser": "~1.5.2",
     "browserify": "~5.9.1",
+    "chai": "^1.9.1",
     "express": "~4.7.2",
     "grunt": "^0.4.4",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "^0.3.0",
     "grunt-contrib-cssmin": "^0.9.0",
-    "grunt-contrib-jshint": "^0.9.2",
     "grunt-contrib-stylus": "~0.18.0",
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-test": "^0.10.0",
-    "grunt-nodemon": "~0.2.1",
+    "grunt-nodemon": "^0.3.0",
+    "grunt-protractor-runner": "^1.1.0",
     "grunt-shell": "^0.6.4",
     "karma-jasmine": "^0.1.5",
+    "lodash": "^2.4.1",
     "mocha": "^1.20.1",
     "morgan": "~1.2.2",
     "neo4j": "^1.1.0",
+    "protractor": "^1.0.0",
     "q": "^1.0.1",
-    "stylus": "~0.47.3"
+    "stylus": "~0.47.3",
+    "supertest": "^0.13.0",
+    "request": "~2.40.0",
+    "bower": "~1.3.9",
+    "grunt-bower-task": "~0.4.0"
   },
   "devDependencies": {
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-uglify": "^0.4.1",
+    "grunt-nodemon": "~0.2.1",
     "karma": "~0.12.19",
     "karma-chrome-launcher": "^0.1.4",
+    "karma-coverage": "~0.2.5",
     "karma-mocha": "^0.1.4",
     "karma-nested-reporter": "^0.1.1",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-nodemon": "~0.2.1"
+    "karma-phantomjs-launcher": "~0.1.4",
+    "protractor": "~1.0.0",
+    "sinon": "~1.10.3"
   }
 }

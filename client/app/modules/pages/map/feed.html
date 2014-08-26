@@ -1,3 +1,32 @@
-<div ng-repeat="data in fbData">
-	{{data.place.name}}
+<div ui-view></div>
+<div ng-if="inBounds.length" class='waddlefeed'>
+  <div class='waddlefeeditem' ng-repeat="footprint in inBounds | orderBy:'-checkin.checkinTime' | limitTo:20 ">
+    <h4 class='feeditemname'ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      {{footprint.place.name}}
+    </h4>
+    <img ng-if="!footprint.checkin.liked" class='giveprops feedactions' title="Give Props" ng-click="addPropsToCheckin(footprint)"/>
+    <img ng-if="footprint.checkin.liked" class='givepropsactive feedactions' title="Give Props"/>
+    <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
+    <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List"/>
+    <br/>
+    <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
+    <div class='feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      <img ng-if="footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
+    </div>
+    <div ng-if="footprint.checkin.caption === 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
+      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoSmall === 'null' && footprint.checkin.caption === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
+    </div>
+    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
+      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'">"{{footprint.checkin.caption}}"</h4>
+    </div>
+    <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
+      <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
+      <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
+    </form>
+  </div>
 </div>
+<script>
+  $('.comment_form').on('click', function() {
+    $(this).height(30);
+  });
+</script>

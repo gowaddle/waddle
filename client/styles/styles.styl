@@ -1,3 +1,220 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lobster'), url(http://themes.googleusercontent.com/static/fonts/lobster/v6/MWVf-Rwh4GLQVBEwbyI61Q.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/MTP_ySUJH_bn48VBG8sNSnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/k3k702ZOKiLJc3WVjuplzHhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/EInbV5DfGHOiMmvb1Xr-hnhCUOGz7vYGh680lGh-uXM.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/xjAJXh38I15wypJXxuGMBobN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+
+.col-md-4 {
+  display: inline;
+}
+
+.waddlewaddle {
+  color: #FFF;
+}
+
+#welcome{
+  width:900px;
+  height:100%;
+  margin:auto;
+  height:auto;
+  text-align: center;
+  display: block;
+}
+
+.threeimage {
+  width:300px;
+  height:auto;
+  margin-top: 40px; 
+}
+#welcomewrapper{
+  float:left;
+  width:100%;
+  height:100%;
+  margin:auto;
+  height:auto;
+  text-align: center;
+  vertical-align:top;
+  display: block;
+  background:url(https://s3-us-west-2.amazonaws.com/waddle/WaddleLandingBG.jpg) no-repeat center center fixed;
+  }
+#landingbody {
+  float:left;
+  width:100%;
+  height:100%;
+  margin:auto;
+  height:auto;
+  display: block;
+  text-align:center;
+}
+#bodytable {
+  text-align:center;
+  margin:0 auto;
+  margin-bottom:100px;
+}
+.makemap{
+  margin-top:65px;
+  margin-bottom:65px;
+  padding:30px 70px;
+  border:4px solid #ffffff;
+  background:#ff5959;
+  color:#ffffff;
+  font-family:'Open Sans', san-serif;
+  
+  -webkit-border-radius: 10px;
+}
+.makemap:hover{
+  background:#ff6b6b;
+}
+.makemap:active{
+  background:#d94c4c;
+}
+.join{
+  padding:10px 25px;
+  border:0px;
+  background:#ff5959;
+  color:#ffffff;
+  font-family:'Open Sans', san-serif;
+  
+  -webkit-border-radius: 5px;
+}
+.join:hover{
+  background:#ff6b6b;
+}
+.join:active{
+  background:#d94c4c;
+}
+.loginbutton{
+  padding:5px 10px;
+  border:0px;
+  background-color: rgba(0,0,0,0);
+  color:#ffffff;
+  font-family:'Open Sans', san-serif;
+}
+.loginbutton:hover{
+  background-color: rgba(0,0,0,.5);
+}
+.loginbutton:active{
+  background-color: rgba(0,0,0,.25);
+}
+
+div{
+  line-height:1;
+  margin:0px;
+}
+
+h1{
+  font-family:'Open Sans', san-serif;
+  font-style: bold;
+  font-weight:1000;
+  font-size:100px;
+  color:#ffffff;
+  margin:0;
+  padding:0;
+  }
+h2{
+  font-family:'Open Sans', san-serif;
+  font-style: none;
+  font-weight:400;
+  font-size:20px;
+  color:#a6a6a6;
+  line-height:180%;
+  margin:0;
+  padding:0;
+  }
+h3{
+  font-family:'Open Sans', san-serif;
+  font-style: none;
+  font-weight:100;
+  font-size:16px;
+  color:#555555;
+  line-height:180%;
+  margin:0px;
+  padding:0px;
+  }
+h4{
+  font-family:'Open Sans', san-serif;
+  color:#a6a6a6;
+  display:inline;
+  font-size:15px;
+  font-weight:300;
+  margin:0px;
+  padding:0px;
+  }
+h5{
+  font-family:'Open Sans', san-serif;
+  color:#FFF;
+  display:inline;
+  font-size:55px;
+  }
+h6{
+  font-family:'Open Sans', san-serif;
+  color:#555555;
+  display:inline;
+  font-size:12px;
+  font-style:none;
+  font-weight:400;
+  }
+h7{
+  font-family:'Open Sans', san-serif;
+  color:#a6a6a6;
+  display:inline;
+  font-size:9px;
+  }
+h8{
+  font-family:'Open Sans', san-serif;
+  color:#888888;
+  display:inline;
+  font-size:10px;
+  }
+p{
+  display:inline;
+  font-size:12px;
+  font-family:'Open Sans', san-serif;
+}
+
+li{
+  color: #888888;
+  font-family:'Open Sans', san-serif;
+  font-size:14px;
+}
+
 #signin {
   position: absolute;
   background-image: url('https://s3-us-west-2.amazonaws.com/waddle/waddleloginnotwitter.png');
@@ -23,6 +240,75 @@
   opacity: 0.2;
 }
 
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -300px;
+  margin-left: -350px;
+}
+
+#account_connect_bg {
+  background-color:rgba(0,0,0, 0.8); 
+  position:fixed; 
+  top:0; left:0; 
+  width:100%; 
+  height:100%;
+  z-index: 1;
+}
+
+.cancel {
+  position: absolute;
+  top: 144px;
+  left: 753px;
+  opacity: 0;
+  cursor: pointer;
+  background-color: #505050
+}
+
+#fsqsignin {
+  position: absolute;
+  border-radius: 3px;
+  display: inline-block;
+  left: 230px;
+  top: 297px;
+  background-color: #505050;
+  opacity: 0;
+  width: 349px;
+  height: 65px;
+  border-radius: 5px;
+}
+
+#igsignin {
+  position: absolute;
+  display: inline-block;
+  left: 230px;
+  top: 370px;
+  background-color: #505050;
+  opacity: 0;
+  width: 349px;
+  height: 65px;
+  border-radius: 5px;
+}
+
+#fsqsignin:hover {
+  opacity: 0.2;
+}
+
+#igsignin:hover {
+  opacity: 0.2;
+}
+
+
+.divhack{
+  position:absolute; 
+  width:100%;
+  height:100%;
+  top:0;
+  left: 0;
+  z-index: 1;
+}
+
 #map { 
   position:absolute; 
   top:0; 
@@ -30,3 +316,249 @@
   width:100%; 
   z-index: -1; 
 }
+
+.navigation {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 30px;
+  top: 0;
+  background-color:rgba(255, 255, 255, 0.9);
+}
+
+.navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navigation li {
+  float: left;
+}
+
+.navigation li a {
+  width: 100px;
+  height: 10px;
+  line-height: 10px;
+  padding: 10px;
+  display: block;
+  text-align: center;
+}
+
+.navigation li a:hover {
+  background-color: #ddd;
+}
+
+.navigation li a.selected {
+  background-color: #ccc;
+}
+
+.navbarprofile {
+  float: right;
+  margin-right: 20px;
+}
+
+.navbarprofile img {
+  border-radius: 3px;
+  margin-top: 3px;
+  overflow: hidden;
+  max-width: 25px;
+  height: 25px; 
+}
+
+.waddlefeed {
+   margin-top: 40px;
+   height: 40em;
+   width: 275px;
+   float: right;
+   border-radius:5px;
+   background-color:rgba(255,255,255,0.9);
+   overflow-y: scroll;
+}
+
+.defaultpeng {
+  -webkit-filter: grayscale(50%);
+  -moz-filter: grayscale(80%);
+  -o-filter: grayscale(80%);
+  -ms-filter: grayscale(80%);
+  filter: grayscale(50%); 
+  height: 70px;
+  width: 65px;
+  left: 30px;
+  opacity: 0.8;
+  margin-bottom: -20px;
+  position: relative;
+}
+
+.waddlefeeditem {
+  padding: 5px;
+  height: 25%;
+  background-color: #fff;
+  margin: 5px;
+  overflow: hidden;
+}
+
+.feeditemname {
+  display: inline-block;
+  white-space: nowrap;
+  width: 77%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.feedphoto {
+  position: relative;
+  max-width: 100px;
+  max-height: 100px;
+  overflow:hidden;
+  left: 70px;
+  cursor: pointer;
+  background-position: center;
+}
+
+.footprintbrick {
+  border: 1px solid #a6a6a6;
+  margin: 3 px;
+}
+
+.waddlefeedfriend {
+  height: 17%;
+  background-color: #fff;
+  margin: 5px;
+}
+
+.friendname {
+  position: relative;
+  left: 130px;
+  top: -67px;
+  cursor:pointer;
+}
+
+.friendname:hover {
+  color: Teal;
+}
+
+.friendphoto {
+  cursor: pointer;
+  display: inline;
+  margin: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  width: 95px;
+  max-height: 95px; 
+}
+
+.footprints {
+   margin-top: 60px;
+   margin-left: 50px;
+   height: 720px;
+   width: 1100px;
+   background-color:rgba(255,255,255,0.9);
+   overflow-y: scroll;
+}
+
+
+.footprintitem {
+  top: 50px;
+  margin: 10px;
+  padding: 5px;
+  min-height: 300px;
+  min-width: 300px;
+  max-height: 750px;
+  border-radius: 5px;
+  overflow-y: scroll;
+  position: absolute;
+  background-color: rgba(255,255,255,0.9);
+  z-index: 1;
+}
+
+.closefootprint {
+    font-family:'Open Sans', san-serif;
+    float:right;
+    cursor:pointer;
+    color: #a6a6a6;
+    font-size: 25px;
+    display: inline-block;
+    line-height: 0px;
+    padding: 11px 3px;    
+}
+
+.footprintcommentpiccontainer {
+  display: inline;
+  width: 50px;
+  overflow: hidden;
+}
+
+.footprintcommentpic {
+  width: 70px;
+  height: auto;
+}
+
+.commentername {
+  display: block;
+}
+
+// Props image
+.giveprops {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Inactive_01.png');
+}
+
+.givepropsactive {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Active_01.png');
+}
+
+.giveprops:hover {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/props_Active_01.png');
+}
+
+.feedactions {
+  float:right;
+}
+
+// Bucket image
+.addbucket {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Inactive_01.png');
+}
+
+.addbucketactive {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Active_01.png');
+}
+
+.addbucket:hover {
+  content: url('https://s3-us-west-2.amazonaws.com/waddle/bucket_Active_01.png');
+}
+
+.captioncontainer {
+  display: inline-block;
+  margin: 20px;
+  position: relative;
+  width: 170px;
+  height: auto;
+  left: 40px;
+}
+
+.comment_form input {
+  position: relative;
+  height:12px; 
+  width:245px; 
+  padding:5px;
+  box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+  border-radius: 3px;
+  border: none;
+}
+
+.comment_form input:focus {
+    outline: none;
+}
+
+::-webkit-input-placeholder {
+   color: silver;
+   font-family: 'Open-Sans', sans-serif;
+   font-size: 13px;
+}
+
+.mapuiview {
+
+}
+
