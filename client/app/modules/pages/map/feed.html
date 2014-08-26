@@ -10,14 +10,23 @@
     <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List"/>
     <br/>
     <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
-    <div class = 'feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      <img ng-if="footprint.checkin.photoSmall != 'null'" ng-src="{{footprint.checkin.photoSmall}}">
+    <div class='feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      <img ng-if="footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
     </div>
-    <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoSmall === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
-    <h8 ng-if="footprint.checkin.caption != 'null'">{{footprint.checkin.caption}}</h8>
+    <div ng-if="footprint.checkin.caption === 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
+      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoSmall === 'null' && footprint.checkin.caption === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
+    </div>
+    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
+      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'">"{{footprint.checkin.caption}}"</h4>
+    </div>
     <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
       <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
       <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
     </form>
   </div>
 </div>
+<script>
+  $('.comment_form').on('click', function() {
+    $(this).height(30);
+  });
+</script>
