@@ -153,6 +153,26 @@ utils.getFBStatuses = function (user) {
   return deferred.promise;
 };
 
+utils.getFBFeedItemsWithLocation = function(user) {
+  var deferred = Q.defer();
+
+  var fbID = user.getProperty('facebookID');
+  var fbToken = user.getProperty('fbToken');
+
+  var query = {
+    access_token: fbToken,
+    'with': 'location'
+  }
+
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/feed';
+
+  var feedItemContainer = [];
+
+  deferred.resolve(utils.makeFBPaginatedRequest(queryPath, feedItemContainer);
+
+  return deferred.promise;
+}
+
 utils.handleUpdateObject = function (update) {
   console.log("update: " + JSON.stringify(update));
   var deferred = Q.defer();
