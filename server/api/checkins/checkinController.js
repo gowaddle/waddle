@@ -97,6 +97,7 @@ checkinController.realtimeFoursquareData = function (req, res) {
   User.findByFoursquareID(userFoursquareID)
   .then(function (userNode) {
     user = userNode;
+    console.log(checkin);
     return foursquareUtils.parseCheckin(checkin);
   })
   .then(function (parsedCheckin) {
