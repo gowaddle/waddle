@@ -1,26 +1,23 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $rootScope, $state, $rootScope) {
+var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $rootScope, $state) {
   Auth.checkLogin()
   .then( function (){
+    //$scope.inBounds = MapFactory.currentInBounds;
 
-
-    var filterFeedByBounds = function () {
-      var bounds = $scope.currentMap.getBounds();
-      $rootScope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      console.log($rootScope.inBounds[0]);
-    };
-
+    // Finds all points on the map that are within the bottom left and top right
+    // points on the user's view
     if ($scope.currentMap && MapFactory.markerQuadTree) {
+      MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
       
-      filterFeedByBounds();
+      $scope.inBounds = MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
 
       // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
       $scope.currentMap.on('move', function() {
-        $scope.$apply(filterFeedByBounds); 
+        $scope.inBounds = MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
+        $scope.$apply()
       });
     }
-
 
     $scope.addPropsToCheckin = function (footprint){
       
@@ -88,7 +85,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$rootScope', '$state', '$rootScope'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$rootScope', '$state'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 
