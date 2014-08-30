@@ -3,19 +3,20 @@
 var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $rootScope, $state) {
   Auth.checkLogin()
   .then( function (){
-    //$scope.inBounds = MapFactory.currentInBounds;
-
     // Finds all points on the map that are within the bottom left and top right
     // points on the user's view
     if ($scope.currentMap && MapFactory.markerQuadTree) {
       MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
       
-      $scope.inBounds = MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
+      MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
+      $scope.inBoundsObject = MapFactory.currentInBounds;
 
       // When the user pans the map, we set the list of checkins visible to a scope variable for rendering in the feed
       $scope.currentMap.on('move', function() {
-        $scope.inBounds = MapFactory.filterFeedByBounds($scope.currentMap.getBounds());
-        $scope.$apply()
+        $scope.inBoundsObject = MapFactory.currentInBounds;
+        $scope.$apply(function(){
+          MapFactory.filterFeedByBounds($scope.currentMap.getBounds())
+        });
       });
     }
 

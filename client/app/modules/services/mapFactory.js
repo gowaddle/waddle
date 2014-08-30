@@ -99,13 +99,18 @@ var MapFactory = function (){
     } 
   }
 
+  var currentMap;
+  var currentInBounds = {
+    datapoints: null
+  };
+
   var mapFactoryVars = {
     // Markers in bounds are stored on factory to be accessible from any state
     markerQuadTree: null,
-    currentMap: undefined,
+    currentMap: currentMap,
     // Share data points in bounds accross different views.  
     // Mainly added to account for navbar's need for inbounds data
-    currentInBounds: undefined,
+    currentInBounds: currentInBounds,
 
     // Stores all of a user's checkins based on latitude and longitude
     // Allows quicker lookup times for which markers are in bounds,
@@ -182,8 +187,8 @@ var MapFactory = function (){
     },
 
     filterFeedByBounds: function(bounds){
-      MapFactory['currentInBounds'] = mapFactoryVars.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
-      return MapFactory.currentInBounds;
+      currentInBounds.datapoints = mapFactoryVars.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      return currentInBounds;
     }
   }
 
