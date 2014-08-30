@@ -27,8 +27,7 @@
 ## Requirements
 
 - Node 0.10.x
-- etc
-- etc
+- Neo4J
 
 ## Development
 
@@ -37,9 +36,13 @@
 From within the root directory:
 
 ```sh
-sudo npm install -g bower
+npm install -g bower
+npm install -g grunt
+npm install -g karma
 npm install
 bower install
+grunt dev
+
 ```
 
 ### Tasks
