@@ -15,14 +15,12 @@
 1. [Usage](#Usage)
 1. [Requirements](#requirements)
 1. [Development](#development)
-    1. [Installing Dependencies](#installing-dependencies)
-    1. [Tasks](#tasks)
-1. [Team](#team)
+    a. [Installing Dependencies](#installing-dependencies)
 1. [Contributing](#contributing)
 
 ## Usage
 
-> Some usage instructions
+waddle.herokuapp.com
 
 ## Requirements
 
@@ -44,11 +42,6 @@ bower install
 grunt dev
 
 ```
-
-### Tasks
-
-See the projects backlog in asana [here](https://app.asana.com/0/15156300230188/15156300230188)
-
 
 ## Contributing
 
