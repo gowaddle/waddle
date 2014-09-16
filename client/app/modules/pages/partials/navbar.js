@@ -11,7 +11,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
         // immediately when 'my bucketlist' is clicked
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
         var bounds = MapFactory.currentMap.getBounds()
-        $rootScope.inBounds = MapFactory.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+        MapFactory.filterFeedByBounds(bounds)
         $state.go('map.feed');
       });
   };

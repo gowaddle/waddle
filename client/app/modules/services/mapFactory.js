@@ -1,10 +1,15 @@
 (function(){
 
 var MapFactory = function (){
-  // Stores all of a user's checkins based on latitude and longitude
-  // Allows quicker lookup times for which markers are in bounds,
-  // which is called every time the map moves
-  var QuadTree = function (footprint) {
+  // Mapbox Configuration
+  L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
+  var aggregatedMarkers = new L.MarkerClusterGroup({
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: 12,
+    maxClusterRadius: 60
+  });
+
+  QuadTree = function (footprint) {
     this.lat = footprint.place.lat;
     this.lng = footprint.place.lng;
     this.footprint = footprint;
@@ -94,96 +99,100 @@ var MapFactory = function (){
     } 
   }
 
-  // Markers in bounds are stored on factory to be accessible from any state
-  var markerQuadTree = null;
-
-  // Mapbox Configuration
-  L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
-  var aggregatedMarkers = new L.MarkerClusterGroup({
-    showCoverageOnHover: false,
-    disableClusteringAtZoom: 12,
-    maxClusterRadius: 60
-  });
-
-  var initializeMap = function () {
-    var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
-      attributionControl: false,
-      zoomControl: false,
-      worldCopyJump: true,
-      minZoom: 2,
-      // maxBounds: [[80,200],[-80,-200]],
-      bounceAtZoomLimits: false
-    }).setView([20.00, 0.00], 2);
-
-    configuredMap.addLayer(aggregatedMarkers);
-
-    return configuredMap;
-  };
-
-  var makeMarker = function (footprint) {
-    var place = footprint.place;
-    var checkin = footprint.checkin;
-
-    var placeName = place.name;
-    var latLng = [place.lat, place.lng];
-    var img;
-    var caption;
-
-    if (checkin.photoSmall !== 'null') {
-      img = checkin.photoSmall;
-    }
-
-    if (checkin.caption !== 'null') {
-      caption = checkin.caption;
-    }
-
-    var marker = L.marker(latLng, {
-      icon: L.mapbox.marker.icon({
-        'marker-color': '1087bf',
-        'marker-size': 'large',
-        'marker-symbol': 'circle-stroked'
-      }),
-      title: placeName
-    });
-
-    if (img && caption) {
-      marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4><img src="' + img + '"/>');
-    } else if (img) {
-      marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
-    } else if (caption) {
-      marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4>');
-    } else {
-      marker.bindPopup('<h3>' + placeName + '</h3>');
-    }
-
-    aggregatedMarkers.addLayer(marker);
-  };
-
-  var handleUserCheckinData = function (allFootprints) {
-    aggregatedMarkers.clearLayers();
-
-    var footprintQuadtree;
-
-    _.each(allFootprints, function (footprint) {
-
-      footprintQuadtree ? footprintQuadtree.insert(footprint) : footprintQuadtree = new QuadTree(footprint);
-
-      makeMarker(footprint);
-    });
-
-    return footprintQuadtree;
-  };
-
   var currentMap;
-
-  return {
-    currentMap: currentMap,
-    QuadTree: QuadTree,
-    markerQuadTree: markerQuadTree,
-    leaflet: L,
-    initializeMap: initializeMap,
-    handleUserCheckinData: handleUserCheckinData
+  var currentInBounds = {
+    datapoints: null
   };
+
+  var mapFactoryVars = {
+    // Markers in bounds are stored on factory to be accessible from any state
+    markerQuadTree: null,
+    currentMap: currentMap,
+    // Share data points in bounds accross different views.  
+    // Mainly added to account for navbar's need for inbounds data
+    currentInBounds: currentInBounds,
+
+    // Stores all of a user's checkins based on latitude and longitude
+    // Allows quicker lookup times for which markers are in bounds,
+    // which is called every time the map moves
+    QuadTree: QuadTree,
+    
+    initializeMap: function () {
+      var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
+        attributionControl: false,
+        zoomControl: false,
+        worldCopyJump: true,
+        minZoom: 2,
+        // maxBounds: [[80,200],[-80,-200]],
+        bounceAtZoomLimits: false
+      }).setView([20.00, 0.00], 2);
+
+      configuredMap.addLayer(aggregatedMarkers);
+
+      return configuredMap;
+    },
+
+    makeMarker: function (footprint) {
+      var place = footprint.place;
+      var checkin = footprint.checkin;
+
+      var placeName = place.name;
+      var latLng = [place.lat, place.lng];
+      var img;
+      var caption;
+
+      if (checkin.photoSmall !== 'null') {
+        img = checkin.photoSmall;
+      }
+
+      if (checkin.caption !== 'null') {
+        caption = checkin.caption;
+      }
+
+      var marker = L.marker(latLng, {
+        icon: L.mapbox.marker.icon({
+          'marker-color': '1087bf',
+          'marker-size': 'large',
+          'marker-symbol': 'circle-stroked'
+        }),
+        title: placeName
+      });
+
+      if (img && caption) {
+        marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4><img src="' + img + '"/>');
+      } else if (img) {
+        marker.bindPopup('<h3>' + placeName + '</h3><img src="' + img + '"/>');
+      } else if (caption) {
+        marker.bindPopup('<h3>' + placeName + '</h3><h4>' + caption + '</h4>');
+      } else {
+        marker.bindPopup('<h3>' + placeName + '</h3>');
+      }
+
+      aggregatedMarkers.addLayer(marker);
+    },
+
+    handleUserCheckinData: function (allFootprints) {
+      aggregatedMarkers.clearLayers();
+
+      var footprintQuadtree;
+
+      _.each(allFootprints, function (footprint) {
+
+        footprintQuadtree ? footprintQuadtree.insert(footprint) : footprintQuadtree = new QuadTree(footprint);
+
+        mapFactoryVars.makeMarker(footprint);
+      });
+
+      return footprintQuadtree;
+    },
+
+    filterFeedByBounds: function(bounds){
+      currentInBounds.datapoints = mapFactoryVars.markerQuadTree.markersInBounds(bounds._southWest, bounds._northEast);
+      return currentInBounds;
+    }
+  }
+
+  return mapFactoryVars;
 
     // var shadedCountries = L.mapbox.featureLayer().addTo(configuredMap);
    // $scope.countriesBeen = [];

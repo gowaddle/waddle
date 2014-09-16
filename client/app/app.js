@@ -37,7 +37,7 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
     .state('map.feed', {
       url: '/feed',
       templateUrl: '../app/modules/pages/map/feed.html', 
-      controller: 'FeedController'
+      controller: 'FeedController as mapFeed'
     })
     .state('map.feed.footprint', {
       url: '/:footprint',
@@ -46,7 +46,7 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
     .state('map.footprints', {
       url: '/footprints',
       templateUrl: '../app/modules/pages/map/footprints.html',
-      controller: 'FeedController'
+      controller: 'FeedController as mapFootprints'
     })
 
   $urlRouterProvider.otherwise('/');
