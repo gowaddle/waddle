@@ -106,7 +106,7 @@ var MapFactory = function (){
   });
 
   var initializeMap = function () {
-    var configuredMap = L.mapbox.map('map', 'injeyeo2.i9nn801b', {
+    var configuredMap = L.mapbox.map('map', 'injeyeo.8fac2415', {
       attributionControl: false,
       zoomControl: false,
       worldCopyJump: true,
