@@ -15,20 +15,17 @@
 1. [Usage](#Usage)
 1. [Requirements](#requirements)
 1. [Development](#development)
-    1. [Installing Dependencies](#installing-dependencies)
-    1. [Tasks](#tasks)
-1. [Team](#team)
+    a. [Installing Dependencies](#installing-dependencies)
 1. [Contributing](#contributing)
 
 ## Usage
 
-> Some usage instructions
+waddle.herokuapp.com
 
 ## Requirements
 
 - Node 0.10.x
-- etc
-- etc
+- Neo4J
 
 ## Development
 
@@ -37,15 +34,14 @@
 From within the root directory:
 
 ```sh
-sudo npm install -g bower
+npm install -g bower
+npm install -g grunt
+npm install -g karma
 npm install
 bower install
+grunt dev
+
 ```
-
-### Tasks
-
-See the projects backlog in asana [here](https://app.asana.com/0/15156300230188/15156300230188)
-
 
 ## Contributing
 
