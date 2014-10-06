@@ -99,9 +99,36 @@ var MapFactory = function (){
     } 
   }
 
+<<<<<<< HEAD
+  // Markers in bounds are stored on factory to be accessible from any state
+  var markerQuadTree = null;
+
+  // Mapbox Configuration
+  L.mapbox.accessToken = 'pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
+  var aggregatedMarkers = new L.MarkerClusterGroup({
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: 12,
+    maxClusterRadius: 60
+  });
+
+  var initializeMap = function () {
+    var configuredMap = L.mapbox.map('map', 'injeyeo.8fac2415', {
+      attributionControl: false,
+      zoomControl: false,
+      worldCopyJump: true,
+      minZoom: 2,
+      // maxBounds: [[80,200],[-80,-200]],
+      bounceAtZoomLimits: false
+    }).setView([20.00, 0.00], 2);
+
+    configuredMap.addLayer(aggregatedMarkers);
+
+    return configuredMap;
+=======
   var currentMap;
   var currentInBounds = {
     datapoints: null
+>>>>>>> ce1f0250d813910b4ea951d1b5274ec05a99e77a
   };
 
   var mapFactoryVars = {
