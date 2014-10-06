@@ -101,6 +101,7 @@ utils.makeFBPaginatedRequest = function (queryPath, container) {
       var dataObj = JSON.parse(data);
 
       container.push(dataObj.data)
+      console.log("container: " + JSON.stringify(container));
 
       if (! dataObj.paging) {
         deferred.resolve(_.flatten(container, true));
@@ -164,11 +165,13 @@ utils.getFBFeedItemsWithLocation = function(user) {
     'with': 'location'
   }
 
-  var queryPath = 'https://graph.facebook.com/'+fbID+'/feed';
+  var queryPath = 'https://graph.facebook.com/'+fbID+'/feed?' + qs.stringify(query);
+
+  console.log(queryPath);
 
   var feedItemContainer = [];
 
-  deferred.resolve(utils.makeFBPaginatedRequest(queryPath, feedItemContainer);
+  deferred.resolve(utils.makeFBPaginatedRequest(queryPath, feedItemContainer));
 
   return deferred.promise;
 }
@@ -238,7 +241,8 @@ utils.parseFBData = function (user, data) {
   var foursquareVenueQueries = [];
 
   _.each(data, function (datum) {
-    if (datum.place) {
+    console.log("this is ma datum: " + datum);
+    if (datum !== undefined && datum.place) {
       var place = {
         'checkinID': datum.id,
         'name': datum.place.name,
