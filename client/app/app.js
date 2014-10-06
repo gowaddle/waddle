@@ -57,7 +57,8 @@ angular.module('waddle', [
   'waddle.directives',
   'waddle.services',
   'ui.router',
-  'wu.masonry'
+  'wu.masonry',
+  'mgcrea.ngStrap'
 ]).config(['$stateProvider', '$urlRouterProvider', WaddleConfig]);
 
 })();
