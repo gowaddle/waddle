@@ -2,13 +2,14 @@
 	<ul>
 		<div class="navbarprofile">
 		 <img ng-src="{{photo}}"/>
+		 <button type="button" class="btn btn-sm btn-primary" bs-dropdown="dropdown" data-html="true" data-template="../app/modules/pages/partials/dropdown.tpl.html">Menu</button>
 		 <h6>{{name}}</h6>
 		</div>
 		<li ui-sref='map.providers' class='create'><a>add platforms</a></li>
-    <li ui-sref='map.friends'><a>my friends</a></li>
+    <li ui-sref='map.friends'><a>friends</a></li>
 <!--     <li ui-sref='map.footprints'><a>my footprints</a></li> -->
-    <li ng-click='loadBucketlist()'><a>my bucket list</a></li>
-    <li ui-sref='map'><a>my map</a></li>
+    <li ng-click='loadBucketlist()'><a>hype list</a></li>
+    <li ui-sref='map'><a>footprints</a></li>
 		<li ng-click='logout()'><a>sign out</a></li>
 	</ul>
 </div>

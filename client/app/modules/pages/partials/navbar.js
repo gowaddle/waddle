@@ -1,6 +1,6 @@
 (function(){
 
-var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFactory, $state){
+var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFactory, $state, $dropdown){
   $scope.logout = Auth.logout;
 
   $scope.loadBucketlist = function () {
@@ -20,6 +20,16 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
     $scope.photo = UserRequests.allData.fbProfilePicture;
     $scope.name = UserRequests.allData.name;
   }
+
+  // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
+
+  $scope.dropdown = [
+    {"text": "<p class= 'fa fa-download'>Another action</p>", "href": "#anotherAction"},
+    {"text": '<p class="fa fa-globe"></p>&nbsp;Display an alert', click: '$alert("Holy guacamole!")'},
+    {"text": '<p class="fa fa-external-link"></p>&nbsp;External link', href: '/auth/facebook', target: '_self'},
+    {divider: true},
+    {"text": 'Separated link', href: '#separatedLink'}
+  ];
 }
 
 NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state'];
