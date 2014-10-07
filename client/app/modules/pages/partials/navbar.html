@@ -1,14 +1,30 @@
 <div class='navigation'>
+<div class="container">
 	<ul>
 		<div class="navbarprofile">
+		<li ui-sref='map'><a>
 		 <img ng-src="{{photo}}"/>
-		 <h6>{{name}}</h6>
+		 <h6>{{name}}</h6></a></li>
+ 		 <button type="button" class="btn btn-sm btn-primary" bs-dropdown="dropdown" data-html="true" data-template="../app/modules/pages/partials/dropdown.tpl.html">Menu</button>
+
 		</div>
-		<li ui-sref='map.providers' class='create'><a>add platforms</a></li>
-    <li ui-sref='map.friends'><a>my friends</a></li>
+		<li><img class="waddlelogo" src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogoGrey_1.png"></li>
+		<li ui-sref='map.providers' class='create'><a>add social</a></li>
+    <li ui-sref='map.friends'><a>friends</a></li>
 <!--     <li ui-sref='map.footprints'><a>my footprints</a></li> -->
-    <li ng-click='loadBucketlist()'><a>my bucket list</a></li>
-    <li ui-sref='map'><a>my map</a></li>
+    <li ng-click='loadBucketlist()'><a>hype list</a></li>
+    <li ui-sref='map'><a>footprints</a></li>
 		<li ng-click='logout()'><a>sign out</a></li>
 	</ul>
+	<div class="row">
+  <div class="col-lg-3">
+    <div class="input-group">
+      <input type="text" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Search</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+</div>
 </div>

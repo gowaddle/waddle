@@ -91,15 +91,25 @@ userController.userLogin = function (req, res) {
       })
       userFBFriendsData = allFriends;
 
+      // return facebookUtils.getFBFeedItemsWithLocation(user);
+
       //get tagged places
-      return facebookUtils.getFBTaggedPosts(user);
+      // return facebookUtils.getFBTaggedPosts(user);
     })
+    // .then(function (fbRawFeedItemsWithLocation) {
+    //   console.log("RAW data RAWRRRRR: " + JSON.stringify(fbRawFeedItemsWithLocation));
+    //   return facebookUtils.parseFBData(user, fbRawFeedItemsWithLocation);
+    // })
+    // .then(function (fbParsedFeedItems) {
+    //   console.log("PARSED DATA: " + JSON.stringify(fbParsedFeedItems));
+    //   return user.addCheckins(fbParsedFeedItems);
+    // })
     .then(function (fbRawTaggedPostsData) {
       // parse Checkin data
       return facebookUtils.parseFBData(user, fbRawTaggedPostsData);
     })
     .then(function (fbParsedTaggedPostsData) {
-      userFBTaggedPostsData = fbParsedTaggedPostsData;
+      // userFBTaggedPostsData = fbParsedTaggedPostsData;
       // get Picture data
       return facebookUtils.getFBPhotos(user);
     })
