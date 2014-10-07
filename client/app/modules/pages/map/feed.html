@@ -4,8 +4,8 @@
     <h4 class='feeditemname'ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
       {{footprint.place.name}}
     </h4>
-    <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
-    <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List"/>
+    <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketList(footprint)"/>
+    <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List" ng-click="removeCheckinFromBucketList(footprint)"/>
     <br/>
     <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
     <div class='feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">

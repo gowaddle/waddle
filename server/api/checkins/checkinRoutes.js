@@ -10,6 +10,7 @@ module.exports = function (app) {
 
   //Routes for user actions
   app.post('/bucketlist', checkinController.addToBucketList);
+  app.post('/removebucket', checkinController.removeFromBucketList)
   app.post('/comment', checkinController.addComment);
   app.post('/props', checkinController.giveProps);
   app.get('/interactions/:checkinid', checkinController.getPropsAndComments);
