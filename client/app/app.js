@@ -57,7 +57,18 @@ angular.module('waddle', [
   'waddle.directives',
   'waddle.services',
   'ui.router',
-  'wu.masonry'
+  'wu.masonry',
+  'mgcrea.ngStrap.helpers.dimensions',
+  'mgcrea.ngStrap.tooltip',
+  'mgcrea.ngStrap.dropdown',
+  'ngSanitize'
 ]).config(['$stateProvider', '$urlRouterProvider', WaddleConfig]);
+
+//   angular.module('mgcrea.ngStrap')
+//   .config(function($dropdownProvider) {
+//     angular.extend($dropdownProvider.defaults, {
+//       html: true
+//     });
+// })
 
 })();

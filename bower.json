@@ -22,6 +22,7 @@
     "angular": "~1.2.22",
     "jquery": "~2.1.1",
     "lodash": "~2.4.1",
-    "angular-ui-router": "~0.2.10"
+    "angular-ui-router": "~0.2.10",
+    "angular-strap": "~2.1.1"
   }
 }
