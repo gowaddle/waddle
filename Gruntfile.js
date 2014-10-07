@@ -27,7 +27,11 @@ module.exports = function (grunt) {
 					'client/bower_components/angular-ui-router/angular-ui-router.js',
 					'client/bower_components/angular-masonry/angular-masonry.js',
 					'client/bower_components/angular-strap/dist/angular-strap.min.js',
-					'client/bower_components/angular-strap/dist/angular-strap.tpl.min.js'
+					'client/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
+					'client/bower_components/angular-strap/src/helpers/dimensions.js',
+					'client/bower_components/angular-strap/src/tooltip/tooltip.js',
+					'client/bower_components/angular-strap/src/dropdown/dropdown.js',
+					'client/bower_components/angular-sanitize/angular-sanitize.min.js'
 				]
 			}
 		},
