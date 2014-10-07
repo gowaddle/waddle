@@ -40,15 +40,46 @@ Checkin.addToBucketList = function(facebookID, checkinID){
     'RETURN checkin'
   ].join('\n');
 
+
   var params = {
     facebookID: facebookID,
     checkinID: checkinID
   };
 
+  console.log(params);
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
       deferred.resolve(results);
+    }
+  });
+
+  return deferred.promise;
+};
+
+Checkin.removeFromBucketList = function(facebookID, checkinID){
+  var deferred = Q.defer();
+
+  var query = [
+    // 'MATCH (user:User {facebookID: {facebookID}})',
+    // 'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+    // 'MATCH (user)-[rel:hasBucket]->(checkin)',
+    // 'DELETE rel'
+    'match (user:User {facebookID: {facebookID}})-[rel:hasBucket]->(checkin:Checkin {checkinID: {checkinID}})delete rel'
+  ].join('\n');
+
+
+  var params = {
+    facebookID: facebookID,
+    checkinID: checkinID
+  };
+  console.log(params);
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results);
+      console.log('query executed!')
     }
   });
 

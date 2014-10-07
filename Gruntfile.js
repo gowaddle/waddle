@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 			bower: {
 				dest: 'client/dist/bower.js',
 				src: ['client/bower_components/jquery/jquery.js',
-					'client/bower_components/lodash/lodash.compat.js',
+					'client/bower_components/lodash/dist/lodash.compat.js',
 					'client/bower_components/eventEmitter/EventEmitter.js',
 					'client/bower_components/get-style-property/get-style-property.js',
 					'client/bower_components/get-size/get-size.js',
@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 					'client/bower_components/masonry/masonry.js',
 					'client/bower_components/imagesloaded/imagesloaded.js',
 					'client/bower_components/angular/angular.js',
-					'client/bower_components/angular-ui-router/angular-ui-router.js',
+					'client/bower_components/angular-ui-router/release/angular-ui-router.min.js',
 					'client/bower_components/angular-masonry/angular-masonry.js',
 					'client/bower_components/angular-strap/dist/angular-strap.min.js',
 					'client/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
