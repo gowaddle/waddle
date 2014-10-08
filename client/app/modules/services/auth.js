@@ -23,8 +23,9 @@ var Auth = function ($q, $state){
 
     window.sessionStorage.clear();
     window.localStorage.clear();
+    
 
-    $state.go('frontpage');
+    $state.go('frontpage',{},{reload: true});
   };
 
   return {
