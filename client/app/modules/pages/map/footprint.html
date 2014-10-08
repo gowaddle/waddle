@@ -1,5 +1,5 @@
 <div class="footprintitem">
-	<span ng-click="closeFootprintWindow()" class="closefootprint">X</span>
+	<span ng-click="closeFootprintWindow()" class="closefootprint">x</span>
 	<h2>{{footprint.place.name}}</h2>
 	<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
 	<img ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
@@ -7,9 +7,9 @@
 	<div>
 		<img ng-if="!footprint.checkin.bucketed" class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
 		<img ng-if="footprint.checkin.bucketed" class='addbucketactive' title="Add to Bucket List"/>
-		<img ng-if="!footprint.checkin.liked" class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint)">
+		<!-- <img ng-if="!footprint.checkin.liked" class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint)">
 		<img ng-if="footprint.checkin.liked" class='givepropsactive' title="Give Props">
-		<h4>{{selectedFootprintInteractions.props}}</h4>
+		<h4>{{selectedFootprintInteractions.props}}</h4> -->
 	</div>
 	<div>
 	  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>

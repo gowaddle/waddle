@@ -1,4 +1,45 @@
-<div class='navigation'>
+
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" ui-sref='map'><img class="waddlelogo" src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogoGrey_1.png"></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a ui-sref='map'>Feed</a></li>
+        <li><a ng-click='loadBucketlist()'>Hype List</a></li>
+      </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        	<li><a ui-sref='map' class="navbarprofile"><img ng-src="{{photo}}"/><h6>{{name}}</h6></a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a ui-sref='map.friends'>Friends</a></li>
+            <li><a ui-sref='map.providers' class='create'>Add social</a></li>
+            <li class="divider"></li>
+            <li><a ng-click='logout()'>Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!-- <div class='navigation'>
 <div class="container">
 	<ul>
 		<div class="navbarprofile">
@@ -9,11 +50,10 @@
 
 		</div>
 		<li><img class="waddlelogo" src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogoGrey_1.png"></li>
+		<li ui-sref='map'><a>footprints</a></li>
+		<li ng-click='loadBucketlist()'><a>hype list</a></li>
+		<li ui-sref='map.friends'><a>friends</a></li>
 		<li ui-sref='map.providers' class='create'><a>add social</a></li>
-    <li ui-sref='map.friends'><a>friends</a></li>
-<!--     <li ui-sref='map.footprints'><a>my footprints</a></li> -->
-    <li ng-click='loadBucketlist()'><a>hype list</a></li>
-    <li ui-sref='map'><a>footprints</a></li>
 		<li ng-click='logout()'><a>sign out</a></li>
 	</ul>
 	<div class="row">
@@ -23,7 +63,7 @@
       <span class="input-group-btn">
         <button class="btn btn-default" type="button">Search</button>
       </span>
-    </div><!-- /input-group -->
+    </div> --><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
 </div><!-- /.row -->
 </div>
