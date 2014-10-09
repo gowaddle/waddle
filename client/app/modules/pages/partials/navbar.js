@@ -24,7 +24,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
 
   $scope.dropdown = [
-    {"text": "<p class= 'fa fa-download'>Another action</p>", "href": "#anotherAction"},
+    {"text": "<p class= 'fa fa-download'>Friends</p>", "ui-sref": "map.friends"},
     {"text": '<p class="fa fa-globe"></p>&nbsp;Display an alert', click: '$alert("Holy guacamole!")'},
     {"text": '<p class="fa fa-external-link"></p>&nbsp;External link', href: '/auth/facebook', target: '_self'},
     {divider: true},

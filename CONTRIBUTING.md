@@ -1,6 +1,17 @@
 # Contributing
 
-## General Workflow (tl;dr version)
+## Setup
+1. Fork the repo & clone
+2. Install neo4j
+3. Run npm install (this will also run the grunt file)
+4. Contact administrator to add you to the Heroku account
+5. Add heroku repo as a remote
+6. Run heroku config
+7. Save environment variables in bash profile
+8. Contact administrator to add you to the Facebook account
+9. Accept request to become a developer on the Facebook app
+
+## General Git Workflow (tl;dr version)
 
 1. Fork the repo
 1. Cut a namespaced feature branch from dev
