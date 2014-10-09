@@ -32,6 +32,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   ];
 }
 
+//Inject all the dependent services needed by the controller
 NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state'];
 
 angular.module('waddle.navbar', [])

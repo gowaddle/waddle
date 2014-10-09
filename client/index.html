@@ -9,14 +9,27 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="dist/style.min.css"/>
   </head>
+    <script src='bower_components/angular/angular.js'></script>
+    <script src='bower_components/angular-ui-router/angular-ui-router.js'></script>
+    <script src='bower_components/angular-masonry/angular-masonry.js'></script>
+    <script src='bower_components/lodash/lodash.compat.js'></script>
+
   <body ng-app='waddle'>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
     <div ui-view='navbar'></div>
     <div ui-view='map' class = 'mapuiview'></div>
     <div ui-view></div>
+<<<<<<< Updated upstream
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.js'></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
     <script src="dist/app.min.js"></script>
      <script src="//code.angularjs.org/1.2.23/angular-animate.min.js" data-semver="1.2.23"></script>
     <script src="//code.angularjs.org/1.2.23/angular-sanitize.min.js" data-semver="1.2.23"></script>
+=======
+    <script src="dist/app.js"></script>
+
+    
+>>>>>>> Stashed changes
   </body>
 </html>

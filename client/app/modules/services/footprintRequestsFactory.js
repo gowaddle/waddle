@@ -20,6 +20,16 @@ var FootprintRequests = function ($http){
       }
     },
 
+    removeFromBucketList: function (data) {
+      if (data) {
+        return $http({
+          method: 'POST',
+          data: data,
+          url: 'api/checkins/removebucket'
+        });
+      }
+    },
+
     addComment: function (data) {
       if (data && data.text) {
         return $http({
