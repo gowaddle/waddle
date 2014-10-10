@@ -6,7 +6,7 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory) {
     $scope.allUserFriends = UserRequests.allData.friends;
     console.log($scope.allUserFriends);
   }
-//when the location map for a friend is request , this method get the data of the friend and builds the quadtree representing friend data on the map 
+//gets friend data and builds quadtree representing friend data on the map 
   $scope.clickFriend = function (friend) {
     var viewer = window.sessionStorage.userFbID;
     UserRequests.getUserData(friend, viewer)

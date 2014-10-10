@@ -6,10 +6,12 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   $scope.loadBucketlist = function () {
     UserRequests.getBucketList(window.sessionStorage.userFbID)
       .then(function (BucketData) {
+        console.log(BucketData);
         // Because the navbar controller does not inherit the map or feed scope,
         // current map has to be retrieved from MapFactory.  This is used to set the inbounds 
         // immediately when 'my bucketlist' is clicked
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
+        console.log(MapFactory.currentMap);
         var bounds = MapFactory.currentMap.getBounds()
         MapFactory.filterFeedByBounds(bounds)
         $state.go('map.feed');
@@ -20,6 +22,17 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
     $scope.photo = UserRequests.allData.fbProfilePicture;
     $scope.name = UserRequests.allData.name;
   }
+
+  $scope.loadAggregatedFootprints = function () {
+    UserRequests.getAggregatedFeedData(window.sessionStorage.userFbID)
+      .then(function (aggregatedFootprints) {
+        console.log(aggregatedFootprints.data[0]);
+        MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(aggregatedFootprints.data[0]);
+        var bounds = MapFactory.currentMap.getBounds();
+        MapFactory.filterFeedByBounds(bounds);
+        $state.go('map.feed'); 
+    });
+  };
 
   // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
 
