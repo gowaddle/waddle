@@ -267,7 +267,7 @@ li{
 }
 
 .waddlelogo {
-  margin:5px;
+  margin: 0px;
   width:25px;
   height:auto;
 }
@@ -364,7 +364,8 @@ li{
 
 .navbarprofile {
   float: right;
-  margin-right: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .navbarprofile img {
@@ -374,15 +375,28 @@ li{
   height: 25px; 
 }
 
+.navbar-default {
+  background-color: rgba(255,255,255,0.5);
+}
+
+.active {
+  opacity: 0.8;
+  border-radius: 5px;
+}
+
 .waddlefeed {
-   margin-top: 40px;
+   margin-top: 10px;
    margin-right: 10px;
    height: 50em;
    width: 275px;
    float: right;
    border-radius:5px;
-   background-color:rgba(255,255,255,0.9);
+   background-color:rgba(255,255,255,0.5);
    overflow-y: scroll;
+}
+
+.feedtitle {
+    margin-left: 10px;
 }
 
 .defaultpeng {
@@ -470,19 +484,32 @@ li{
    overflow-y: scroll;
 }
 
-
 .footprintitem {
-  top: 50px;
-  margin: 10px;
+  top: 80px;
+  margin-right: auto;
+  margin-left: auto;
   padding: 5px;
   min-height: 300px;
   min-width: 300px;
   max-height: 750px;
-  border-radius: 5px;
+  max-width: 1100px;
+  border-radius: 10px;
   overflow-y: scroll;
-  position: absolute;
+  position: fixed;
   background-color: rgba(255,255,255,0.9);
   z-index: 1;
+  margin-left: 50px;
+}
+
+.footprintpicture{
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 700px;
+  max-height: 700px;
+}
+
+.footprint-pic-bg{
+  background-color: #000;
 }
 
 .closefootprint {
