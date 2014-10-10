@@ -232,10 +232,10 @@ User.prototype.findAllCheckins = function (viewer) {
   var deferred = Q.defer();
 
   var query = [
-    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
     (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' +
       'OPTIONAL MATCH (bucketer:User {facebookID: {viewerID}})-[:hasBucket]->(checkin)' : ""),
-    'RETURN checkin, p' + (viewer ? ', liker, bucketer' : "")
+    'RETURN user, checkin, place' + (viewer ? ', liker, bucketer' : "")
   ].join('\n');
 
   var params = {
@@ -251,8 +251,9 @@ User.prototype.findAllCheckins = function (viewer) {
     else {
       var parsedResults = _.map(results, function (item) {
         var singleResult = {
+          "user": item.user.data,
           "checkin": item.checkin.data,
-          "place": item.p.data
+          "place": item.place.data
         }
         if (item.liker){
           singleResult.checkin.liked = true;
@@ -269,6 +270,16 @@ User.prototype.findAllCheckins = function (viewer) {
 
   return deferred.promise;
 };
+
+//TO-DO: implement query to get all footprints associated with a user and their friends
+
+// User.getAggregatedFootprintList = function (viewer) {
+//   var deferred = Q.defer();
+
+//   var query = [
+//     'M'
+//   ]
+// }
 
 // Find all bucketList items for a user
 // Takes a facebookID and returns a footprint object with
@@ -311,6 +322,8 @@ User.getBucketList = function (facebookID){
 // Find a single user in the database, requires facebookID as input
 // If user is not in database, promise will resolve to error 'user does not exist'
 User.find = function (data) {
+
+  console.log('model: ', JSON.stringify(data));
 
   var deferred = Q.defer();
 

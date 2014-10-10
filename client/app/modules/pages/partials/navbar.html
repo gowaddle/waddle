@@ -17,6 +17,7 @@
       <ul class="nav navbar-nav">
         <li class="active"><a ui-sref='map'>Feed</a></li>
         <li><a ng-click='loadBucketlist()'>Hype List</a></li>
+         <li ng-click='loadAggregatedFootprints()'><a>home</a></li>
       </ul>
       <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
@@ -62,22 +63,15 @@
 		<li ng-click='loadBucketlist()'><a>hype list</a></li>
 		<li ui-sref='map.friends'><a>friends</a></li>
 		<li ui-sref='map.providers' class='create'><a>add social</a></li>
-		<li ng-click='logout()'><a>sign out</a></li>
-	</ul>
-	<div class="row">
-  <div class="col-lg-3">
-    <div class="input-group">
-      <input type="text" class="form-control">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Search</button>
-      </span>
-    </div> --><!-- /input-group -->
+
+    <li ui-sref='map.friends'><a>friends</a></li>
+<!--     <li ui-sref='map.footprints'><a>my footprints</a></li> -->
 
 <!-- Place divs here -->
 
 <!-- New Navbar starts here -->
 
-  </div><!-- /.col-lg-6 -->
-</div><!-- /.row -->
+<!--   </div>
 </div>
 </div>
+</div> -->

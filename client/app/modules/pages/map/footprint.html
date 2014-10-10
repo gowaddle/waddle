@@ -19,9 +19,9 @@
 				<div class='footprintcommentpiccontainer'>
 					<img class='footprintcommentpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
 				</div>
-				<p>{{comment.comment.text}}</p>
-				<h7>{{comment.comment.time | date : shortDate}}</h7>
 				<h4 class="commentername">{{comment.commenter.name}}</h4>
+				<h7>{{comment.comment.time | date : shortDate}}</h7>
+				<p>{{comment.comment.text}}</p>
 			</div>
 			<div>
 			  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
