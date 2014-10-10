@@ -39,7 +39,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
       });
     };
 
-    $scope.addCheckinToBucketlist = function (footprint){
+    $scope.addCheckinToBucketList = function (footprint){
       var bucketListData = {
         facebookID: window.sessionStorage.userFbID,
         checkinID: footprint.checkin.checkinID
@@ -50,6 +50,18 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
         MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true);
         filterFeedByBounds();
+      });
+    };
+
+    $scope.removeCheckinFromBucketList = function (footprint){
+      console.log('removed?');
+      var bucketListData = {
+        facebookID: window.sessionStorage.userFbID,
+        checkinID: footprint.checkin.checkinID
+      };
+      FootprintRequests.removeFromBucketList(bucketListData)
+      .then(function (data){
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', false);
       });
     };
 

@@ -128,6 +128,22 @@ checkinController.addToBucketList = function (req, res){
     });
 };
 
+checkinController.removeFromBucketList = function (req, res){
+  console.log('in the controller!');
+  var checkinID = req.body.checkinID;
+  var facebookID = req.body.facebookID;
+
+  Checkin.removeFromBucketList(facebookID, checkinID)
+    .then(function (data){
+      res.json(data);
+      res.status(201).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    });
+}
+
 checkinController.addComment = function (req, res){
   var clickerID = req.body.clickerID;
   var checkinID = req.body.checkinID;
@@ -164,6 +180,7 @@ checkinController.giveProps = function (req, res){
       res.status(500).end();
     });
 };
+
 
 checkinController.getPropsAndComments = function (req, res){
   var checkinID = req.params.checkinid;

@@ -27,6 +27,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
   });
 }
 
+// Inject all the depependent services needed by the controller
 MapController.$inject = ['Auth', 'UserRequests', 'MapFactory', '$scope', '$state', '$stateParams', '$rootScope'];
 
 //Start creating Angular module
