@@ -25,16 +25,24 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        	<li><a ui-sref='map' class="navbarprofile"><img ng-src="{{photo}}"/><h6>{{name}}</h6></a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
+      	<li ui-sref='map.friends'><a>friends</a></li>
+		<li ui-sref='map.providers' class='create'><a>add social</a></li>
+		<li ng-click='logout()'><a>sign out</a></li>
+        <li><a ui-sref='map' class="navbarprofile"><img ng-src="{{photo}}"/><h6>{{name}}</h6></a></li>
+
+        <!-- dropdown button. not working yet but in progress. -->
+<!--         <button type="button" class="btn btn-default" data-html="true" data-animation="am-flip-x" data-template="../app/modules/pages/partials/dropdown.tpl.html" bs-dropdown="dropdown">Options <span class="caret"></span>
+        </button> -->
+        
+<!--         <li class="dropdown">
+          <a href="#" class="dropdown-toggle" ng-controller="DropdownCtrl">Options<span class="caret"></span></a>
+          <ul class="dropdown-menu">
             <li><a ui-sref='map.friends'>Friends</a></li>
             <li><a ui-sref='map.providers' class='create'>Add social</a></li>
             <li class="divider"></li>
             <li><a ng-click='logout()'>Logout</a></li>
           </ul>
-        </li>
+        </li> -->
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -64,6 +72,11 @@
         <button class="btn btn-default" type="button">Search</button>
       </span>
     </div> --><!-- /input-group -->
+
+<!-- Place divs here -->
+
+<!-- New Navbar starts here -->
+
   </div><!-- /.col-lg-6 -->
 </div><!-- /.row -->
 </div>
