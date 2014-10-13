@@ -423,12 +423,21 @@ li{
 }
 
 .feeditemname {
-  display: inline-block;
-  white-space: nowrap;
+  display: inline;
+  white-space: normal;
   width: 77%;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+  font-weight: 400;
+  font-size: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.checkindate{
+  float: right;
+  margin-right: 10px;
 }
 
 .feedphoto {
@@ -439,8 +448,9 @@ li{
   text-align:center;
   cursor: pointer;
   background-position: center;
-  border-radius: 5px;
-  padding: 5px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .footprintbrick {
@@ -452,27 +462,17 @@ li{
   height: 17%;
   background-color: #fff;
   margin: 5px;
+  width: auto;
+  border-radius: 10px;
 }
 
 .friendname {
-  position: relative;
-  left: 130px;
-  top: -67px;
+  display: inline-block;
   cursor:pointer;
 }
 
 .friendname:hover {
   color: Teal;
-}
-
-.friendphoto {
-  cursor: pointer;
-  display: inline;
-  margin: 5px;
-  border-radius: 3px;
-  overflow: hidden;
-  width: 95px;
-  max-height: 95px; 
 }
 
 .footprints {
@@ -502,14 +502,16 @@ li{
 }
 
 .footprintpicture{
-  margin-right: auto;
-  margin-left: auto;
   max-width: 700px;
   max-height: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footprint-pic-bg{
   background-color: #000;
+  border-radius: 10px
+  text-align: center;
 }
 
 .closefootprint {
@@ -531,7 +533,24 @@ li{
 
 .footprintcommentpic {
   width: 70px;
+  border-radius: 10px;
   height: auto;
+}
+
+.footprintprofpic {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.friendphoto {
+  width: 95px;
+  height: 95px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline;
+  margin: 5px;
 }
 
 .commentername {
@@ -579,11 +598,11 @@ li{
 
 .comment_form input {
   position: relative;
-  height:24px; 
-  width:245px; 
+  height:26px; 
+  width: 100%; 
   padding:5px;
-  box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
-  border-radius: 3px;
+  box-shadow: 0px 0px 3px #ccc inset;
+  border-radius: 5px;
   border: none;
 }
 

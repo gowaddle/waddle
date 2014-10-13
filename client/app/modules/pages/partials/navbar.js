@@ -24,6 +24,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   }
 
   $scope.loadAggregatedFootprints = function () {
+    console.log("hi");
     UserRequests.getAggregatedFeedData(window.sessionStorage.userFbID)
       .then(function (aggregatedFootprints) {
         console.log(aggregatedFootprints.data[0]);
@@ -36,13 +37,13 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
 
   // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
 
-  $scope.dropdown = [
-    {"text": '<p class="fa fa-download"></p>&nbsp;Friends', ui-sref: 'map.friends'},
-    {"text": '<p class="fa fa-globe"></p>&nbsp;Add Social', ui-sref: 'map.providers'},
-    {"text": '<p class="fa fa-external-link"></p>&nbsp;External link', href: '/auth/facebook', target: '_self'},
-    {divider: true},
-    {"text": 'Log out', 'ng-click': 'logout()'}
-  ];
+  // $scope.dropdown = [
+  //   {"text": '<p class="fa fa-download"></p>&nbsp;Friends', "ui-sref": 'map.friends'},
+  //   {"text": '<p class="fa fa-globe"></p>&nbsp;Add Social', "ui-sref": 'map.providers'},
+  //   {"text": '<p class="fa fa-external-link"></p>&nbsp;External link', href: '/auth/facebook', target: '_self'},
+  //   {divider: true},
+  //   {"text": 'Log out', 'ng-click': 'logout()'}
+  // ];
 }
 
 //Inject all the dependent services needed by the controller
