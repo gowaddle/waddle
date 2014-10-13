@@ -11,7 +11,6 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
         // current map has to be retrieved from MapFactory.  This is used to set the inbounds 
         // immediately when 'my bucketlist' is clicked
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
-        console.log(MapFactory.currentMap);
         var bounds = MapFactory.currentMap.getBounds()
         MapFactory.filterFeedByBounds(bounds)
         $state.go('map.feed');
@@ -24,7 +23,6 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   }
 
   $scope.loadAggregatedFootprints = function () {
-    console.log("hi");
     UserRequests.getAggregatedFeedData(window.sessionStorage.userFbID)
       .then(function (aggregatedFootprints) {
         console.log(aggregatedFootprints.data[0]);
