@@ -7,6 +7,8 @@
 		</div>
 		<div class="col-lg-3">
 			<div>
+				<img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
+				<h4>{{footprint.user.name}}</h4>
 				<h2>{{footprint.place.name}}</h2>
 				<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
 				<img ng-if="!footprint.checkin.bucketed" class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
@@ -17,7 +19,7 @@
 			</div>
 			<div class='footprintcomments' ng-repeat="comment in selectedFootprintInteractions.comments">
 				<div class='footprintcommentpiccontainer'>
-					<img class='footprintcommentpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+					<img class='footprintprofpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
 				</div>
 				<h4 class="commentername">{{comment.commenter.name}}</h4>
 				<h7>{{comment.comment.time | date : shortDate}}</h7>

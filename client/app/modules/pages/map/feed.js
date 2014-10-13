@@ -17,6 +17,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         $scope.$apply(function(){
           MapFactory.filterFeedByBounds($scope.currentMap.getBounds())
         });
+        console.log($scope.inBoundsObject);
       });
     }
 

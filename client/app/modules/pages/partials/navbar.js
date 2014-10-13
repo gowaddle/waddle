@@ -11,7 +11,6 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
         // current map has to be retrieved from MapFactory.  This is used to set the inbounds 
         // immediately when 'my bucketlist' is clicked
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(BucketData.data);
-        console.log(MapFactory.currentMap);
         var bounds = MapFactory.currentMap.getBounds()
         MapFactory.filterFeedByBounds(bounds)
         $state.go('map.feed');
@@ -36,13 +35,13 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
 
   // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
 
-  $scope.dropdown = [
-    {"text": '<p class="fa fa-download"></p>&nbsp;Friends', "ui-sref": 'map.friends'},
-    {"text": '<p class="fa fa-globe"></p>&nbsp;Add Social', "ui-sref": 'map.providers'},
-    {"text": '<p class="fa fa-external-link"></p>&nbsp;External link', href: '/auth/facebook', target: '_self'},
-    {divider: true},
-    {"text": 'Log out', 'ng-click': 'logout()'}
-  ];
+  // $scope.dropdown = [
+  //   {"text": '<p class="fa fa-download"></p>&nbsp;Friends', "ui-sref": 'map.friends'},
+  //   {"text": '<p class="fa fa-globe"></p>&nbsp;Add Social', "ui-sref": 'map.providers'},
+  //   {"text": '<p class="fa fa-external-link"></p>&nbsp;External link', href: '/auth/facebook', target: '_self'},
+  //   {divider: true},
+  //   {"text": 'Log out', 'ng-click': 'logout()'}
+  // ];
 }
 
 //Inject all the dependent services needed by the controller
