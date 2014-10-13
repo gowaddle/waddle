@@ -229,7 +229,7 @@ userController.addInstagramData = function (req, res) {
 
 };
 
-//
+//uses facebook ID to grab friend data when user navigates to friend page
 userController.getUserData = function (req, res){
   var userData = {
     facebookID: req.params.friend
@@ -250,6 +250,57 @@ userController.getUserData = function (req, res){
     res.status(500).end();
   });
 };
+
+userController.getAggregatedListOfCheckins = function (req, res){
+  // var users = req.params.userlist;
+  var params = {};
+  var aggregatedFootprints = [];
+  var friendCheckins;
+  params.facebookID = req.params.user;
+
+  User.find(params)
+  .then(function (userNode) {
+    user = userNode
+    return user.findAllCheckins(params.facebookID);
+  })
+  .then(function (userCheckins){
+    aggregatedFootprints.push(userCheckins);
+    return user.findAllFriends();
+  })
+  .then(function (friendlist) {
+    _.each(friendlist, function(friend) {
+      User.find(friend)
+      .then(function (friendnode) {
+        return friendnode.findAllCheckins(params.facebookID);
+      })
+      .then(function (friendCheckins) {
+        aggregatedFootprints.push(friendCheckins);
+        console.log('aggregated footprints', JSON.stringify(aggregatedFootprints));
+      })   
+    })
+    // if(aggregatedFootprints.length > 1) {
+      return aggregatedFootprints;
+    // }
+  })
+  .then(function (aggregatedFootprints) {
+    console.log(aggregatedFootprints);
+    res.json(aggregatedFootprints);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  });
+}
+
+userController.getAllFriendCheckins = function (container) {
+  var deferred = Q.defer();
+
+
+  container.push()
+
+
+}
 
 // Takes a facebookID and returns a footprint object with
 // checkin and place keys, containing checkin and place data

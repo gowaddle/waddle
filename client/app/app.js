@@ -1,7 +1,11 @@
-(function(){
-'use strict';
+// The applcations states are created using ui-router . 
+//Here the controller,templateURL that each state uses are specified too.
 
+(function(){
+
+'use strict';
 var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
+  //creates an application state 
   $stateProvider
     .state('frontpage', {
       url: '/',
@@ -48,10 +52,11 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
       templateUrl: '../app/modules/pages/map/footprints.html',
       controller: 'FeedController as mapFootprints'
     })
-
+//when  none of the above state match the URL then redirect the page to state represented by '/' 
   $urlRouterProvider.otherwise('/');
 };
 
+//All the depenedent modules in the app are registered . Through config method application states are configired .
 angular.module('waddle', [
   'waddle.controllers',
   'waddle.directives',

@@ -31,6 +31,15 @@ var UserRequests = function ($http){
       }
     },
 
+    getAggregatedFeedData:function (userFbID) {
+      if (userFbID) {
+        return $http({
+          method: 'GET',
+          url: '/api/users/aggregatefeed/' + userFbID
+        });
+      }
+    },
+
     getBucketList: function (userFbID) {
       if (userFbID) {
         return $http({

@@ -107,7 +107,7 @@ var MapFactory = function (){
   var mapFactoryVars = {
     // Markers in bounds are stored on factory to be accessible from any state
     markerQuadTree: null,
-    currentMap: currentMap,
+    // currentMap: currentMap,
     // Share data points in bounds accross different views.  
     // Mainly added to account for navbar's need for inbounds data
     currentInBounds: currentInBounds,
