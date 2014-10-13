@@ -2,21 +2,27 @@
 <div ng-if="inBoundsObject.datapoints" class='waddlefeed'>
   <h3 class="feedtitle">Feed</h3>
   <div class='waddlefeeditem' ng-repeat="footprint in inBoundsObject.datapoints | orderBy:'-checkin.checkinTime' | limitTo:20 ">
-    <h4 class='feeditemname'ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      {{footprint.place.name}}
-    </h4>
-    <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketList(footprint)"/>
-    <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List" ng-click="removeCheckinFromBucketList(footprint)"/>
+    <img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
+    <h4>{{footprint.user.name}}</h4>
+      <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketList(footprint)"/>
+      <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List" ng-click="removeCheckinFromBucketList(footprint)"/>
+      <h8 class="checkindate">{{footprint.checkin.checkinTime | date : shortDate}}</h8>
     <br/>
-    <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
-    <div class='feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      <img ng-if="footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
+    <h3 class='feeditemname' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      {{footprint.place.name}}
+    </h3>
+    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge !== 'null'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      <img class='feedphoto' ng-if="footprint.checkin.photoLarge !== 'null'" ng-src="{{footprint.checkin.photoLarge}}">
+      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge !== 'null'">{{footprint.checkin.caption}}</h4>
     </div>
-    <div ng-if="footprint.checkin.caption === 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
-      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoSmall === 'null' && footprint.checkin.caption === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
+    <div ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      <img class='feedphoto' ng-if="footprint.checkin.photoLarge !== 'null'" ng-src="{{footprint.checkin.photoLarge}}">
     </div>
-    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
-      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'">"{{footprint.checkin.caption}}"</h4>
+    <div ng-if="footprint.checkin.caption === 'null' && footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
+      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.caption === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
+    </div>
+    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
+      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge === 'null'">"{{footprint.checkin.caption}}"</h4>
     </div>
     <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
       <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
