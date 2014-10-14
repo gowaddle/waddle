@@ -476,9 +476,17 @@ li{
   border-radius: 10px;
 }
 
+.waddlefeedfriend:hover {
+  cursor: pointer;
+}
+
 .friendname {
-  display: inline-block;
+  display: inline;
   cursor:pointer;
+  float: left;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .friendname:hover {
@@ -525,14 +533,14 @@ li{
 }
 
 .closefootprint {
-    font-family:'Open Sans', san-serif;
-    float:right;
-    cursor:pointer;
-    color: #a6a6a6;
-    font-size: 25px;
-    display: inline-block;
-    line-height: 0px;
-    padding: 11px 3px;    
+  font-family:'Open Sans', san-serif;
+  float:right;
+  cursor:pointer;
+  color: #a6a6a6;
+  font-size: 25px;
+  display: inline-block;
+  line-height: 0px;
+  padding: 11px 3px;    
 }
 
 .footprintcommentpiccontainer {
@@ -555,12 +563,13 @@ li{
 }
 
 .friendphoto {
+  float: left;
   width: 95px;
   height: 95px;
   border-radius: 10px;
   overflow: hidden;
   display: inline;
-  margin: 5px;
+  margin: 12px;
 }
 
 .commentername {
