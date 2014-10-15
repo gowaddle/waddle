@@ -54,6 +54,7 @@ userController.userLogin = function (req, res) {
     // console.log('fb checkins: ', checkinsAlreadyStored.length);
     // For existing users
     if (checkinsAlreadyStored.length) {
+      user.setProperty('footprintsCount', checkinsAlreadyStored.length);
       user.findAllFriends()
       .then(function (neoUserData){
         var allData = {
