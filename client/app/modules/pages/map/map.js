@@ -11,6 +11,7 @@ var MapController = function (Auth, UserRequests, MapFactory, $scope, $state, $s
     }
   });
 
+
   $scope.data = {};
     
   Auth.checkLogin()

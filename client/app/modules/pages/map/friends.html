@@ -1,8 +1,9 @@
 <div class='waddlefeed'>
 	<div class='waddlefeedfriend' ng-click="clickFriend(friend.facebookID)" ng-repeat="friend in allUserFriends">
 		<div class="photocontainer">
-	      <img class='friendphoto' ng-src="{{friend.fbProfilePicture}}" ng-click="clickFriend(friend.facebookID)">
-	    </div>
-    	<h3 class='friendname'>{{friend.name}}</h3>
- 	</div>
+      <img class='friendphoto' ng-src="{{friend.fbProfilePicture}}" ng-click="clickFriend(friend.facebookID)">
+    </div>
+    <h3 class='friendname' ng-click="clickFriend(friend.facebookID)">{{friend.name}}</h3>
+    <h3 class='friendname' ng-click="clickFriend(friend.facebookID)">{{friend.footprintsCount}}</h3>
+  </div>
 </div>
