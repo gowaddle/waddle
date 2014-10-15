@@ -41,6 +41,16 @@
   src: local('Open Sans Italic'), local('OpenSans-Italic'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/xjAJXh38I15wypJXxuGMBobN6UDyHWBl620a-IRfuBk.woff) format('woff');
 }
 
+.white{
+  color: #808080;
+  border: 0px;
+  background: rgba(0, 0, 0, 0);
+  margin: 6px;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+}
+
 .col-md-4 {
   display: inline;
 }
@@ -379,6 +389,10 @@ li{
   margin-bottom: auto;
 }
 
+.dropstyle {
+  background-color: rgba(0, 0, 0, 0);
+}
+
 .navbarprofile img {
   border-radius: 5px;
   overflow: hidden;
@@ -476,9 +490,17 @@ li{
   border-radius: 10px;
 }
 
+.waddlefeedfriend:hover {
+  cursor: pointer;
+}
+
 .friendname {
-  display: inline-block;
+  display: inline;
   cursor:pointer;
+  float: left;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .friendname:hover {
@@ -525,14 +547,14 @@ li{
 }
 
 .closefootprint {
-    font-family:'Open Sans', san-serif;
-    float:right;
-    cursor:pointer;
-    color: #a6a6a6;
-    font-size: 25px;
-    display: inline-block;
-    line-height: 0px;
-    padding: 11px 3px;    
+  font-family:'Open Sans', san-serif;
+  float:right;
+  cursor:pointer;
+  color: #a6a6a6;
+  font-size: 25px;
+  display: inline-block;
+  line-height: 0px;
+  padding: 11px 3px;    
 }
 
 .footprintcommentpiccontainer {
@@ -555,12 +577,13 @@ li{
 }
 
 .friendphoto {
+  float: left;
   width: 95px;
   height: 95px;
   border-radius: 10px;
   overflow: hidden;
   display: inline;
-  margin: 5px;
+  margin: 12px;
 }
 
 .commentername {
