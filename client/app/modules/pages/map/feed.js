@@ -1,6 +1,6 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $rootScope, $state) {
+var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth, $scope, $rootScope, $state) {
   Auth.checkLogin()
   .then( function (){
     // Finds all points on the map that are within the bottom left and top right
@@ -17,8 +17,11 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         $scope.$apply(function(){
           MapFactory.filterFeedByBounds($scope.currentMap.getBounds())
         });
+
       });
     }
+
+    // $scope.footprintsCount = UserRequests.allData.allCheckins.length;
 
     $scope.addPropsToCheckin = function (footprint){
       
@@ -39,7 +42,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
       });
     };
 
-    $scope.addCheckinToBucketlist = function (footprint){
+    $scope.addCheckinToBucketList = function (footprint){
       var bucketListData = {
         facebookID: window.sessionStorage.userFbID,
         checkinID: footprint.checkin.checkinID
@@ -50,6 +53,18 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
         MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true);
         filterFeedByBounds();
+      });
+    };
+
+    $scope.removeCheckinFromBucketList = function (footprint){
+      console.log('removed?');
+      var bucketListData = {
+        facebookID: window.sessionStorage.userFbID,
+        checkinID: footprint.checkin.checkinID
+      };
+      FootprintRequests.removeFromBucketList(bucketListData)
+      .then(function (data){
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', false);
       });
     };
 
@@ -86,7 +101,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$rootScope', '$state'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'UserRequests', 'Auth', '$scope', '$rootScope', '$state'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 

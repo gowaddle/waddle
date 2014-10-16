@@ -41,6 +41,16 @@
   src: local('Open Sans Italic'), local('OpenSans-Italic'), url(http://themes.googleusercontent.com/static/fonts/opensans/v8/xjAJXh38I15wypJXxuGMBobN6UDyHWBl620a-IRfuBk.woff) format('woff');
 }
 
+.white{
+  color: #808080;
+  border: 0px;
+  background: rgba(0, 0, 0, 0);
+  margin: 6px;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+}
+
 .col-md-4 {
   display: inline;
 }
@@ -266,8 +276,19 @@ li{
   background-color: #505050
 }
 
+.loading{
+  text-align: center;
+}
+
+.loadingimg{
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .waddlelogo {
-  margin:5px;
+  margin: 0px;
   width:25px;
   height:auto;
 }
@@ -364,7 +385,12 @@ li{
 
 .navbarprofile {
   float: right;
-  margin-right: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.dropstyle {
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .navbarprofile img {
@@ -374,15 +400,28 @@ li{
   height: 25px; 
 }
 
+.navbar-default {
+  background-color: rgba(255,255,255,0.5);
+}
+
+.active {
+  opacity: 0.8;
+  border-radius: 5px;
+}
+
 .waddlefeed {
-   margin-top: 40px;
+   margin-top: 10px;
    margin-right: 10px;
    height: 50em;
    width: 275px;
    float: right;
    border-radius:5px;
-   background-color:rgba(255,255,255,0.9);
+   background-color:rgba(255,255,255,0.5);
    overflow-y: scroll;
+}
+
+.feedtitle {
+    margin-left: 10px;
 }
 
 .defaultpeng {
@@ -409,12 +448,20 @@ li{
 }
 
 .feeditemname {
-  display: inline-block;
-  white-space: nowrap;
+  display: inline;
+  white-space: normal;
   width: 77%;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
+}
+
+.checkindate{
+  float: right;
+  margin-right: 10px;
 }
 
 .feedphoto {
@@ -425,8 +472,9 @@ li{
   text-align:center;
   cursor: pointer;
   background-position: center;
-  border-radius: 5px;
-  padding: 5px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .footprintbrick {
@@ -438,27 +486,30 @@ li{
   height: 17%;
   background-color: #fff;
   margin: 5px;
+  width: auto;
+  border-radius: 10px;
+}
+
+.waddlefeedfriend:hover {
+  cursor: pointer;
 }
 
 .friendname {
+  display: block;
+  cursor:pointer;
   position: relative;
-  left: 130px;
-  top: -67px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.footprintnumber {
+  margin-top: 40px;
+  display: block;
   cursor:pointer;
 }
 
 .friendname:hover {
   color: Teal;
-}
-
-.friendphoto {
-  cursor: pointer;
-  display: inline;
-  margin: 5px;
-  border-radius: 3px;
-  overflow: hidden;
-  width: 95px;
-  max-height: 95px; 
 }
 
 .footprints {
@@ -470,30 +521,45 @@ li{
    overflow-y: scroll;
 }
 
-
 .footprintitem {
-  top: 50px;
-  margin: 10px;
+  top: 80px;
+  margin-right: auto;
+  margin-left: auto;
   padding: 5px;
   min-height: 300px;
   min-width: 300px;
   max-height: 750px;
-  border-radius: 5px;
+  max-width: 1100px;
+  border-radius: 10px;
   overflow-y: scroll;
-  position: absolute;
+  position: fixed;
   background-color: rgba(255,255,255,0.9);
   z-index: 1;
+  margin-left: 50px;
+}
+
+.footprintpicture{
+  max-width: 700px;
+  max-height: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footprint-pic-bg{
+  background-color: #000;
+  border-radius: 10px
+  text-align: center;
 }
 
 .closefootprint {
-    font-family:'Open Sans', san-serif;
-    float:right;
-    cursor:pointer;
-    color: #a6a6a6;
-    font-size: 25px;
-    display: inline-block;
-    line-height: 0px;
-    padding: 11px 3px;    
+  font-family:'Open Sans', san-serif;
+  float:right;
+  cursor:pointer;
+  color: #a6a6a6;
+  font-size: 25px;
+  display: inline-block;
+  line-height: 0px;
+  padding: 11px 3px;    
 }
 
 .footprintcommentpiccontainer {
@@ -504,7 +570,25 @@ li{
 
 .footprintcommentpic {
   width: 70px;
+  border-radius: 10px;
   height: auto;
+}
+
+.footprintprofpic {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.friendphoto {
+  float: left;
+  width: 95px;
+  height: 95px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline;
+  margin: 12px;
 }
 
 .commentername {
@@ -552,11 +636,11 @@ li{
 
 .comment_form input {
   position: relative;
-  height:24px; 
-  width:245px; 
+  height:26px; 
+  width: 100%; 
   padding:5px;
-  box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
-  border-radius: 3px;
+  box-shadow: 0px 0px 3px #ccc inset;
+  border-radius: 5px;
   border: none;
 }
 

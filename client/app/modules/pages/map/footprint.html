@@ -1,29 +1,37 @@
-<div class="footprintitem">
-	<span ng-click="closeFootprintWindow()" class="closefootprint">X</span>
-	<h2>{{footprint.place.name}}</h2>
-	<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
-	<img ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
-	<img ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
-	<div>
-		<img ng-if="!footprint.checkin.bucketed" class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
-		<img ng-if="footprint.checkin.bucketed" class='addbucketactive' title="Add to Bucket List"/>
-		<img ng-if="!footprint.checkin.liked" class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint)">
-		<img ng-if="footprint.checkin.liked" class='givepropsactive' title="Give Props">
-		<h4>{{selectedFootprintInteractions.props}}</h4>
-	</div>
-	<div>
-	  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
-	  <form name="customSubmit" data-custom-submit class='comment_form' novalidate>
-      <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
-      <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
-    </form>
-	</div>
-	<div class='footprintcomments' ng-repeat="comment in selectedFootprintInteractions.comments">
-		<div class='footprintcommentpiccontainer'>
-			<img class='footprintcommentpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+<div class="row">
+	<div class="footprintitem col-lg-12">
+		<span ng-click="closeFootprintWindow()" class="closefootprint">x</span>
+		<div class="footprint-pic-bg col-lg-9">
+			<img class="footprintpicture" ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
+			<img class="footprintpicture" ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
 		</div>
-		<p>{{comment.comment.text}}</p>
-		<h7>{{comment.comment.time | date : shortDate}}</h7>
-		<h4 class="commentername">{{comment.commenter.name}}</h4>
+		<div class="col-lg-3">
+			<div>
+				<img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
+				<h4>{{footprint.user.name}}</h4>
+				<h2>{{footprint.place.name}}</h2>
+				<h3 ng-if="footprint.checkin.caption !== 'null'">"{{footprint.checkin.caption}}"</h3>
+				<img ng-if="!footprint.checkin.bucketed" class='addbucket' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
+				<img ng-if="footprint.checkin.bucketed" class='addbucketactive' title="Add to Bucket List"/>
+				<!-- <img ng-if="!footprint.checkin.liked" class='giveprops' title="Give Props" ng-click="addPropsToCheckin(footprint)">
+				<img ng-if="footprint.checkin.liked" class='givepropsactive' title="Give Props">
+				<h4>{{selectedFootprintInteractions.props}}</h4> -->
+			</div>
+			<div class='footprintcomments' ng-repeat="comment in selectedFootprintInteractions.comments">
+				<div class='footprintcommentpiccontainer'>
+					<img class='footprintprofpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+				</div>
+				<h4 class="commentername">{{comment.commenter.name}}</h4>
+				<h7>{{comment.comment.time | date : shortDate}}</h7>
+				<p>{{comment.comment.text}}</p>
+			</div>
+			<div>
+			  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
+			  <form name="customSubmit" data-custom-submit class='comment_form' novalidate>
+		      <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
+		      <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>
+		    </form>
+			</div>
+		</div>
 	</div>
 </div>
