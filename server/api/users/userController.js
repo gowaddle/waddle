@@ -124,17 +124,18 @@ userController.userLogin = function (req, res) {
       userFBPhotoData = fbParsedPhotoData;
       combinedFBCheckins = userFBTaggedPostsData.concat(userFBPhotoData);
       //get statuses posted by user
-      return facebookUtils.getFBStatuses(user);
-    })
-    .then(function (fbRawStatusList) {
-      return facebookUtils.parseFBData(user, fbRawStatusList);
-    })
-    .then(function (fbParsedStatusesData) {
-      userFBStatusesData = fbParsedStatusesData;
-      combinedFBCheckins = combinedFBCheckins.concat(userFBStatusesData);
-      console.log("combinedCheckins: " + combinedFBCheckins);
+      // return facebookUtils.getFBStatuses(user);
       return user.addCheckins(combinedFBCheckins);
     })
+    // .then(function (fbRawStatusList) {
+    //   return facebookUtils.parseFBData(user, fbRawStatusList);
+    // })
+    // .then(function (fbParsedStatusesData) {
+    //   userFBStatusesData = fbParsedStatusesData;
+    //   combinedFBCheckins = combinedFBCheckins.concat(userFBStatusesData);
+    //   console.log("combinedCheckins: " + combinedFBCheckins);
+    //   return user.addCheckins(combinedFBCheckins);
+    // })
     .then(function (data) {
       return user.findAllCheckins(userData.facebookID);
     })
