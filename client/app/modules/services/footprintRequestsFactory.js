@@ -40,6 +40,16 @@ var FootprintRequests = function ($http){
       }
     },
 
+    removeComment : function(data) {
+      if (data) {
+        return $http({
+          method : 'POST',
+          data : data ,
+          url : 'api/checkins/removecomment'
+        });
+      }
+    },
+
     giveProps: function (data) {
       if (data) {
         return $http({

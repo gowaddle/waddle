@@ -164,7 +164,24 @@ checkinController.addComment = function (req, res){
       res.status(500).end();
     });
 };
+// remove comment
 
+checkinController.removeComment = function (req, res){
+  console.log('in the controller!');
+  var checkinID = req.body.checkinID;
+  var facebookID = req.body.facebookID;
+  var commentID = req.body.commentID ;
+  console.log(req.body);
+  Checkin.removeComment(facebookID, checkinID , commentID)
+    .then(function (data){
+      res.json(data);
+      res.status(201).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    });
+}
 checkinController.giveProps = function (req, res){
   var clickerID = req.body.clickerID;
   var checkinID = req.body.checkinID;

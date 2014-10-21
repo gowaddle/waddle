@@ -98,6 +98,26 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
         $scope.selectedFootprintInteractions.comments = data.data.comments;
       });  
     };
+//    $scope.removeCommenttest = function()
+  //  {
+    //  console.log("del reached");
+    //}
+
+     $scope.removeComment = function (footprint, comment){
+      console.log(footprint);
+      console.log(comment);
+      var commentData = {
+        facebookID: comment.commenter.facebookID,
+        checkinID: footprint.checkin.checkinID,
+        commentID : comment.comment.commentID 
+      };
+      console.log(commentData);
+      FootprintRequests.removeComment(commentData)
+      .then(function (data){
+        console.log("success");
+        //MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', false);
+      });
+    };
   });
 }
 

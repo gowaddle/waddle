@@ -24,6 +24,8 @@
 				<h4 class="commentername">{{comment.commenter.name}}</h4>
 				<h7>{{comment.comment.time | date : shortDate}}</h7>
 				<p>{{comment.comment.text}}</p>
+				<button ng-click="removeComment(footprint, comment)">Delete </button>  
+
 			</div>
 			<div>
 			  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
