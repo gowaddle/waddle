@@ -1,7 +1,7 @@
 var neo4j = require('neo4j');
 var Q = require('q');
 var _ = require('lodash');
-var uuid = require('node-uuid');
+//var uuid = require('node-uuid');
 
 var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
 
@@ -94,7 +94,7 @@ Checkin.addComment = function (clickerID, checkinID, text){
   var query = [
   'MATCH (clicker:User {facebookID: {facebookID}})',
   'MATCH (checkin:Checkin {checkinID: {checkinID}})',
-  'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, time: timestamp(), commentID : uuid.v4()})' +
+  'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, time: timestamp()})' +
   '-[:gotComment]->(checkin)',
   'RETURN comment'
   ].join('\n');
