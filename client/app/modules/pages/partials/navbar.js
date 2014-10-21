@@ -25,8 +25,8 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
   $scope.loadAggregatedFootprints = function () {
     UserRequests.getAggregatedFeedData(window.sessionStorage.userFbID)
       .then(function (aggregatedFootprints) {
-        console.log(aggregatedFootprints.data[0]);
-        MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(aggregatedFootprints.data[0]);
+        console.log(aggregatedFootprints.data);
+        MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(aggregatedFootprints.data);
         var bounds = MapFactory.currentMap.getBounds();
         MapFactory.filterFeedByBounds(bounds);
         $state.go('map.feed'); 

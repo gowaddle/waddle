@@ -11,17 +11,17 @@
     <h3 class='feeditemname' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
       {{footprint.place.name}}
     </h3>
-    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge !== 'null'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      <img class='feedphoto' ng-if="footprint.checkin.photoLarge !== 'null'" ng-src="{{footprint.checkin.photoLarge}}">
-      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge !== 'null'">{{footprint.checkin.caption}}</h4>
+    <div ng-if="footprint.checkin.caption !== 'null'" ng-if="footprint.checkin.photoLarge !== 'null'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      <img class='feedphoto' ng-src="{{footprint.checkin.photoLarge}}">
+      <h4>{{footprint.checkin.caption}}</h4>
     </div>
-    <div ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      <img class='feedphoto' ng-if="footprint.checkin.photoLarge !== 'null'" ng-src="{{footprint.checkin.photoLarge}}">
+    <div  ng-if="footprint.checkin.photoLarge !== 'null'" ng-if="footprint.checkin.caption === null" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
+      <img class='feedphoto'  ng-src="{{footprint.checkin.photoLarge}}">
     </div>
-    <div ng-if="footprint.checkin.caption === 'null' && footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
-      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.caption === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
+    <div ng-if="footprint.checkin.photoLarge === 'null'" ng-if="footprint.checkin.caption === 'null'" class='captioncontainer'>
+      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
     </div>
-    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
+    <div ng-if="footprint.checkin.caption !== 'null'" ng-if="footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
       <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge === 'null'">"{{footprint.checkin.caption}}"</h4>
     </div>
     <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>

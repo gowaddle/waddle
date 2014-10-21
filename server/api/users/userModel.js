@@ -279,8 +279,44 @@ User.prototype.findAllCheckins = function (viewer) {
 //   var query = [
 //     'M'
 //   ]
-// }
+// 
 
+User.prototype.getAggregatedFootprintList = function (facebookID) {
+  var deferred = Q.defer();
+
+  var query = [
+    // 'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasFriend]->(friend:User)-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
+    'return user, friend, checkin, place'
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (item) {
+        var singleResult = {
+          "user": item.user.data,
+          "checkin": item.checkin.data,
+          "place": item.place.data,
+        }
+
+        if(item.friend) {
+          singleResult["user"] = item.friend.data;
+        }
+
+        return singleResult;
+      });
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+}
 // Find all bucketList items for a user
 // Takes a facebookID and returns a footprint object with
 // checkin and place keys, containing checkin and place data
