@@ -66,7 +66,8 @@ angular.module('waddle', [
   'mgcrea.ngStrap.helpers.dimensions',
   'mgcrea.ngStrap.tooltip',
   'mgcrea.ngStrap.dropdown',
-  'ngSanitize'
+  'ngSanitize',
+  'btford.socket-io'
 ]).config(['$stateProvider', '$urlRouterProvider', WaddleConfig]);
 
 //   angular.module('mgcrea.ngStrap')
