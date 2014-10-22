@@ -40,8 +40,16 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
     })
     .state('map.feed', {
       url: '/feed',
-      templateUrl: '../app/modules/pages/map/feed.html', 
-      controller: 'FeedController as mapFeed'
+      views: {
+        '': {
+          templateUrl: '../app/modules/pages/map/feed.html', 
+          controller: 'FeedController as mapFeed'
+        },
+        'profile': {
+          templateUrl: '../app/modules/pages/map/profile.html',
+          controller: 'ProfileController'
+        }
+      },
     })
     .state('map.feed.footprint', {
       url: '/:footprint',
