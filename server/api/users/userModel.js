@@ -233,9 +233,10 @@ User.prototype.findAllCheckins = function (viewer) {
 
   var query = [
     'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
-    (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' +
+    'OPTIONAL MATCH (checkin)<-[]-(comment:Comment)<-[]-(commenter:User)',
+    (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[:givesProps]->(checkin)' +
       'OPTIONAL MATCH (bucketer:User {facebookID: {viewerID}})-[:hasBucket]->(checkin)' : ""),
-    'RETURN user, checkin, place' + (viewer ? ', liker, bucketer' : "")
+    'RETURN user, checkin, place, collect(comment), collect(commenter)' + (viewer ? ', liker, bucketer' : "")
   ].join('\n');
 
   var params = {
@@ -250,17 +251,33 @@ User.prototype.findAllCheckins = function (viewer) {
     if (err) { deferred.reject(err); }
     else {
       var parsedResults = _.map(results, function (item) {
+        
         var singleResult = {
           "user": item.user.data,
           "checkin": item.checkin.data,
-          "place": item.place.data
+          "place": item.place.data,
+          "comments": null
         }
+
+        if(item['collect(comment)'].length && item['collect(commenter)'].length) {
+          var commentsArray = [];
+          for(var i = 0; i < item['collect(comment)'].length; i++) {
+            var commentData = {
+              comment: item['collect(comment)'][i].data,
+              commenter: item['collect(commenter)'][i].data
+            }
+            commentsArray.push(commentData);
+          }
+          singleResult.comments = commentsArray;
+        }
+
         if (item.liker){
           singleResult.checkin.liked = true;
         }
         if (item.bucketer){
           singleResult.checkin.bucketed = true;
         }
+        console.log(JSON.stringify(singleResult.comments));
         return singleResult
       });
 
@@ -287,7 +304,7 @@ User.prototype.getAggregatedFootprintList = function (facebookID) {
   var query = [
     // 'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
     'MATCH (user:User {facebookID: {facebookID}})-[:hasFriend]->(friend:User)-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
-    'return user, friend, checkin, place'
+    'RETURN user, friend, checkin, place'
   ].join('\n');
 
   var params = {
