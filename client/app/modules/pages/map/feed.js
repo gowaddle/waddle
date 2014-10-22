@@ -23,6 +23,10 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
 
     // $scope.footprintsCount = UserRequests.allData.allCheckins.length;
 
+    $scope.removeComment = function() {
+      console.log('reached remove comment');
+    }
+
     $scope.addPropsToCheckin = function (footprint){
       
       var propsData = {
