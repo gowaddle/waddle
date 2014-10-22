@@ -24,23 +24,11 @@
     <div ng-if="footprint.checkin.caption !== 'null'" ng-if="footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
       <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge === 'null'">"{{footprint.checkin.caption}}"</h4>
     </div>
-    <div class="feedcomment">
-    <img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
-    <h4>{{footprint.user.name}}</h4>
-    <h8 class="checkindate">5 minutes ago</h8><br>
-    <p>Boy Toy named Troy used to live in Detroit.</p>
-    </div>
-    <div class="feedcomment">
-    <img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
-    <h4>{{footprint.user.name}}</h4>
-    <h8 class="checkindate">5 minutes ago</h8><br>
-    <p>Little in the middle but she got much back. Little in the middle but she got much back.</p>
-    </div>
-    <div class="feedcomment">
-    <img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
-    <h4>{{footprint.user.name}}</h4>
-    <h8 class="checkindate">5 minutes ago</h8><br>
-    <p>Yeah! This one is for my bitches with a fat ass in the club.</p>
+    <div class="feedcomment" ng-repeat="comment in footprint.comments | orderBy:'comment.time'">
+    <img class='footprintprofpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+    <h4>{{comment.commenter.name}}</h4>
+    <h8 class="checkindate">{{comment.comment.time | date : shortDate}}</h8><br>
+    <p>{{comment.comment.text}}</p>
     </div>
 <!--     <div class='footprintcomments' ng-repeat="comment in selectedFootprintInteractions.comments">
         <div class='footprintcommentpiccontainer'>
