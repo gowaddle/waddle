@@ -304,7 +304,8 @@ User.prototype.getAggregatedFootprintList = function (facebookID) {
   var query = [
     // 'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
     'MATCH (user:User {facebookID: {facebookID}})-[:hasFriend]->(friend:User)-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
-    'RETURN user, friend, checkin, place'
+    'OPTIONAL MATCH (checkin)<-[]-(comment:Comment)<-[]-(commenter:User)',
+    'RETURN user, friend, checkin, place, collect(comment), collect(commenter)'
   ].join('\n');
 
   var params = {
@@ -319,6 +320,18 @@ User.prototype.getAggregatedFootprintList = function (facebookID) {
           "user": item.user.data,
           "checkin": item.checkin.data,
           "place": item.place.data,
+        }
+
+        if(item['collect(comment)'].length && item['collect(commenter)'].length) {
+          var commentsArray = [];
+          for(var i = 0; i < item['collect(comment)'].length; i++) {
+            var commentData = {
+              comment: item['collect(comment)'][i].data,
+              commenter: item['collect(commenter)'][i].data
+            }
+            commentsArray.push(commentData);
+          }
+          singleResult.comments = commentsArray;
         }
 
         if(item.friend) {
