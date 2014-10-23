@@ -277,7 +277,6 @@ User.prototype.findAllCheckins = function (viewer) {
         if (item.bucketer){
           singleResult.checkin.bucketed = true;
         }
-        console.log(JSON.stringify(singleResult.comments));
         return singleResult
       });
 
@@ -403,7 +402,9 @@ User.find = function (data) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
+      console.log('results' + JSON.stringify(results[0].user.data))
       if (results && results[0] && results[0]['user']) {
+        console.log(results)
         deferred.resolve(new User(results[0]['user']));
       }
       else {

@@ -58,7 +58,7 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
     .state('map.footprints', {
       url: '/footprints',
       templateUrl: '../app/modules/pages/map/footprints.html',
-      controller: 'FeedController as mapFootprints'
+      controller: 'FeedController as mapFeed'
     })
 //when  none of the above state match the URL then redirect the page to state represented by '/' 
   $urlRouterProvider.otherwise('/');
