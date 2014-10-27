@@ -1,6 +1,6 @@
 <div ui-view></div>
 <div ng-if="inBoundsObject.datapoints" class='waddlefeed'>
-  <h3 class="feedtitle">Feed</h3>
+  <h3 class="feedtitle" ng-click="socketTest()">Feed</h3>
   <div class='waddlefeeditem' ng-repeat="footprint in inBoundsObject.datapoints | orderBy:'-checkin.checkinTime' | limitTo:20 ">
     <img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
     <h4>{{footprint.user.name}}</h4>

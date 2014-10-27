@@ -1,6 +1,6 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth, $scope, $rootScope, $state) {
+var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth, $scope, $rootScope, $state, Socket) {
   Auth.checkLogin()
   .then( function (){
     // Finds all points on the map that are within the bottom left and top right
@@ -20,6 +20,20 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
 
       });
     }
+
+     
+     $scope.socketTest = function() {
+      console.log('hi');
+      Socket.emit('hi', 'hello my socket');
+       // Socket.forward('news', $scope);
+       // $scope.$on('Socket:news', function(ev, data) {
+       //  console.log(data);
+       //  $scope.theData = data;
+       // })
+     }
+     Socket.on('hi', function(data) {
+      console.log('client says: ' + data);
+     })
 
     // $scope.footprintsCount = UserRequests.allData.allCheckins.length;
 
@@ -125,7 +139,7 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'UserRequests', 'Auth', '$scope', '$rootScope', '$state'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'UserRequests', 'Auth', '$scope', '$rootScope', '$state', 'Socket'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 
