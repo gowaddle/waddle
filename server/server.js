@@ -1,14 +1,14 @@
 var express = require('express');
 var app = express();
-var server=require('http').Server(app);
-var io = require('socket.io')(server);
+// var server=require('http').Server(app);
+// var io = require('socket.io')(server);
 
 require('./middleware.js')(app, express);
 
 
 var port = process.env.PORT || 8080;
 
-server.listen(port, function () {
+app.listen(port, function () {
 	console.log('Listening on port ' + this.address().port);
 });
 
