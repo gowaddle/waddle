@@ -24,16 +24,16 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
      
      $scope.socketTest = function() {
       console.log('hi');
-      Socket.emit('hi', 'hello my socket');
+      // Socket.emit('hi', 'hello my socket');
        // Socket.forward('news', $scope);
        // $scope.$on('Socket:news', function(ev, data) {
        //  console.log(data);
        //  $scope.theData = data;
        // })
      }
-     Socket.on('hi', function(data) {
-      console.log('client says: ' + data);
-     })
+     // Socket.on('hi', function(data) {
+     //  console.log('client says: ' + data);
+     // })
 
     // $scope.footprintsCount = UserRequests.allData.allCheckins.length;
 
