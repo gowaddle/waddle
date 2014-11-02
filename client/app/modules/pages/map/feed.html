@@ -1,8 +1,9 @@
 <div ui-view></div>
 <div ng-if="inBoundsObject.datapoints" class='waddlefeed'>
-  <h3 class="feedtitle" ng-click="socketTest()">Feed</h3>
+  <br>
+  <h4 class="feedtitle">Feed</h4>
   <div class='waddlefeeditem' ng-repeat="footprint in inBoundsObject.datapoints | orderBy:'-checkin.checkinTime' | limitTo:20 ">
-    <img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'>
+    <div class="footprintprofpicframe"><img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'></div>
     <h4>{{footprint.user.name}}</h4>
       <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketList(footprint)"/>
       <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List" ng-click="removeCheckinFromBucketList(footprint)"/>
