@@ -473,4 +473,49 @@ User.findByInstagramID = function (instagramID) {
   return deferred.promise;
 };
 
+User.findByFootprintCheckinID = function (checkinID) {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (checkin:Checkin{checkinID: {checkinID}})<-[]-(user:User)',
+    'RETURN user'
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+  return deferred.promise;
+}
+
+User.findLatestCommenterAndCommentOnCheckinByCheckinID = function (checkinID) {
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (user:User)-[]->(checkin:Checkin {checkinID:{checkinID}})<-[]-(comment:Comment)<-[]-(commenter:User)',
+  'OPTIONAL MATCH (checkin)-[]->(place:Place)',
+  'RETURN user, commenter, checkin, comment, place', 
+  'ORDER BY -comment.time', 
+  'LIMIT 1'
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results[0]);
+    }
+  });
+  return deferred.promise;
+}
+
 module.exports = User;

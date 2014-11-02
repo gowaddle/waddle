@@ -51,6 +51,15 @@ var WaddleConfig = function ($stateProvider, $urlRouterProvider) {
         }
       },
     })
+    .state('map.feed.checkin', {
+      url: '/checkin',
+      templateUrl: '../app/modules/pages/map/checkin.html',
+      controller: 'CheckinController'
+    })
+    .state('map.feed.checkin.post', {
+      url: '/:venue',
+      templateUrl: '../app/modules/pages/map/checkin-post.html'
+    })
     .state('map.feed.footprint', {
       url: '/:footprint',
       templateUrl: '../app/modules/pages/map/footprint.html'

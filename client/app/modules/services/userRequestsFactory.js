@@ -29,7 +29,7 @@ var UserRequests = function ($http){
       }
 
     },
-
+    
     // Grab existing user's checkins/data
     // Pass in the viewerID so that there is a context to the data returned
     // this allows the viewer to see whether they have liked another user's checkin
