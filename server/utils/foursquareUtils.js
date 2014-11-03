@@ -147,6 +147,10 @@ utils.parseNativeCheckin = function (venue) {
     formattedCheckin.category = venue.categories[0].name;
   }
 
+   if (venue.footprintCaption) {
+    formattedCheckin.caption = venue.footprintCaption;
+  }
+
   return formattedCheckin;
 }
 

@@ -1,13 +1,13 @@
 	<div ui-view></div>
     <div class="footprintitem col-lg-12">
-        <span ng-click="closeFootprintWindow()" class="closefootprint">x</span>
-        <form class="navbar-form navbar-left" role="search">
+      <span ng-click="closeFootprintWindow()" class="closefootprint">x</span>
+      <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
           <input ng-model="venueQuery" type="text" class="form-control" placeholder="Type in the name of a place">
-           <input ng-model="locationQuery" type="text" class="form-control" placeholder="Enter a city name">
+          <input ng-model="locationQuery" type="text" class="form-control" placeholder="Enter a city name">
         </div>
         <button type="submit" class="btn btn-default" ng-click="getAndParseUserInput()">Submit</button>
-    </form>
+      </form>
     <div ng-repeat='venue in venues'>
         <!-- <h4 ng-click='getSelectedVenueInfo(venue)'>{{venue.name}}</h4> <br/> -->
         <h4 ng-click='passSelectedVenueInfoToPostModal(venue)' ui-sref="map.feed.checkin.post({venue: venue.id})">{{venue.name}}</h4> 

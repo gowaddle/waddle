@@ -2,11 +2,11 @@
   <div class='centered'>
   	<div class="footprintitem col-lg-12">
   		<h2>{{venue.name}}</h2>
-  	<form>
-  		<textarea>
+  	<form class="navbar-form navbar-left" role="search">
+  		<textarea  ng-model="footprintCaption" type="text" class="form-control" placeholder="What did you think of this place?">
   		</textarea>
-  	</form>
-  	<button type="submit" class="btn btn-default" ng-click="getAndParseUserInput()">Post</button>
+  	  <button type="submit" class="btn btn-default" ng-click="sendCheckinDataToServer(venue)" ui-sref="map.feed">Post</button>
+    </form>
   </div>
   <span class="cancel" ui-sref='map.feed.checkin'>X</span>
 </div>
