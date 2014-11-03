@@ -10,6 +10,30 @@ var facebookUtils = require('../../utils/facebookUtils.js');
 
 var checkinController = {};
 
+checkinController.handleNativeCheckin = function (req, res) {
+  var user;
+  var nativeCheckin = req.body
+  var facebookID = req.body.facebookID
+
+  User.find({facebookID: facebookID})
+  .then(function (userNode) {
+    user = userNode;
+    return foursquareUtils.parseNativeCheckin(nativeCheckin);
+  })
+  .then(function (parsedCheckin) {
+    console.log('parsedCheckin: ' + JSON.stringify(parsedCheckin));
+    return user.addCheckins([parsedCheckin]);
+  })
+  .then(function (data) {
+    console.log(data);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
+  res.status(200).end();
+};
+
 checkinController.instagramHubChallenge = function (req, res) {
   res.status(200).send(req.query['hub.challenge']);
 };

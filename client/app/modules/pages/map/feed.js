@@ -1,6 +1,6 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth, $scope, $rootScope, $state) {
+var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth, $scope, $rootScope, $state, Socket) {
   Auth.checkLogin()
   .then( function (){
     // Finds all points on the map that are within the bottom left and top right
@@ -20,6 +20,19 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
 
       });
     }
+
+     
+     $scope.socketTest = function() {
+      Socket.emit('hi', 'hello my socket');
+       Socket.forward('news', $scope);
+       $scope.$on('Socket:news', function(ev, data) {
+        console.log(data);
+        $scope.theData = data;
+       })
+     }
+     Socket.on('hi', function(data) {
+      console.log('client says: ' + data);
+     })
 
     // $scope.footprintsCount = UserRequests.allData.allCheckins.length;
 
@@ -125,11 +138,11 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'UserRequests', 'Auth', '$scope', '$rootScope', '$state'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'UserRequests', 'Auth', '$scope', '$rootScope', '$state', 'Socket'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 
-var CustomSubmitDirective = function(FootprintRequests) {
+var CustomSubmitDirective = function(FootprintRequests, Socket) {
   return {
     restrict: 'A',
     link: function( scope , element , attributes ){
@@ -174,19 +187,20 @@ var CustomSubmitDirective = function(FootprintRequests) {
         var commentData = {
           clickerID: window.sessionStorage.userFbID,
           checkinID: scope.footprint.checkin.checkinID,
+          commentID: scope.footprint.comments[0],
           text: scope.comment
         }
 
         FootprintRequests.addComment(commentData)
-        .then(function (data){
-
+        .then(function (data) {
+          Socket.emit('comment posted', commentData);
           if (FootprintRequests.openFootprint){
             scope.updateFootprint(FootprintRequests.openFootprint)
           }
           scope.data.currentComment = ''
           //$element[0][0].value = ''
         })
-        console.log(commentData)
+        console.log(commentData);
         scope.comment = ""
         scope.$apply();
       });
@@ -194,7 +208,7 @@ var CustomSubmitDirective = function(FootprintRequests) {
   };
 };
 
-CustomSubmitDirective.$inject = ['FootprintRequests'];
+CustomSubmitDirective.$inject = ['FootprintRequests', 'Socket'];
 
 //Start creating Angular module
 angular.module('waddle.feed', [])

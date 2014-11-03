@@ -277,7 +277,6 @@ User.prototype.findAllCheckins = function (viewer) {
         if (item.bucketer){
           singleResult.checkin.bucketed = true;
         }
-        console.log(JSON.stringify(singleResult.comments));
         return singleResult
       });
 
@@ -403,7 +402,9 @@ User.find = function (data) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
+      console.log('results' + JSON.stringify(results[0].user.data))
       if (results && results[0] && results[0]['user']) {
+        console.log(results)
         deferred.resolve(new User(results[0]['user']));
       }
       else {
@@ -471,5 +472,50 @@ User.findByInstagramID = function (instagramID) {
 
   return deferred.promise;
 };
+
+User.findByFootprintCheckinID = function (checkinID) {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (checkin:Checkin{checkinID: {checkinID}})<-[]-(user:User)',
+    'RETURN user'
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+  return deferred.promise;
+}
+
+User.findLatestCommenterAndCommentOnCheckinByCheckinID = function (checkinID) {
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (user:User)-[]->(checkin:Checkin {checkinID:{checkinID}})<-[]-(comment:Comment)<-[]-(commenter:User)',
+  'OPTIONAL MATCH (checkin)-[]->(place:Place)',
+  'RETURN user, commenter, checkin, comment, place', 
+  'ORDER BY -comment.time', 
+  'LIMIT 1'
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results[0]);
+    }
+  });
+  return deferred.promise;
+}
 
 module.exports = User;

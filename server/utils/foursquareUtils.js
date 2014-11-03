@@ -4,6 +4,8 @@ var qs = require('querystring');
 var Q = require('q');
 var _ = require('lodash');
 
+var uuid = require('node-uuid');
+
 var helpers = require('./helpers.js');
 
 var User = require('../api/users/userModel.js');
@@ -121,6 +123,32 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
     return utils.parseCheckin(checkin);
   });
 };
+
+utils.parseNativeCheckin = function (venue) {
+
+  var formattedCheckin = {
+    'checkinID': uuid.v4(),
+    'name': venue.name,
+    'lat': venue.location.lat,
+    'lng': venue.location.lng,
+    'checkinTime': new Date().getTime(),
+    'likes': 'null',
+    'photoSmall': 'null',
+    'photoLarge': 'null',
+    'caption': 'null',
+    'foursquareID': venue.id,
+    'country': venue.location.country,
+    'category': 'null',
+    'source': 'waddle'
+  };
+ 
+
+  if (venue.categories[0]) {
+    formattedCheckin.category = venue.categories[0].name;
+  }
+
+  return formattedCheckin;
+}
 
 utils.parseCheckin = function (checkin) {
   var formattedCheckin = {

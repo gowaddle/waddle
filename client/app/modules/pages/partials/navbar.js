@@ -33,6 +33,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
     });
   };
 
+
   // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
 
   $scope.dropdown = [
@@ -44,7 +45,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
 }
 
 //Inject all the dependent services needed by the controller
-NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state'];
+NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state', '$dropdown'];
 
 angular.module('waddle.navbar', [])
   .controller('NavbarController', NavbarController);

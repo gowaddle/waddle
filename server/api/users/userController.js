@@ -236,15 +236,18 @@ userController.getUserData = function (req, res){
   var userData = {
     facebookID: req.params.friend
   };
+  var userInfo = {};
   var viewer = req.params.viewer;
 
   User.find(userData)
   .then(function (friend) {
+    userInfo.user = friend.node._data.data;
     return friend.findAllCheckins(viewer);
   })
   .then(function (checkins) {
     // console.log("checkins: ", checkins.length)
-    res.json(checkins);
+    userInfo.footprints = checkins;
+    res.json(userInfo);
     res.status(200).end();
   })
   .catch(function (err) {
@@ -316,11 +319,23 @@ userController.getAggregatedListOfCheckins = function (req, res){
   // });
 };
 
-userController.getAllFriendCheckins = function (container) {
-  var deferred = Q.defer();
+userController.getUserInfo = function (req, res) {
+  console.log('in the controller')
+  var params = {};
+  params.facebookID = req.params.user;
+  console.log('dis be ma params' + JSON.stringify(req.params))
 
+  User.find(params)
+   .then(function (userInfo) {
+    console.log('userInfo' + JSON.stringify(userInfo.node._data.data));
+    res.json(userInfo.node._data.data);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  });
 
-  container.push()
 
 
 }
