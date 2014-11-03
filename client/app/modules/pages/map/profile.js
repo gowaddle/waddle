@@ -2,13 +2,13 @@
 
 var ProfileController = function ($scope, $state, UserRequests){
 
-$scope.username = 'HOOBBY';
+$scope.username = 'Inje Yeo';
 
 
 
 $scope.picture = ''
 
-
+}
 // Inject all the depependent services needed by the controller
 ProfileController.$inject = ['$scope', '$state', 'UserRequests'];
 

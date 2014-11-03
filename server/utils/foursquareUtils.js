@@ -141,7 +141,7 @@ utils.parseNativeCheckin = function (venue) {
     'category': 'null',
     'source': 'waddle'
   };
-  console.log('oh heyyyyy')
+ 
 
   if (venue.categories[0]) {
     formattedCheckin.category = venue.categories[0].name;

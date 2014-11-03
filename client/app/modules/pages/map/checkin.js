@@ -6,7 +6,11 @@ var CheckinController = function ($scope, NativeCheckin){
 
 	$scope.venueData = {};
 
-	$scope.getSelectedVenueInfo = function(venueInfo) {
+	$scope.passSelectedVenueInfoToPostModal = function (venueInfo) {
+		$scope.venue = venueInfo;
+	}
+
+	$scope.sendSelectedVenueInfotoServer = function(venueInfo) {
 		venueInfo.facebookID = window.sessionStorage.userFbID;
 
 		NativeCheckin.sendCheckinDataToServer(venueInfo)
