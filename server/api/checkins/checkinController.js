@@ -1,5 +1,7 @@
 var Q = require('q');
 var _ = require('lodash');
+var aws = require('aws-sdk');
+var uuid = require('node-uuid')
 
 var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
@@ -260,5 +262,31 @@ checkinController.getPropsAndComments = function (req, res){
       res.status(500).end();
     });
 };
+
+checkinController.sign_s3 = function (req, res) {
+  aws.config.update({accessKeyId: process.env.AWS_ACCESS_KEY, secretAccessKey: process.env.AWS_SECRET_KEY});
+    var s3 = new aws.S3();
+    var aws_uuid = uuid.v4();
+    var s3_params = {
+        Bucket: process.env.S3_BUCKET,
+        Key: aws_uuid,
+        Expires: 60,
+        ContentType: req.query.s3_object_type,
+        ACL: 'public-read'
+    };
+    s3.getSignedUrl('putObject', s3_params, function(err, data){
+        if(err){
+            console.log(err);
+        }
+        else{
+            var return_data = {
+                signed_request: data,
+                url: 'https://' + process.env.S3_BUCKET + '.s3.amazonaws.com/' + aws_uuid
+            };
+            res.write(JSON.stringify(return_data));
+            res.end();
+        }
+    });
+}
 
 module.exports = checkinController;

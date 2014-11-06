@@ -6,23 +6,27 @@ var CheckinController = function ($scope, NativeCheckin){
 
 	$scope.venueData = {};
 
+	$scope.s3Upload = NativeCheckin.s3_upload;
+
 	$scope.passSelectedVenueInfoToPostModal = function (venueInfo) {
 		$scope.venue = venueInfo;
 	}
 
-	$scope.sendSelectedVenueInfotoServer = function(venueInfo) {
+	$scope.sendCheckinDataToServer = function(venueInfo) {
 		venueInfo.facebookID = window.sessionStorage.userFbID;
-
-		NativeCheckin.sendCheckinDataToServer(venueInfo)
+		venueInfo.footprintCaption = $scope.footprintCaption;
+		NativeCheckin.s3_upload()
+		.then(function (public_url) {
+		  venueInfo.photo = public_url;
+		  console.log('venueInfo: ' + JSON.stringify(venueInfo));
+		  NativeCheckin.sendCheckinDataToServer(venueInfo)
+		})
 		.then(function (data) {
 			console.log(data);
 		})
-
 	}
 
 	$scope.getAndParseUserInput = function () {
-		// console.log($scope.venueQuery)
-		// console.log($scope.locationQuery)
 		var venueQuery = $scope.venueQuery.replace(" ", "%20");
 		var locationQuery = $scope.locationQuery.replace(" ", "%20");
 		NativeCheckin.searchFoursquareVenues({near: locationQuery, query: venueQuery})
