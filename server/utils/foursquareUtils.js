@@ -151,6 +151,10 @@ utils.parseNativeCheckin = function (venue) {
     formattedCheckin.caption = venue.footprintCaption;
   }
 
+   if (venue.photo) {
+    formattedCheckin.photoLarge = venue.photo;
+  }
+
   return formattedCheckin;
 }
 

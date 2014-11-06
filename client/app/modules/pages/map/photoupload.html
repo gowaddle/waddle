@@ -1,0 +1,14 @@
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<div style="z-index:20;">
+<input style="z-index:20;" type="file" id="files"/>
+<p style="z-index:20" id="status">Please select a file</p>
+<div style="border:1px solid gray;width:300px;z-index:20;"  id="preview"><img src="/images/default.png" style="width:300px;" /></div>
+
+<form method="POST" action="/submit_form/">
+    <input type="hidden" id="avatar_url" name="avatar_url" value="/public/images/default.png" />
+    <input type="text" name="username" placeholder="Username" /><br />
+    <input type="text" name="full_name" placeholder="Full name" /><br /><br />
+    <input type="submit" value="Update profile" />
+</form>
+<div>
+

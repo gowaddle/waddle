@@ -6,6 +6,8 @@ var CheckinController = function ($scope, NativeCheckin){
 
 	$scope.venueData = {};
 
+	$scope.s3Upload = NativeCheckin.s3_upload;
+
 	$scope.passSelectedVenueInfoToPostModal = function (venueInfo) {
 		$scope.venue = venueInfo;
 	}
@@ -13,8 +15,12 @@ var CheckinController = function ($scope, NativeCheckin){
 	$scope.sendCheckinDataToServer = function(venueInfo) {
 		venueInfo.facebookID = window.sessionStorage.userFbID;
 		venueInfo.footprintCaption = $scope.footprintCaption;
-
-		NativeCheckin.sendCheckinDataToServer(venueInfo)
+		NativeCheckin.s3_upload()
+		.then(function (public_url) {
+		  venueInfo.photo = public_url;
+		  console.log('venueInfo: ' + JSON.stringify(venueInfo));
+		  NativeCheckin.sendCheckinDataToServer(venueInfo)
+		})
 		.then(function (data) {
 			console.log(data);
 		})
