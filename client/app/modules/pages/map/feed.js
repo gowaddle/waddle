@@ -21,11 +21,24 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
       });
     }
 
+    $scope.feedDisplay = function (photo, caption) {
+      if(photo === 'null' && caption === 'null') {
+        return "bothNull";
+      } else if(photo !== 'null' && caption !== 'null') {
+        return "bothTrue";
+      } else if (photo === 'null' && caption !== 'null'){
+        return "captionTrue";
+      } else {
+        return "photoTrue";
+      }
+    }
+
     $scope.search = {query: null};
 
     $scope.$on('displayFootprint', function (event, footprintNotification) {
       console.log('footprintNotification', footprintNotification);
       $scope.getFootprint(footprintNotification);
+      event.stopPropagation();
     });
 
     $scope.filterMap = function () {
