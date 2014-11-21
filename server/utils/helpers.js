@@ -22,4 +22,22 @@ helpers.httpsGet = function (queryPath) {
   return deferred.promise;
 };
 
+helpers.findCityByReverseGeocoding = function (lat, lng) {
+  var deferred = Q.defer();
+  var geocodingQueryPath = 'https://api.tiles.mapbox.com/v4/geocode/mapbox.places-city-v1/' 
+  + lng + ',' + lat + '.json?access_token=pk.eyJ1Ijoid2FkZGxldXNlciIsImEiOiItQWlwaU5JIn0.mTIpotbZXv5KVgP4pkcYrA';
+  console.log(geocodingQueryPath);
+
+  helpers.httpsGet(geocodingQueryPath)
+  .then(function (data) {
+    console.log(data)
+    deferred.resolve(JSON.parse(data))
+  })
+  .catch(function (err) {
+    deferred.reject(err);
+  });
+
+  return deferred.promise
+}
+
 module.exports = helpers;

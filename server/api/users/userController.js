@@ -258,6 +258,7 @@ userController.getUserData = function (req, res){
 
 userController.getAggregatedListOfCheckins = function (req, res){
   // var users = req.params.userlist;
+  var user;
   var params = {};
   var aggregatedFootprints = [];
   // var friendCheckins;
@@ -283,41 +284,27 @@ userController.getAggregatedListOfCheckins = function (req, res){
     console.log(err);
     res.status(500).end();
   });
-
-  // User.find(params)
-  // .then(function (userNode) {
-  //   user = userNode
-  //   return user.findAllCheckins(params.facebookID);
-  // })
-  // .then(function (userCheckins){
-  //   aggregatedFootprints.push(userCheckins);
-  //   return user.findAllFriends();
-  // })
-  // .then(function (friendlist) {
-  //   _.each(friendlist, function(friend) {
-  //     User.find(friend)
-  //     .then(function (friendnode) {
-  //       return friendnode.findAllCheckins(params.facebookID);
-  //     })
-  //     .then(function (friendCheckins) {
-  //       aggregatedFootprints.push(friendCheckins);
-  //       console.log('aggregated footprints', JSON.stringify(aggregatedFootprints));
-  //     })   
-  //   })
-  //   // if(aggregatedFootprints.length > 1) {
-  //     return aggregatedFootprints;
-  //   // }
-  // })
-  // .then(function (aggregatedFootprints) {
-  //   console.log(aggregatedFootprints);
-  //   res.json(aggregatedFootprints);
-  //   res.status(200).end();
-  // })
-  // .catch(function (err) {
-  //   console.log(err);
-  //   res.status(500).end();
-  // });
 };
+
+userController.getNotifications = function (req, res) {
+  var user;
+  var params = {}
+  params.facebookID = req.params.user;
+
+  User.find(params)
+  .then(function (userNode) {
+    user = userNode;
+    return user.getNotifications();
+  })
+  .then(function (notifications) {
+    res.json(notifications);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  })
+}
 
 userController.getUserInfo = function (req, res) {
   console.log('in the controller')

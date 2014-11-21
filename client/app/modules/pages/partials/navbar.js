@@ -1,6 +1,6 @@
 (function(){
 
-var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFactory, $state, $dropdown){
+var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFactory, $state, $dropdown, FootprintRequests){
   $scope.logout = Auth.logout;
 
   $scope.loadBucketlist = function () {
@@ -33,6 +33,28 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
     });
   };
 
+  $scope.loadFootprint = function (notification) {
+    console.log(notification);
+    $scope.$root.$broadcast("displayFootprint", notification);
+    // $scope.footprint = {checkin: notification.checkin, place: notification.place};
+    // var checkinID = notification.checkin.checkinID;
+
+    // FootprintRequests.openFootprint = notification;
+
+    // FootprintRequests.getFootprintInteractions(checkinID)
+    // .then(function (data) {
+    //   FootprintRequests.currentFootprint = data.data;
+    //   $scope.selectedFootprintInteractions = FootprintRequests.currentFootprint;
+    // });
+  }
+
+  $scope.displayNotifications = function () {
+    UserRequests.fetchNotifications(window.sessionStorage.userFbID)
+    .then(function (notifications) {
+      $scope.notifications = notifications.data;
+    });
+  }
+
 
   // var myDropdown = $dropdown(element, {title: 'blah', content: 'bsadsda'});
 
@@ -45,7 +67,7 @@ var NavbarController = function (Auth, $rootScope, $scope, UserRequests, MapFact
 }
 
 //Inject all the dependent services needed by the controller
-NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state', '$dropdown'];
+NavbarController.$inject = ['Auth', '$rootScope', '$scope', 'UserRequests', 'MapFactory', '$state', '$dropdown', 'FootprintRequests'];
 
 angular.module('waddle.navbar', [])
   .controller('NavbarController', NavbarController);

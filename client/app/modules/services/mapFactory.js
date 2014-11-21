@@ -171,6 +171,19 @@ var MapFactory = function (){
       aggregatedMarkers.addLayer(marker);
     },
 
+    searchMarkersByPlaceName: function (searchQuery) {
+      var processedSearchQuery = searchQuery.toLowerCase();
+      function checkPlaceName (marker) {
+        console.log(marker.title);
+        return marker.title
+              .toLowerCase()
+              .indexOf(processedSearchQuery) !== -1;
+
+      }
+      aggregatedMarkers.setFilter(checkPlaceName);
+
+    },
+
     handleUserCheckinData: function (allFootprints) {
       aggregatedMarkers.clearLayers();
 

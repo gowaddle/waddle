@@ -93,15 +93,16 @@ Checkin.addComment = function (clickerID, checkinID, text){
   var commentID = uuid.v4();
   var query = [
   'MATCH (clicker:User {facebookID: {facebookID}})',
-  'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+  'MATCH (commentReceiver:User)-[:hasCheckin]->(checkin:Checkin {checkinID: {checkinID}})',
   'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, commentID : {commentID}, time: timestamp() })' + 
   '-[:gotComment]->(checkin)',
+  'MERGE (commentReceiver)-[:hasUnreadNotification]->(comment)',
   'RETURN comment'
   ].join('\n');
   var params = {
     'facebookID': clickerID,
     'checkinID': checkinID,
-    'text': text ,
+    'text': text,
     'commentID' : commentID
   };
 
