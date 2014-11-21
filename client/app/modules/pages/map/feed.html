@@ -14,17 +14,17 @@
     <h3 class='feeditemname' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
       {{footprint.place.name}}
     </h3>
-    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge !== 'null'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
+    <div ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'bothTrue'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
       <img class='feedphoto' ng-src="{{footprint.checkin.photoLarge}}">
       <h4>{{footprint.checkin.caption}}</h4>
     </div>
-    <div  ng-if="footprint.checkin.photoLarge !== 'null' && footprint.checkin.caption === null" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
+    <div  ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'photoTrue'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
       <img class='feedphoto'  ng-src="{{footprint.checkin.photoLarge}}">
     </div>
-    <div ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.caption === 'null'" class='captioncontainer'>
+    <div ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'bothNull'" class='captioncontainer'>
       <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
     </div>
-    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoLarge === 'null'" class='captioncontainer'>
+    <div ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'captionTrue'" class='captioncontainer'>
       <h4>"{{footprint.checkin.caption}}"</h4>
     </div>
     <div class="feedcomment" ng-repeat="comment in footprint.comments | orderBy:'comment.time'">
