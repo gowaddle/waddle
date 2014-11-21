@@ -2,11 +2,21 @@
 
 var ProfileController = function ($scope, $state, UserRequests){
 
-$scope.username = 'Inje Yeo';
 
+	if(UserRequests.allData) {
+		console.log('Profile Controller: ', UserRequests.allData);
+		$scope.username = UserRequests.allData.name;
+		$scope.picture = UserRequests.allData.fbProfilePicture
+		$scope.footprintsCount = UserRequests.allData.footprintsCount;
+	}
 
+	$scope.$on('displayFriendInfo', function (event, friendProfileData) {
+	  console.log('friendProfileData: ', friendProfileData);
+	 	$scope.username = friendProfileData.name;
+		$scope.picture = friendProfileData.fbProfilePicture
+		$scope.footprintsCount = friendProfileData.footprintsCount;
+	});
 
-$scope.picture = ''
 
 }
 // Inject all the depependent services needed by the controller
