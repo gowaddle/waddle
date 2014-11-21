@@ -14,6 +14,7 @@ var FriendsController = function ($scope, $state, UserRequests, MapFactory, $roo
     UserRequests.getUserData(friend, viewer)
       .then(function (data){
         MapFactory.markerQuadTree = MapFactory.handleUserCheckinData(data.data.footprints);
+        $rootScope.$broadcast("displayFriendInfo", data.data.user);
         $state.go('map.feed')
       });
   };

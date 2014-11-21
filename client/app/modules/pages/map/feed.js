@@ -38,6 +38,7 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
     $scope.$on('displayFootprint', function (event, footprintNotification) {
       console.log('footprintNotification', footprintNotification);
       $scope.getFootprint(footprintNotification);
+      event.stopPropagation();
     });
 
     $scope.filterMap = function () {
