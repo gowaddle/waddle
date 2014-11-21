@@ -21,7 +21,22 @@ var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth
       });
     }
 
+    $scope.search = {query: null};
+
+    $scope.$on('displayFootprint', function (event, footprintNotification) {
+      console.log('footprintNotification', footprintNotification);
+      $scope.getFootprint(footprintNotification);
+    });
+
+    $scope.filterMap = function () {
+      console.log($scope.search.query);
+      MapFactory.searchMarkersByPlaceName($scope.search.query);
+    };
      
+     Socket.on('notification', function(data) {
+      console.log('notify moi' + data);
+     });
+
      $scope.socketTest = function() {
       Socket.emit('hi', 'hello my socket');
        Socket.forward('news', $scope);

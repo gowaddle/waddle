@@ -14,7 +14,7 @@ server.listen(port, function () {
 	console.log('Listening on port ' + this.address().port);
 });
 
-io.on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
 	console.log('socket connected!');
 
   socket.on('comment posted', function(commentData) {
@@ -24,6 +24,7 @@ io.on('connection', function (socket) {
   		commenterName = commentData.commenter.data.name;
   		footprintPlaceName = commentData.place.data.name;
   		console.log(commenterName + ' left a comment on your footprint at ' + footprintPlaceName);
+      socket.emit('notification', commentData)
   	})
   })
 });

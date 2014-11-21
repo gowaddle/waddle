@@ -158,8 +158,10 @@ User.prototype.addCheckins = function(combinedCheckins){
     'ON MATCH SET checkin.checkinTime = {checkinTime}, checkin.likes = {likes}, checkin.photoSmall = {photoSmall}, checkin.photoLarge = {photoLarge}, checkin.caption = {caption}, checkin.source = {source}',
     //change to merge on foursquareID only
     'MERGE (place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}, foursquareID: {foursquareID}})',
-    'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)',
-    'RETURN user, checkin, place',
+    'MERGE (country:Country {name: {country}})',
+    'MERGE (city:City {name: {city}})',
+    'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)-[:hasCity]->(city)-[:hasCountry]->(country)',
+    'RETURN user, checkin, place, city, country',
   ].join('\n');
 
   // Map over the friends and return a list of objects
@@ -346,6 +348,39 @@ User.prototype.getAggregatedFootprintList = function (facebookID) {
 
   return deferred.promise;
 }
+
+User.prototype.getNotifications = function () {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasUnreadNotification]->(comment:Comment)-[]->(checkin:Checkin)-[]->(place:Place)',
+    'MATCH (commenter:User)-[:madeComment]->(comment)',
+    'RETURN user, comment, checkin, place, commenter'
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+    db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (item) {
+        var singleResult = {
+          "user": item.user.data,
+          "comment": item.comment.data,
+          "commenter": item.commenter.data,
+          "checkin": item.checkin.data,
+          "place": item.place.data
+        }
+        return singleResult;
+      });
+      deferred.resolve(parsedResults);
+    }
+  });
+  return deferred.promise;
+}
+
 // Find all bucketList items for a user
 // Takes a facebookID and returns a footprint object with
 // checkin and place keys, containing checkin and place data
@@ -373,7 +408,6 @@ User.getBucketList = function (facebookID){
         if (singleResult.checkin.likes.length){
           singleResult.checkin.liked = true;
         }
-        console.log(item.checkin.data)
         return singleResult;
       })
 
@@ -388,8 +422,6 @@ User.getBucketList = function (facebookID){
 // If user is not in database, promise will resolve to error 'user does not exist'
 User.find = function (data) {
 
-  console.log('model: ', JSON.stringify(data));
-
   var deferred = Q.defer();
 
   var query = [
@@ -402,7 +434,6 @@ User.find = function (data) {
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
-      console.log('results' + JSON.stringify(results[0].user.data))
       if (results && results[0] && results[0]['user']) {
         console.log(results)
         deferred.resolve(new User(results[0]['user']));
@@ -517,5 +548,6 @@ User.findLatestCommenterAndCommentOnCheckinByCheckinID = function (checkinID) {
   });
   return deferred.promise;
 }
+
 
 module.exports = User;

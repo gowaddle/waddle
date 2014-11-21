@@ -155,7 +155,6 @@ checkinController.addToBucketList = function (req, res){
 };
 
 checkinController.removeFromBucketList = function (req, res){
-  console.log('in the controller!');
   var checkinID = req.body.checkinID;
   var facebookID = req.body.facebookID;
 
@@ -190,10 +189,8 @@ checkinController.addComment = function (req, res){
       res.status(500).end();
     });
 };
-// remove comment
 
 checkinController.removeComment = function (req, res){
-  console.log('in the controller!');
   var checkinID = req.body.checkinID;
   var facebookID = req.body.facebookID;
   var commentID = req.body.commentID ;
@@ -208,6 +205,7 @@ checkinController.removeComment = function (req, res){
       res.status(500).end();
     });
 }
+
 checkinController.giveProps = function (req, res){
   var clickerID = req.body.clickerID;
   var checkinID = req.body.checkinID;
