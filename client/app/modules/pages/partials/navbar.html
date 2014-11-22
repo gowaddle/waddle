@@ -22,8 +22,8 @@
       </form>
       <ul class="nav navbar-nav navbar-right">
 
-        <li class="active" ui-sref='map.feed.checkin'>Check in</li>
-        <li class="active"><a ui-sref='map'><h9>Feed</h9></a></li>
+        <li><a ui-sref='map.feed.checkin'><h9>Check in<h9></a></li>
+        <li><a ui-sref='map'><h9>Feed</h9></a></li>
         <li><a ng-click='loadBucketlist()'><h9>Hype List</h9></a></li>
         <li ng-click='loadAggregatedFootprints()'><a><h9>Home</h9></a></li>
 <!--       	<li ui-sref='map.friends'><a>friends</a></li>
@@ -34,14 +34,15 @@
         <!-- dropdown button. not working yet but in progress. -->
         
         <li>
-          <button ng-click="displayNotifications()" type="button" class="btn btn-default dropstyle white"><span class="glyphicon glyphicon-bell white"></span></button>
-          <button type="button" class="btn btn-default dropstyle white" data-html="true" data-animation="am-flip-x" data-template="../app/modules/pages/partials/dropdown.tpl.html" bs-dropdown="dropdown" placement="bottom-left" container="body"><span class="glyphicon glyphicon-cog white"></span>
+            <button ng-click="displayNotifications()" type="button" class="btn btn-default dropstyle white" data-html="true" data-animation="am-flip-x" data-template="../app/modules/pages/partials/dropdown.tpl.html" bs-dropdown="notifications" placement="bottom-left" container="body"><span class="glyphicon glyphicon-bell white"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                <div ng-repeat="notification in notifications">
+                <h4 ng-click="loadFootprint(notification)" ui-sref="map.feed.footprint({footprint: notification.checkin.checkinID})">{{notification.commenter.name}} commented on your footprint at {{notification.place.name}}</h4></div></li>
+            </ul>
+            <button type="button" class="btn btn-default dropstyle white" data-html="true" data-animation="am-flip-x" data-template="../app/modules/pages/partials/dropdown.tpl.html" bs-dropdown="dropdown" placement="bottom-left" container="body"><span class="glyphicon glyphicon-cog white"></span>
           </button>
     	</li>
-
-      <div ng-repeat="notification in notifications">
-        <h4 ng-click="loadFootprint(notification)" ui-sref="map.feed.footprint({footprint: notification.checkin.checkinID})">{{notification.commenter.name}} commented on your footprint at {{notification.place.name}}</h4>
-      </div>
         
 <!--         <li class="dropdown">
           <a href="#" class="dropdown-toggle" ng-controller="DropdownCtrl">Options<span class="caret"></span></a>

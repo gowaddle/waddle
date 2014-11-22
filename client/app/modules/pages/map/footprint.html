@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="footprintitem col-lg-12">
-		<span ng-click="closeFootprintWindow()" class="closefootprint">x</span>
+		<span ng-click="closeFootprintWindow()" class="closefootprint"><span class="glyphicon glyphicon-remove"></span></span>
 		<div class="footprint-pic-bg col-lg-9">
 			<img class="footprintpicture" ng-if="footprint.checkin.photoLarge !== 'null'"ng-src="{{footprint.checkin.photoLarge}}">
 			<img class="footprintpicture" ng-if="footprint.checkin.photoLarge === 'null' && footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
@@ -25,7 +25,7 @@
 					<h4>{{comment.commenter.name}}</h4>
 					<h7 class="checkindate">{{comment.comment.time | date : shortDate}}</h7><br>
 					<p>{{comment.comment.text}}</p><br>
-					<button class="deletecomment" ng-click='removeComment(footprint, comment)'>Delete</button>
+					<button class="deletecomment" ng-click='removeComment(footprint, comment)'><span class="glyphicon glyphicon-trash"></span></button>
 				</div>
 				<div>
 				  <h4 ng-if="selectedFootprintInteractions.comments.length === 0">Be the first to comment!</h4>
