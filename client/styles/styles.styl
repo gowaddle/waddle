@@ -266,14 +266,6 @@ li{
   opacity: 0.2;
 }
 
-.centered {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -300px;
-  margin-left: -350px;
-}
-
 #account_connect_bg {
   background-color:rgba(0,0,0, 0.8); 
   position:fixed; 
@@ -285,8 +277,6 @@ li{
 
 .cancel {
   position: absolute;
-  top: 144px;
-  left: 753px;
   opacity: 0;
   cursor: pointer;
   background-color: #505050
@@ -529,6 +519,8 @@ li{
   padding: 0px;
 }
 
+}
+
 .checkindate{
   float: right;
   margin-right: 10px;
@@ -621,6 +613,33 @@ li{
   position: fixed;
   background-color: rgba(255,255,255,0.9);
   z-index: 2;
+}
+
+.postcheckin{
+ padding: 5px;
+ min-height: 300px;
+ min-width:300px;
+ max-height:750px;
+ min-height:750px;
+ border-radius: 10px;
+ overflow-y: scroll;
+ background-color: #ffffff;
+ position: fixed;
+ top:50%;
+ left: 50%;
+ display: block;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -300px;
+  margin-left: -350px;
+}
+
+.fullwidth{
+  width: auto;
 }
 
 .footprintpicture{
