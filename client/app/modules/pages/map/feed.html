@@ -2,8 +2,7 @@
 <div ng-if="inBoundsObject.datapoints" class='waddlefeed'>
   <br>
   <h4 class="feedtitle">Feed</h4>
-   <button ng-click='testing()'>Test</button>
-  <input ng-model="search.query" ng-keyup="filterMap()" placeholder="Search footprints">
+  <input class="navbar-form form-control inline nomargin" ng-model="search.query" ng-keyup="filterMap()" placeholder="Search footprints">
   <div class='waddlefeeditem' ng-repeat="footprint in inBoundsObject.datapoints | orderBy:'-checkin.checkinTime' | filter:search.query | limitTo:50">
     <div class="footprintprofpicframe"><img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'></div>
     <h4>{{footprint.user.name}}</h4>
