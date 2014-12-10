@@ -1,0 +1,18 @@
+<!--  <div id='account_connect_bg'> -->
+<div id="account_connect_bg">
+  <div class="postcheckin centered">
+      <span class="closefootprint" ui-sref='map.feed.checkin'><span class="glyphicon glyphicon-remove"></span></span>
+  		<h3 style="margin-left: 15px;">{{venue.name}}</h3>
+  	<form class="navbar-form navbar-left" role="search">
+  		<textarea  ng-model="footprintCaption" type="text" class="form-control fullwidth" style="width: 100%;" placeholder="What did you think of this place?">
+  		</textarea>
+      <input type="file" id="files"/><p id="status">Please select a file</p>
+      <div style="text-align: center;" id="preview">
+      <!-- <button type="submit" class="btn btn-default" ui-sref="map.feed.checkin.post.photoupload">Upload Photo</button> -->
+  	  <button type="submit" class="btn btn-default" ng-click="sendCheckinDataToServer(venue)" ui-sref="map.feed">Post</button>
+    </form>
+  </div>
+</div>
+</div>
+<!-- </div> -->
+<div ui-view></div>

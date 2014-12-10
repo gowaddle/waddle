@@ -54,6 +54,7 @@ userController.userLogin = function (req, res) {
     // console.log('fb checkins: ', checkinsAlreadyStored.length);
     // For existing users
     if (checkinsAlreadyStored.length) {
+      user.setProperty('footprintsCount', checkinsAlreadyStored.length);
       user.findAllFriends()
       .then(function (neoUserData){
         var allData = {
@@ -123,17 +124,18 @@ userController.userLogin = function (req, res) {
       userFBPhotoData = fbParsedPhotoData;
       combinedFBCheckins = userFBTaggedPostsData.concat(userFBPhotoData);
       //get statuses posted by user
-      return facebookUtils.getFBStatuses(user);
-    })
-    .then(function (fbRawStatusList) {
-      return facebookUtils.parseFBData(user, fbRawStatusList);
-    })
-    .then(function (fbParsedStatusesData) {
-      userFBStatusesData = fbParsedStatusesData;
-      combinedFBCheckins = combinedFBCheckins.concat(userFBStatusesData);
-      console.log("combinedCheckins: " + combinedFBCheckins);
+      // return facebookUtils.getFBStatuses(user);
       return user.addCheckins(combinedFBCheckins);
     })
+    // .then(function (fbRawStatusList) {
+    //   return facebookUtils.parseFBData(user, fbRawStatusList);
+    // })
+    // .then(function (fbParsedStatusesData) {
+    //   userFBStatusesData = fbParsedStatusesData;
+    //   combinedFBCheckins = combinedFBCheckins.concat(userFBStatusesData);
+    //   console.log("combinedCheckins: " + combinedFBCheckins);
+    //   return user.addCheckins(combinedFBCheckins);
+    // })
     .then(function (data) {
       return user.findAllCheckins(userData.facebookID);
     })
@@ -229,20 +231,23 @@ userController.addInstagramData = function (req, res) {
 
 };
 
-//
+//uses facebook ID to grab friend data when user navigates to friend page
 userController.getUserData = function (req, res){
   var userData = {
     facebookID: req.params.friend
   };
+  var userInfo = {};
   var viewer = req.params.viewer;
 
   User.find(userData)
   .then(function (friend) {
+    userInfo.user = friend.node._data.data;
     return friend.findAllCheckins(viewer);
   })
   .then(function (checkins) {
     // console.log("checkins: ", checkins.length)
-    res.json(checkins);
+    userInfo.footprints = checkins;
+    res.json(userInfo);
     res.status(200).end();
   })
   .catch(function (err) {
@@ -250,6 +255,77 @@ userController.getUserData = function (req, res){
     res.status(500).end();
   });
 };
+
+userController.getAggregatedListOfCheckins = function (req, res){
+  // var users = req.params.userlist;
+  var user;
+  var params = {};
+  var aggregatedFootprints = [];
+  // var friendCheckins;
+  params.facebookID = req.params.user;
+
+  User.find(params)
+  .then(function (userNode) {
+    user = userNode;
+    return user.getAggregatedFootprintList(params.facebookID);
+  })
+  .then(function (aggregatedFootprintsFromFriends) {
+    aggregatedFootprints.push(aggregatedFootprintsFromFriends);
+    return user.findAllCheckins(params.facebookID);
+  })
+  .then(function (userFootprints) {
+    aggregatedFootprints.push(userFootprints);
+
+    console.log(aggregatedFootprints);
+    res.json(_.flatten(aggregatedFootprints));
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  });
+};
+
+userController.getNotifications = function (req, res) {
+  var user;
+  var params = {}
+  params.facebookID = req.params.user;
+
+  User.find(params)
+  .then(function (userNode) {
+    user = userNode;
+    return user.getNotifications();
+  })
+  .then(function (notifications) {
+    res.json(notifications);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  })
+}
+
+userController.getUserInfo = function (req, res) {
+  console.log('in the controller')
+  var params = {};
+  params.facebookID = req.params.user;
+  console.log('dis be ma params' + JSON.stringify(req.params))
+
+  User.find(params)
+   .then(function (userInfo) {
+    console.log('userInfo' + JSON.stringify(userInfo.node._data.data));
+    res.json(userInfo.node._data.data);
+    res.status(200).end();
+  })
+  .catch(function (err) {
+    console.log(err);
+    res.status(500).end();
+  });
+
+
+
+}
 
 // Takes a facebookID and returns a footprint object with
 // checkin and place keys, containing checkin and place data

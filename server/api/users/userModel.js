@@ -158,8 +158,10 @@ User.prototype.addCheckins = function(combinedCheckins){
     'ON MATCH SET checkin.checkinTime = {checkinTime}, checkin.likes = {likes}, checkin.photoSmall = {photoSmall}, checkin.photoLarge = {photoLarge}, checkin.caption = {caption}, checkin.source = {source}',
     //change to merge on foursquareID only
     'MERGE (place:Place {name: {name}, lat: {lat}, lng: {lng}, country: {country}, category: {category}, foursquareID: {foursquareID}})',
-    'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)',
-    'RETURN user, checkin, place',
+    'MERGE (country:Country {name: {country}})',
+    'MERGE (city:City {name: {city}})',
+    'MERGE (user)-[:hasCheckin]->(checkin)-[:hasPlace]->(place)-[:hasCity]->(city)-[:hasCountry]->(country)',
+    'RETURN user, checkin, place, city, country',
   ].join('\n');
 
   // Map over the friends and return a list of objects
@@ -232,10 +234,11 @@ User.prototype.findAllCheckins = function (viewer) {
   var deferred = Q.defer();
 
   var query = [
-    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(p:Place)',
-    (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[connection:givesProps]->(checkin)' +
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
+    'OPTIONAL MATCH (checkin)<-[]-(comment:Comment)<-[]-(commenter:User)',
+    (viewer ? 'OPTIONAL MATCH (liker:User {facebookID: {viewerID}})-[:givesProps]->(checkin)' +
       'OPTIONAL MATCH (bucketer:User {facebookID: {viewerID}})-[:hasBucket]->(checkin)' : ""),
-    'RETURN checkin, p' + (viewer ? ', liker, bucketer' : "")
+    'RETURN user, checkin, place, collect(comment), collect(commenter)' + (viewer ? ', liker, bucketer' : "")
   ].join('\n');
 
   var params = {
@@ -250,10 +253,26 @@ User.prototype.findAllCheckins = function (viewer) {
     if (err) { deferred.reject(err); }
     else {
       var parsedResults = _.map(results, function (item) {
+        
         var singleResult = {
+          "user": item.user.data,
           "checkin": item.checkin.data,
-          "place": item.p.data
+          "place": item.place.data,
+          "comments": null
         }
+
+        if(item['collect(comment)'].length && item['collect(commenter)'].length) {
+          var commentsArray = [];
+          for(var i = 0; i < item['collect(comment)'].length; i++) {
+            var commentData = {
+              comment: item['collect(comment)'][i].data,
+              commenter: item['collect(commenter)'][i].data
+            }
+            commentsArray.push(commentData);
+          }
+          singleResult.comments = commentsArray;
+        }
+
         if (item.liker){
           singleResult.checkin.liked = true;
         }
@@ -269,6 +288,98 @@ User.prototype.findAllCheckins = function (viewer) {
 
   return deferred.promise;
 };
+
+//TO-DO: implement query to get all footprints associated with a user and their friends
+
+// User.getAggregatedFootprintList = function (viewer) {
+//   var deferred = Q.defer();
+
+//   var query = [
+//     'M'
+//   ]
+// 
+
+User.prototype.getAggregatedFootprintList = function (facebookID) {
+  var deferred = Q.defer();
+
+  var query = [
+    // 'MATCH (user:User {facebookID: {facebookID}})-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasFriend]->(friend:User)-[:hasCheckin]->(checkin:Checkin)-[:hasPlace]->(place:Place)',
+    'OPTIONAL MATCH (checkin)<-[]-(comment:Comment)<-[]-(commenter:User)',
+    'RETURN user, friend, checkin, place, collect(comment), collect(commenter)'
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (item) {
+        var singleResult = {
+          "user": item.user.data,
+          "checkin": item.checkin.data,
+          "place": item.place.data,
+        }
+
+        if(item['collect(comment)'].length && item['collect(commenter)'].length) {
+          var commentsArray = [];
+          for(var i = 0; i < item['collect(comment)'].length; i++) {
+            var commentData = {
+              comment: item['collect(comment)'][i].data,
+              commenter: item['collect(commenter)'][i].data
+            }
+            commentsArray.push(commentData);
+          }
+          singleResult.comments = commentsArray;
+        }
+
+        if(item.friend) {
+          singleResult["user"] = item.friend.data;
+        }
+
+        return singleResult;
+      });
+
+      deferred.resolve(parsedResults);
+    }
+  });
+
+  return deferred.promise;
+}
+
+User.prototype.getNotifications = function () {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (user:User {facebookID: {facebookID}})-[:hasUnreadNotification]->(comment:Comment)-[]->(checkin:Checkin)-[]->(place:Place)',
+    'MATCH (commenter:User)-[:madeComment]->(comment)',
+    'RETURN user, comment, checkin, place, commenter'
+  ].join('\n');
+
+  var params = {
+    facebookID: this.getProperty('facebookID')
+  };
+
+    db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      var parsedResults = _.map(results, function (item) {
+        var singleResult = {
+          "user": item.user.data,
+          "comment": item.comment.data,
+          "commenter": item.commenter.data,
+          "checkin": item.checkin.data,
+          "place": item.place.data
+        }
+        return singleResult;
+      });
+      deferred.resolve(parsedResults);
+    }
+  });
+  return deferred.promise;
+}
 
 // Find all bucketList items for a user
 // Takes a facebookID and returns a footprint object with
@@ -297,7 +408,6 @@ User.getBucketList = function (facebookID){
         if (singleResult.checkin.likes.length){
           singleResult.checkin.liked = true;
         }
-        console.log(item.checkin.data)
         return singleResult;
       })
 
@@ -325,6 +435,7 @@ User.find = function (data) {
     if (err) { deferred.reject(err); }
     else {
       if (results && results[0] && results[0]['user']) {
+        console.log(results)
         deferred.resolve(new User(results[0]['user']));
       }
       else {
@@ -392,5 +503,51 @@ User.findByInstagramID = function (instagramID) {
 
   return deferred.promise;
 };
+
+User.findByFootprintCheckinID = function (checkinID) {
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (checkin:Checkin{checkinID: {checkinID}})<-[]-(user:User)',
+    'RETURN user'
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(new User(results[0]['user']));
+    }
+  });
+  return deferred.promise;
+}
+
+User.findLatestCommenterAndCommentOnCheckinByCheckinID = function (checkinID) {
+  var deferred = Q.defer();
+
+  var query = [
+  'MATCH (user:User)-[]->(checkin:Checkin {checkinID:{checkinID}})<-[]-(comment:Comment)<-[]-(commenter:User)',
+  'OPTIONAL MATCH (checkin)-[]->(place:Place)',
+  'RETURN user, commenter, checkin, comment, place', 
+  'ORDER BY -comment.time', 
+  'LIMIT 1'
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results[0]);
+    }
+  });
+  return deferred.promise;
+}
+
 
 module.exports = User;

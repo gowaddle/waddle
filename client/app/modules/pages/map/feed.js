@@ -1,6 +1,6 @@
 (function(){
 
-var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $rootScope, $state) {
+var FeedController = function (MapFactory, FootprintRequests, UserRequests, Auth, $scope, $rootScope, $state, Socket) {
   Auth.checkLogin()
   .then( function (){
     // Finds all points on the map that are within the bottom left and top right
@@ -17,7 +17,55 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         $scope.$apply(function(){
           MapFactory.filterFeedByBounds($scope.currentMap.getBounds())
         });
+
       });
+    }
+
+    $scope.feedDisplay = function (photo, caption) {
+      if(photo === 'null' && caption === 'null') {
+        return "bothNull";
+      } else if(photo !== 'null' && caption !== 'null') {
+        return "bothTrue";
+      } else if (photo === 'null' && caption !== 'null'){
+        return "captionTrue";
+      } else {
+        return "photoTrue";
+      }
+    }
+
+    $scope.search = {query: null};
+
+    $scope.$on('displayFootprint', function (event, footprintNotification) {
+      console.log('footprintNotification', footprintNotification);
+      $scope.getFootprint(footprintNotification);
+      event.stopPropagation();
+    });
+
+    $scope.filterMap = function () {
+      console.log($scope.search.query);
+      MapFactory.searchMarkersByPlaceName($scope.search.query);
+    };
+     
+     Socket.on('notification', function(data) {
+      console.log('notify moi' + data);
+     });
+
+     $scope.socketTest = function() {
+      Socket.emit('hi', 'hello my socket');
+       Socket.forward('news', $scope);
+       $scope.$on('Socket:news', function(ev, data) {
+        console.log(data);
+        $scope.theData = data;
+       })
+     }
+     Socket.on('hi', function(data) {
+      console.log('client says: ' + data);
+     })
+
+    // $scope.footprintsCount = UserRequests.allData.allCheckins.length;
+
+    $scope.removeComment = function() {
+      console.log('reached remove comment');
     }
 
     $scope.addPropsToCheckin = function (footprint){
@@ -39,7 +87,7 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
       });
     };
 
-    $scope.addCheckinToBucketlist = function (footprint){
+    $scope.addCheckinToBucketList = function (footprint){
       var bucketListData = {
         facebookID: window.sessionStorage.userFbID,
         checkinID: footprint.checkin.checkinID
@@ -50,6 +98,18 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         // The second and third arguments to addPropertyToCheckin add to footprint.checkin 
         MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', true);
         filterFeedByBounds();
+      });
+    };
+
+    $scope.removeCheckinFromBucketList = function (footprint){
+      console.log('removed?');
+      var bucketListData = {
+        facebookID: window.sessionStorage.userFbID,
+        checkinID: footprint.checkin.checkinID
+      };
+      FootprintRequests.removeFromBucketList(bucketListData)
+      .then(function (data){
+        MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', false);
       });
     };
 
@@ -83,14 +143,34 @@ var FeedController = function (MapFactory, FootprintRequests, Auth, $scope, $roo
         $scope.selectedFootprintInteractions.comments = data.data.comments;
       });  
     };
+//    $scope.removeCommenttest = function()
+  //  {
+    //  console.log("del reached");
+    //}
+
+     $scope.removeComment = function (footprint, comment){
+      console.log(footprint);
+      console.log(comment);
+      var commentData = {
+        facebookID: comment.commenter.facebookID,
+        checkinID: footprint.checkin.checkinID,
+        commentID : comment.comment.commentID 
+      };
+      console.log(commentData);
+      FootprintRequests.removeComment(commentData)
+      .then(function (data){
+        console.log("success");
+        //MapFactory.markerQuadTree.addPropertyToCheckin(footprint, 'bucketed', false);
+      });
+    };
   });
 }
 
-FeedController.$inject = ['MapFactory', 'FootprintRequests', 'Auth', '$scope', '$rootScope', '$state'];
+FeedController.$inject = ['MapFactory', 'FootprintRequests', 'UserRequests', 'Auth', '$scope', '$rootScope', '$state', 'Socket'];
 
   // Custom Submit will avoid binding data to multiple fields in ng-repeat and allow custom on submit processing
 
-var CustomSubmitDirective = function(FootprintRequests) {
+var CustomSubmitDirective = function(FootprintRequests, Socket) {
   return {
     restrict: 'A',
     link: function( scope , element , attributes ){
@@ -135,19 +215,20 @@ var CustomSubmitDirective = function(FootprintRequests) {
         var commentData = {
           clickerID: window.sessionStorage.userFbID,
           checkinID: scope.footprint.checkin.checkinID,
+          commentID: scope.footprint.comments[0],
           text: scope.comment
         }
 
         FootprintRequests.addComment(commentData)
-        .then(function (data){
-
+        .then(function (data) {
+          Socket.emit('comment posted', commentData);
           if (FootprintRequests.openFootprint){
             scope.updateFootprint(FootprintRequests.openFootprint)
           }
           scope.data.currentComment = ''
           //$element[0][0].value = ''
         })
-        console.log(commentData)
+        console.log(commentData);
         scope.comment = ""
         scope.$apply();
       });
@@ -155,7 +236,7 @@ var CustomSubmitDirective = function(FootprintRequests) {
   };
 };
 
-CustomSubmitDirective.$inject = ['FootprintRequests'];
+CustomSubmitDirective.$inject = ['FootprintRequests', 'Socket'];
 
 //Start creating Angular module
 angular.module('waddle.feed', [])

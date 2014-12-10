@@ -4,6 +4,8 @@ var qs = require('querystring');
 var Q = require('q');
 var _ = require('lodash');
 
+var uuid = require('node-uuid');
+
 var helpers = require('./helpers.js');
 
 var User = require('../api/users/userModel.js');
@@ -122,6 +124,65 @@ utils.parseFoursquareCheckins = function(foursquareCheckinArray) {
   });
 };
 
+utils.parseNativeCheckin = function (venue) {
+  var deferred = Q.defer();
+
+  var formattedCheckin = {
+    'checkinID': uuid.v4(),
+    'name': venue.name,
+    'lat': venue.location.lat,
+    'lng': venue.location.lng,
+    'checkinTime': new Date().getTime(),
+    'likes': 'null',
+    'photoSmall': 'null',
+    'photoLarge': 'null',
+    'caption': 'null',
+    'foursquareID': venue.id,
+    'address': 'null',
+    'city': 'null',
+    'country': venue.location.country,
+    'postalCode': 'null',
+    'category': 'null',
+    'source': 'waddle'
+  };
+
+  if (venue.categories[0]) {
+    formattedCheckin.category = venue.categories[0].name;
+  }
+
+  if (venue.location.address) {
+    formattedCheckin.address = venue.location.address;
+  }
+
+  if (venue.location.postalCode) {
+    formattedCheckin.postalCode = venue.location.postalCode;
+  }
+
+   if (venue.footprintCaption) {
+    formattedCheckin.caption = venue.footprintCaption;
+  }
+
+  //TODO: figure out how to generate different size images from AWS url
+
+   if (venue.photo) {
+    formattedCheckin.photoLarge = venue.photo;
+  }
+
+  if (venue.location.city) {
+    formattedCheckin.city = venue.location.city;
+    deferred.resolve(formattedCheckin);
+  }
+  else {
+    helpers.findCityByReverseGeocoding(formattedCheckin.lat, formattedCheckin.lng)
+    .then(function (geocodeData) {
+      console.log(geocodeData);
+      formattedCheckin.city = geocodeData.features[0].place_name;
+      deferred.resolve(formattedCheckin);
+    })
+  }
+  return deferred.promise;
+}
+
 utils.parseCheckin = function (checkin) {
   var formattedCheckin = {
     'checkinID': checkin.id,
@@ -134,13 +195,24 @@ utils.parseCheckin = function (checkin) {
     'photoLarge': 'null',
     'caption': 'null',
     'foursquareID': checkin.venue.id,
+    'address': 'null',
+    'city': checkin.venue.location.city,
     'country': checkin.venue.location.country,
+    'postalCode': 'null',
     'category': 'null',
     'source': 'foursquare'
   };
 
   if (checkin.venue.categories[0]) {
     formattedCheckin.category = checkin.venue.categories[0].name;
+  }
+
+  if (checkin.venue.location.address) {
+    formattedCheckin.address = checkin.venue.location.address;
+  }
+
+  if (checkin.venue.location.postalCode) {
+    formattedCheckin.postalCode = checkin.venue.location.postalCode;
   }
 
   if (checkin.photos && checkin.photos.count > 0) {

@@ -72,4 +72,34 @@ Place.find = function (data){
   return deferred.promise;
 };
 
+Place.findByCheckinID = function (checkinID) {
+
+  var deferred = Q.defer();
+
+  var query = [
+    'MATCH (checkin:Checkin {checkinID: {checkinID}})-[]->(place:Place)',
+    'RETURN place',
+  ].join('\n');
+
+  var params = {
+    checkinID: checkinID
+  };
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      console.log('results' + JSON.stringify(results[0].user.data))
+      if (results && results[0] && results[0]['place']) {
+        console.log(results)
+        deferred.resolve(new User(results[0]['place']));
+      }
+      else {
+        deferred.reject(new Error('user does not exist'));
+      }
+    }
+  });
+
+  return deferred.promise;
+};
+
 module.exports = Place;

@@ -1,6 +1,7 @@
 var neo4j = require('neo4j');
 var Q = require('q');
 var _ = require('lodash');
+var uuid = require('node-uuid');
 
 var db = new neo4j.GraphDatabase(process.env['WADDLE_GRAPHENEDB_URL'] || 'http://localhost:7474');
 
@@ -40,11 +41,13 @@ Checkin.addToBucketList = function(facebookID, checkinID){
     'RETURN checkin'
   ].join('\n');
 
+
   var params = {
     facebookID: facebookID,
     checkinID: checkinID
   };
 
+  console.log(params);
   db.query(query, params, function (err, results) {
     if (err) { deferred.reject(err); }
     else {
@@ -55,22 +58,52 @@ Checkin.addToBucketList = function(facebookID, checkinID){
   return deferred.promise;
 };
 
-
-Checkin.addComment = function (clickerID, checkinID, text){
+Checkin.removeFromBucketList = function(facebookID, checkinID){
   var deferred = Q.defer();
 
   var query = [
-  'MATCH (clicker:User {facebookID: {facebookID}})',
-  'MATCH (checkin:Checkin {checkinID: {checkinID}})',
-  'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, time: timestamp()})' +
-  '-[:gotComment]->(checkin)',
-  'RETURN comment'
+    // 'MATCH (user:User {facebookID: {facebookID}})',
+    // 'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+    // 'MATCH (user)-[rel:hasBucket]->(checkin)',
+    // 'DELETE rel'
+    'match (user:User {facebookID: {facebookID}})-[rel:hasBucket]->(checkin:Checkin {checkinID: {checkinID}})delete rel'
   ].join('\n');
 
+
+  var params = {
+    facebookID: facebookID,
+    checkinID: checkinID
+  };
+  console.log(params);
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results);
+      console.log('query executed!')
+    }
+  });
+
+  return deferred.promise;
+};
+
+
+Checkin.addComment = function (clickerID, checkinID, text){
+  var deferred = Q.defer();
+  var commentID = uuid.v4();
+  var query = [
+  'MATCH (clicker:User {facebookID: {facebookID}})',
+  'MATCH (commentReceiver:User)-[:hasCheckin]->(checkin:Checkin {checkinID: {checkinID}})',
+  'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, commentID : {commentID}, time: timestamp() })' + 
+  '-[:gotComment]->(checkin)',
+  'MERGE (commentReceiver)-[:hasUnreadNotification]->(comment)',
+  'RETURN comment'
+  ].join('\n');
   var params = {
     'facebookID': clickerID,
     'checkinID': checkinID,
-    'text': text
+    'text': text,
+    'commentID' : commentID
   };
 
   console.log(params);
@@ -79,6 +112,44 @@ Checkin.addComment = function (clickerID, checkinID, text){
     if (err) { deferred.reject(err); }
     else {
       deferred.resolve(results);
+    }
+  });
+
+  return deferred.promise;
+};
+
+Checkin.removeComment = function(facebookID, checkinID, commentID){
+  var deferred = Q.defer();
+
+  var query = [
+    // 'MATCH (user:User {facebookID: {facebookID}})',
+    // 'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+    // 'MATCH (user)-[rel:hasBucket]->(checkin)',
+    // 'DELETE rel'
+    //'match (user:User {facebookID: {facebookID}})-[rel:hasBucket]->(checkin:Checkin {checkinID: {checkinID}})delete rel'
+  //].join('\n');
+  'match (clicker:User{facebookID: {facebookID}})-[rel1:madeComment]->(comment:Comment {commentID: {commentID}})-[rel2:gotComment]->(checkin:Checkin {checkinID: {checkinID}})delete rel1,rel2,comment'
+  ].join('\n');
+/*var query = [
+  'MATCH (clicker:User {facebookID: {facebookID}})',
+  'MATCH (checkin:Checkin {checkinID: {checkinID}})',
+  'MERGE (clicker)-[:madeComment]->(comment:Comment {text: {text}, commentID : {commentID}, time: timestamp() })' + 
+  '-[:gotComment]->(checkin)',
+  'RETURN comment'
+  ].join('\n');
+  */
+  var params = {
+    facebookID: facebookID,
+    checkinID: checkinID ,
+    commentID : commentID
+  };
+  console.log(params);
+
+  db.query(query, params, function (err, results) {
+    if (err) { deferred.reject(err); }
+    else {
+      deferred.resolve(results);
+      console.log('query executed!')
     }
   });
 

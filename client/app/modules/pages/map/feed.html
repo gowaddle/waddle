@@ -1,22 +1,46 @@
 <div ui-view></div>
 <div ng-if="inBoundsObject.datapoints" class='waddlefeed'>
-  <div class='waddlefeeditem' ng-repeat="footprint in inBoundsObject.datapoints | orderBy:'-checkin.checkinTime' | limitTo:20 ">
-    <h4 class='feeditemname'ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      {{footprint.place.name}}
-    </h4>
-    <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketlist(footprint)"/>
-    <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List"/>
+  <br>
+  <h4 class="feedtitle">Feed</h4>
+  <input class="navbar-form form-control inline nomargin" ng-model="search.query" ng-keyup="filterMap()" placeholder="Search footprints">
+  <div class='waddlefeeditem' ng-repeat="footprint in inBoundsObject.datapoints | orderBy:'-checkin.checkinTime' | filter:search.query | limitTo:50">
+    <div class="footprintprofpicframe"><img class='footprintprofpic' ng-src='{{footprint.user.fbProfilePicture}}'></div>
+    <h4>{{footprint.user.name}}</h4>
+      <img ng-if="!footprint.checkin.bucketed" class='addbucket feedactions' title="Add to Bucket List" ng-click="addCheckinToBucketList(footprint)"/>
+      <img ng-if="footprint.checkin.bucketed" class='addbucketactive feedactions' title="Add to Bucket List" ng-click="removeCheckinFromBucketList(footprint)"/>
+      <h8 class="checkindate">{{footprint.checkin.checkinTime | date : shortDate}}</h8>
     <br/>
-    <h8>{{footprint.checkin.checkinTime | date : shortDate}}</h8>
-    <div class='feedphoto' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})">
-      <img ng-if="footprint.checkin.photoSmall !== 'null'" ng-src="{{footprint.checkin.photoSmall}}">
+    <h3 class='feeditemname' ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
+      {{footprint.place.name}}
+    </h3>
+    <div ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'bothTrue'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
+      <img class='feedphoto' ng-src="{{footprint.checkin.photoLarge}}">
+      <h4>{{footprint.checkin.caption}}</h4>
     </div>
-    <div ng-if="footprint.checkin.caption === 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
-      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.place.foursquareID})" ng-if="footprint.checkin.photoSmall === 'null' && footprint.checkin.caption === 'null'" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
+    <div  ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'photoTrue'" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})">
+      <img class='feedphoto'  ng-src="{{footprint.checkin.photoLarge}}">
     </div>
-    <div ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'" class='captioncontainer'>
-      <h4 ng-if="footprint.checkin.caption !== 'null' && footprint.checkin.photoSmall === 'null'">"{{footprint.checkin.caption}}"</h4>
+    <div ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'bothNull'" class='captioncontainer'>
+      <img class="defaultpeng" ng-click="getFootprint(footprint)" ui-sref="map.feed.footprint({footprint: footprint.checkin.checkinID})" ng-src="https://s3-us-west-2.amazonaws.com/waddle/WaddlePenguinLogo.png"/>
     </div>
+    <div ng-if="feedDisplay(footprint.checkin.photoLarge, footprint.checkin.caption) === 'captionTrue'" class='captioncontainer'>
+      <h4>"{{footprint.checkin.caption}}"</h4>
+    </div>
+    <div class="feedcomment" ng-repeat="comment in footprint.comments | orderBy:'comment.time'">
+    <img class='footprintprofpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+    <h4>{{comment.commenter.name}}</h4>
+    <h8 class="checkindate">{{comment.comment.time | date : shortDate}}</h8><br>
+    <p>{{comment.comment.text}}</p>
+    </div>
+<!--     <div class='footprintcomments' ng-repeat="comment in selectedFootprintInteractions.comments">
+        <div class='footprintcommentpiccontainer'>
+          <img class='footprintprofpic' ng-src='{{comment.commenter.fbProfilePicture}}'>
+        </div>
+        <h4 class="commentername">{{comment.commenter.name}}</h4>
+        <h7>{{comment.comment.time | date : shortDate}}</h7>
+        <p>{{comment.comment.text}}</p>
+        <button ng-click='removeComment()'>Delete</button>
+      </div> -->
     <form name="customSubmit" data-custom-submit info='someinfo' class='comment_form' novalidate>
       <input ng-model='comment' name='comment' placeholder='Leave a comment' class="comment" data-ng-minlength="1" data-ng-maxlength="120" required>
       <span class="help-inline" ng-show="customSubmit.comment.$error.maxlength">120 Character Max</span>

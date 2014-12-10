@@ -19,14 +19,35 @@ var UserRequests = function ($http){
       }
     },
 
+    getUserInfo: function (userFbID) {
+      console.log(userFbID);
+      if (userFbID) {
+        return $http({
+          method: 'GET',
+          url: '/api/users/userinfo/' + userFbID
+        });
+      }
+
+    },
+    
     // Grab existing user's checkins/data
     // Pass in the viewerID so that there is a context to the data returned
     // this allows the viewer to see whether they have liked another user's checkin
+
     getUserData: function (userFbID, viewerID) {
       if (userFbID) {
         return $http({
           method: 'GET',
           url: '/api/users/' + userFbID + "/" + viewerID
+        });
+      }
+    },
+
+    getAggregatedFeedData:function (userFbID) {
+      if (userFbID) {
+        return $http({
+          method: 'GET',
+          url: '/api/users/aggregatefeed/' + userFbID
         });
       }
     },
@@ -38,6 +59,16 @@ var UserRequests = function ($http){
           url: '/api/users/bucketlist/' + userFbID
         });
       }
+    },
+
+    fetchNotifications: function (userFbID) {
+      if (userFbID) {
+        return $http({
+          method: 'GET',
+          url: '/api/users/notifications/' + userFbID
+        })
+      }
+
     }
   }; 
 };

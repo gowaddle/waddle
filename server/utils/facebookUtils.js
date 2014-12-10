@@ -101,7 +101,7 @@ utils.makeFBPaginatedRequest = function (queryPath, container) {
       var dataObj = JSON.parse(data);
 
       container.push(dataObj.data)
-      console.log("container: " + JSON.stringify(container));
+      console.log("makeFBPaginatedRequest container: " + JSON.stringify(container));
 
       if (! dataObj.paging) {
         deferred.resolve(_.flatten(container, true));
@@ -147,7 +147,7 @@ utils.getFBStatuses = function (user) {
 
   var queryPath = 'https://graph.facebook.com/'+fbID+'/statuses?' + qs.stringify(query);
 
-  var statusContainer = [];
+  var statusContainer = ['BROUHAHA'];
 
   deferred.resolve(utils.makeFBPaginatedRequest(queryPath, statusContainer));
 

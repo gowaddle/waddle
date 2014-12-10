@@ -1,5 +1,7 @@
 var Q = require('q');
 var _ = require('lodash');
+var aws = require('aws-sdk');
+var uuid = require('node-uuid')
 
 var Checkin = require('./checkinModel.js');
 var User = require('../users/userModel.js');
@@ -9,6 +11,30 @@ var instagramUtils = require('../../utils/instagramUtils.js');
 var facebookUtils = require('../../utils/facebookUtils.js');
 
 var checkinController = {};
+
+checkinController.handleNativeCheckin = function (req, res) {
+  var user;
+  var nativeCheckin = req.body
+  var facebookID = req.body.facebookID
+
+  User.find({facebookID: facebookID})
+  .then(function (userNode) {
+    user = userNode;
+    return foursquareUtils.parseNativeCheckin(nativeCheckin);
+  })
+  .then(function (parsedCheckin) {
+    console.log('parsedCheckin: ' + JSON.stringify(parsedCheckin));
+    return user.addCheckins([parsedCheckin]);
+  })
+  .then(function (data) {
+    console.log(data);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
+  res.status(200).end();
+};
 
 checkinController.instagramHubChallenge = function (req, res) {
   res.status(200).send(req.query['hub.challenge']);
@@ -128,6 +154,21 @@ checkinController.addToBucketList = function (req, res){
     });
 };
 
+checkinController.removeFromBucketList = function (req, res){
+  var checkinID = req.body.checkinID;
+  var facebookID = req.body.facebookID;
+
+  Checkin.removeFromBucketList(facebookID, checkinID)
+    .then(function (data){
+      res.json(data);
+      res.status(201).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    });
+}
+
 checkinController.addComment = function (req, res){
   var clickerID = req.body.clickerID;
   var checkinID = req.body.checkinID;
@@ -149,6 +190,22 @@ checkinController.addComment = function (req, res){
     });
 };
 
+checkinController.removeComment = function (req, res){
+  var checkinID = req.body.checkinID;
+  var facebookID = req.body.facebookID;
+  var commentID = req.body.commentID ;
+  console.log(req.body);
+  Checkin.removeComment(facebookID, checkinID , commentID)
+    .then(function (data){
+      res.json(data);
+      res.status(201).end();
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(500).end();
+    });
+}
+
 checkinController.giveProps = function (req, res){
   var clickerID = req.body.clickerID;
   var checkinID = req.body.checkinID;
@@ -164,6 +221,7 @@ checkinController.giveProps = function (req, res){
       res.status(500).end();
     });
 };
+
 
 checkinController.getPropsAndComments = function (req, res){
   var checkinID = req.params.checkinid;
@@ -202,5 +260,31 @@ checkinController.getPropsAndComments = function (req, res){
       res.status(500).end();
     });
 };
+
+checkinController.sign_s3 = function (req, res) {
+  aws.config.update({accessKeyId: process.env.AWS_ACCESS_KEY, secretAccessKey: process.env.AWS_SECRET_KEY});
+    var s3 = new aws.S3();
+    var aws_uuid = uuid.v4();
+    var s3_params = {
+        Bucket: process.env.S3_BUCKET,
+        Key: aws_uuid,
+        Expires: 60,
+        ContentType: req.query.s3_object_type,
+        ACL: 'public-read'
+    };
+    s3.getSignedUrl('putObject', s3_params, function(err, data){
+        if(err){
+            console.log(err);
+        }
+        else{
+            var return_data = {
+                signed_request: data,
+                url: 'https://' + process.env.S3_BUCKET + '.s3.amazonaws.com/' + aws_uuid
+            };
+            res.write(JSON.stringify(return_data));
+            res.end();
+        }
+    });
+}
 
 module.exports = checkinController;
